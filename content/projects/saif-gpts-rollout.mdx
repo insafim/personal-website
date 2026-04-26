@@ -1,0 +1,32 @@
+---
+slug: saif-gpts-rollout
+title: SAIF GPTs Rollout — 8,000+ custom GPTs across the IHC portfolio
+category: enterprise
+status: shipped
+year: 2025
+problem: IHC's agentic AI platform (SAIF) needed thousands of custom GPTs configured per role and function across portfolio companies — a months-long manual configuration job at human scale. Each portfolio company had its own sectoral nuance (retail, beauty & wellness, media, etc.) that off-the-shelf assistants did not capture.
+approach: Compressed the work into an automated pipeline. Identified core functions and roles by sector, generated general and role-specific GPT instructions, mapped employees to GPTs via LLM-driven role/function/hierarchy matching, and provisioned at scale through Playwright automation. Ran technical rollout sessions with portfolio teams across the group.
+role: Lead — designed the matching logic, built the provisioning automation, and ran the cross-company rollout.
+scale_metrics:
+  - { label: Custom GPTs provisioned, value: "8,000+" }
+  - { label: Portfolio companies,     value: "20+" }
+  - { label: Manual config replaced,  value: "months → automated" }
+tech_stack:
+  - Prompt Engineering
+  - Playwright
+  - LLM APIs
+  - Python
+tags: [llm-automation, prompt-engineering, playwright, enterprise-rollout]
+---
+
+## Why Playwright
+
+The platform's provisioning surface was a UI, not an API. Browser automation was the
+honest answer: deterministic flows, screenshots for audit, and the ability to fail
+loudly when an upstream change broke the path.
+
+## Where the leverage came from
+
+The matching layer — role × function × hierarchy → GPT — turned a one-by-one
+assignment problem into a query. Once that mapping was clean, provisioning thousands
+of GPTs was a loop, not a project.

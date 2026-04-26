@@ -1,0 +1,33 @@
+---
+slug: visionlabs-synthetic-data
+title: Synthetic-Data Augmentation for Face Recognition — VisionLabs
+category: research
+status: shipped
+year: 2024
+problem: Face-recognition models trained on real-only data plateau at the long tail of identity — small numbers of images per identity, demographic skew, and limited pose/lighting coverage. Adding synthetic identities is appealing, but only works if the synthetic generator is conditioned on a representative descriptor of each real identity.
+approach: Built the descriptor-extraction stage of a synthetic-augmentation pipeline. Trained an IR-50 + ArcFace baseline on MS1M-RetinaFace-T1 (5M faces, 90K identities), then used IR-101 + CurricularFace to extract descriptors and compute per-identity class centers. Those centers conditioned an Arc2Face diffusion generator to produce per-identity synthetic faces; retraining on mixed real+synthetic data improved accuracy by 30% across 7 benchmarks.
+role: Research engineer on the descriptor pipeline — backbone training, descriptor extraction, and class-center computation feeding the generator.
+scale_metrics:
+  - { label: Training data,           value: "5M faces / 90K identities" }
+  - { label: Benchmarks evaluated,    value: "7" }
+  - { label: Accuracy lift,           value: "+30% on mixed real+synthetic" }
+tech_stack:
+  - PyTorch
+  - IR-50 / IR-101 (CNNs)
+  - ArcFace / CurricularFace (margin losses)
+  - Arc2Face (diffusion)
+tags: [face-recognition, synthetic-data, diffusion, vision]
+---
+
+## Why class centers, not single descriptors
+
+A single descriptor over-specifies a synthetic identity to one pose-and-lighting
+configuration. Class centers — averaged across an identity's real images — capture
+identity *separately* from nuisance variation, which is what you want a generator to
+preserve.
+
+## What the lift came from
+
+The 30% improvement wasn't from more data — it was from filling the **demographic and
+pose tails** that real data couldn't reach. Synthetic identities matter most where
+real coverage is thinnest.

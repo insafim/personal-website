@@ -1,0 +1,29 @@
+---
+slug: solar-ghi-nowcasting
+title: Solar GHI Nowcasting from Sky Images — Physics-Informed Two-Stage Network
+category: research
+status: shipped
+year: 2021
+problem: Solar irradiance (GHI) varies sharply with sky condition — clear, cumulus, overcast — and a single regression network has to learn three different physics regimes at once, which it does poorly. Photovoltaic operators need short-horizon forecasts that are accurate across all three regimes, not just on average.
+approach: Built a two-stage system. First, a classical CV sky-condition classifier labels each sky image into one of the three regimes. Then a regime-specialized ResNet sub-model — trained only on its assigned regime — produces the GHI estimate. The split lets each ResNet specialize to a single physics regime. Achieved 10.80% nRMSE and 98.88% Pearson correlation. Published at IEEE ICIIS 2021.
+role: Model architecture and training — sky-classifier, regime-specialized regressors, and routing logic.
+scale_metrics:
+  - { label: nRMSE,                  value: "10.80%" }
+  - { label: Pearson r,              value: "98.88%" }
+  - { label: Sky regimes,            value: "3 (clear / cumulus / overcast)" }
+tech_stack:
+  - PyTorch
+  - OpenCV
+  - ResNet
+related_project_id: solar-ghi-iciis2021
+tags: [solar, regression, physics-informed, vision]
+external_links:
+  - { label: "Paper (IEEE ICIIS 2021)", url: "https://ieeexplore.ieee.org/document/9660664" }
+---
+
+## Why two stages instead of one big network
+
+A single regressor fits the average regime well and the tails badly. Routing first
+turns a hard regression problem into three easier ones, and the routing is
+interpretable — operators can see which regime each forecast came from, which makes
+the system trustworthy in a way an opaque end-to-end network is not.

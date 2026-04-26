@@ -1,0 +1,32 @@
+---
+slug: long-form-video-benchmark
+title: Long-Form Video Understanding Benchmark — MBZUAI IVAL
+category: research
+status: shipped
+year: 2024
+problem: Existing Video-LMM benchmarks focused on short clips (seconds to a minute), but downstream applications — egocentric assistance, surveillance, instructional video — require reasoning over 3-30 minute footage. There was no systematic way to evaluate long-form video understanding, and prior benchmarks under-sampled egocentric content entirely.
+approach: Built a human-in-the-loop QA generation pipeline sourcing both egocentric (Ego4D) and non-egocentric long-form videos. The pipeline proposed candidate Q&A pairs, surfaced them for human review, and emitted curated benchmark items only after sign-off. Implemented inference and evaluation code to benchmark 7 open-source and 2 proprietary Video-LMMs against the resulting test set.
+role: Pipeline engineer — QA generation, human-review tooling, and evaluation harness.
+scale_metrics:
+  - { label: Video duration range,   value: "3-30 minutes" }
+  - { label: Egocentric source,      value: "Ego4D" }
+  - { label: Models evaluated,       value: "9 (7 OSS + 2 proprietary)" }
+tech_stack:
+  - PyTorch
+  - Hugging Face
+  - Python
+tags: [video-lmm, benchmark, egocentric, long-context]
+---
+
+## Why human-in-the-loop
+
+Pure automatic QA generation over 30-minute video produces too many factually-wrong
+or trivially-answerable items. A small human-review step at the *generation* stage —
+not just the evaluation stage — was what made the resulting benchmark worth running
+inference on.
+
+## What the benchmark surfaced
+
+Long-form Video-LMMs degrade in characteristic ways: temporal grounding ("at what
+point did X happen") collapses faster than entity recognition; egocentric reasoning
+is the hardest axis. The benchmark made these failure modes visible side-by-side.

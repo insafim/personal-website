@@ -1,0 +1,29 @@
+---
+slug: avatar-voice-agent
+title: Avatar AI Voice Agent — Digital delegate for IHC's Growth Day
+category: enterprise
+status: shipped
+year: 2025
+problem: 2PointZero needed a way for an "AI delegate" to engage in real time with C-suite from 20+ portfolio companies during the Growth Day event — a setting where latency, faithfulness, and an embodied presence all mattered more than batch chat quality.
+approach: Built a real-time STT-LLM-TTS pipeline orchestrated through LiveKit, with an Anam 3D avatar surfacing the agent visually. Tuned the speech-loop turn-taking and conversational priors so the avatar could sustain back-and-forth with senior leaders without dropping context, and produced a fallback path for high-noise environments.
+role: End-to-end owner — pipeline architecture, latency tuning, avatar integration, and on-stage operations.
+tech_stack:
+  - LiveKit
+  - Anam (3D avatar)
+  - LLM APIs
+  - Real-time STT / TTS
+  - Python
+tags: [voice-agent, livekit, real-time, llm]
+---
+
+## Architecture
+
+A streaming three-stage pipeline — speech-to-text, LLM, text-to-speech — wrapped in a
+LiveKit room so the avatar, the audio, and the network transport share one
+synchronized timeline. The Anam 3D avatar consumes the TTS stream and lip-syncs in
+real time.
+
+The hard parts were not the individual stages but the **seams between them**: barge-in
+detection, end-of-utterance silence thresholds, and keeping the LLM grounded in the
+event's speaker context so the avatar didn't go off-topic when an executive
+free-associated.

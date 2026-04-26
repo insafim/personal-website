@@ -1,0 +1,37 @@
+---
+slug: fte-benchmarking-agent
+title: FTE Benchmarking Agent — Conversational workforce analysis across the IHC portfolio
+category: enterprise
+status: shipped
+year: 2025
+problem: Workforce benchmarking across 2PointZero's portfolio companies was a multi-week manual exercise — and the source data was sparse and unevenly disclosed across companies. Stakeholders needed a conversational way to ask FTE questions and trust the answers.
+approach: Built a hybrid-RAG agent that classifies companies into 12 segments, imputes missing workforce fields via iterative LightGBM imputation within each segment, and validates imputed values through a multi-LLM majority-vote consensus. Retrieval is hybrid — semantic cosine over Qwen3 embeddings combined with weighted Postgres tsvector — surfaced via an MCP backend and a Streamlit frontend.
+role: End-to-end owner — segmentation, imputation pipeline, retriever design, agent layer, and frontend.
+scale_metrics:
+  - { label: Company segments,        value: "12" }
+  - { label: Imputation backbone,     value: "LightGBM (iterative, segment-aware)" }
+  - { label: Validation,              value: "multi-LLM majority vote" }
+tech_stack:
+  - FastAPI
+  - PostgreSQL / pgvector
+  - MCP
+  - Qwen3 embeddings
+  - LightGBM
+  - PyCaret
+  - Streamlit
+tags: [hybrid-rag, mcp, automl, workforce-analytics]
+---
+
+## Why segment-aware imputation
+
+A single global imputer would be wrong for both a 50-person agency and a 5,000-person
+industrial conglomerate. Segmenting first, then imputing within segment, kept the
+imputed FTE numbers defensible when stakeholders asked the obvious follow-up: *"how
+did you get this number?"*
+
+## Why a multi-LLM consensus
+
+Because the imputed values feed an executive-facing agent, a single LLM critique was
+too noisy. Majority-vote consensus across multiple providers gave a meaningful
+abstention signal: when models disagreed, the agent surfaced uncertainty instead of
+fabricating confidence.

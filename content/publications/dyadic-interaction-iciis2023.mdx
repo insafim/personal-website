@@ -1,0 +1,35 @@
+---
+slug: dyadic-interaction-iciis2023
+title: Real-time Multiple Dyadic Interaction Detection in Surveillance Videos in the Wild
+authors:
+  - Insaf Ismath
+  - others
+authorship_order: first
+venue: IEEE ICIIS 2023
+year: 2023
+type: conference
+abstract: |
+  Surveillance video in the wild contains multiple two-person interactions happening simultaneously in a crowded frame, and most action-recognition pipelines — trained on single-actor or single-pair clips — collapse under that overlap. This paper presents a real-time pipeline that combines YOLOv7 + SORT for spatiotemporal localization, YOLO-Pose for skeleton extraction, and an X3D-M backbone with attention for dyadic interaction classification, jointly delivering crowded-scene multi-dyadic detection at real-time framerates.
+contribution_summary: |
+  Designed and implemented the full three-stage pipeline — detection, tracking, pose extraction, and skeleton-based interaction classification — and validated it on crowded surveillance footage where prior single-pair methods break down.
+pdf_url: https://ieeexplore.ieee.org/document/10253565
+doi: "10.1109/ICIIS58898.2023.10253565"
+bibtex: |
+  @inproceedings{ismath2023dyadic,
+    title     = {Real-time Multiple Dyadic Interaction Detection in Surveillance Videos in the Wild},
+    author    = {Ismath, Insaf and others},
+    booktitle = {2023 IEEE 17th International Conference on Industrial and Information Systems (ICIIS)},
+    year      = {2023},
+    publisher = {IEEE},
+    doi       = {10.1109/ICIIS58898.2023.10253565}
+  }
+related_project_id: dyadic-interaction-detection
+tags: [video, action-recognition, surveillance, pose, real-time]
+---
+
+## Why skeleton-based classification
+
+Running an RGB-based action classifier per-pair across a crowded frame doesn't fit
+the real-time budget. Skeletons are a far smaller representation and — for
+two-person interactions — carry most of the discriminative signal, which is what
+made the real-time, multi-dyadic setting tractable on commodity hardware.

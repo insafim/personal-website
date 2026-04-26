@@ -1,0 +1,30 @@
+---
+slug: langgraph-eval-pipeline
+title: LangGraph Evaluation Pipeline — Reproducible benchmarking for portfolio agents
+category: enterprise
+status: shipped
+year: 2025
+problem: Portfolio analytics agents at 2PointZero were being tested ad-hoc — different prompts, different runs, no shared ground-truth, and no way to compare providers or regression-test prompt changes.
+approach: Built a LangGraph-orchestrated evaluation pipeline that auto-generates ground-truth Q&A datasets from agent context, runs multi-provider parallel answer generation, scores answers via LLM-as-Judge, and traces every run through Langfuse for audit and side-by-side comparison.
+role: End-to-end owner — graph design, dataset generation, scoring rubric, and Langfuse integration.
+tech_stack:
+  - LangGraph
+  - Langfuse
+  - LLM APIs
+  - LLM-as-Judge
+  - Python
+tags: [langgraph, langfuse, llm-as-judge, evaluation]
+---
+
+## What the graph does
+
+Three branches run in parallel: ground-truth Q&A generation, candidate-answer
+generation across multiple providers, and judge-based scoring. The graph fans out the
+candidates against the ground-truth and emits a per-provider scoreboard plus a
+Langfuse trace per run.
+
+## Why this changed daily work
+
+Once any prompt or model change is a single command away from a benchmarked diff,
+"does this regression?" stops being a debate and starts being a number. Langfuse
+traces close the loop for stakeholders who want to see the actual prompts and outputs.
