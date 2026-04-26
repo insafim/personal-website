@@ -4,7 +4,7 @@ test("home contains valid Person JSON-LD", async ({ page }) => {
   await page.goto("/");
   const json = await page.locator('script[type="application/ld+json"]').first().textContent();
   expect(json).toBeTruthy();
-  const parsed = JSON.parse(json!);
+  const parsed = JSON.parse(json as string);
   expect(parsed["@context"]).toBe("https://schema.org");
   expect(parsed["@type"]).toBe("Person");
   expect(parsed.name).toBeTruthy();
@@ -17,7 +17,7 @@ test("about contains valid Person JSON-LD", async ({ page }) => {
   await page.goto("/about");
   const json = await page.locator('script[type="application/ld+json"]').first().textContent();
   expect(json).toBeTruthy();
-  const parsed = JSON.parse(json!);
+  const parsed = JSON.parse(json as string);
   expect(parsed["@type"]).toBe("Person");
 });
 

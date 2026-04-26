@@ -22,7 +22,9 @@ export default function ResourcesPage() {
   // ascending, then the rest grouped by kind.
   const readingOrderEnabled = siteConfig.feature_flags.reading_order;
   const ordered = readingOrderEnabled
-    ? resources.filter((r) => typeof r.reading_order === "number").sort((a, b) => (a.reading_order ?? 0) - (b.reading_order ?? 0))
+    ? resources
+        .filter((r) => typeof r.reading_order === "number")
+        .sort((a, b) => (a.reading_order ?? 0) - (b.reading_order ?? 0))
     : [];
 
   return (

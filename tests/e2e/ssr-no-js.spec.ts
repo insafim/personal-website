@@ -23,6 +23,6 @@ test("publications index lists items without JS", async ({ page }) => {
 test("Person JSON-LD parses on home (SSR)", async ({ page }) => {
   await page.goto("/");
   const json = await page.locator('script[type="application/ld+json"]').first().textContent();
-  const parsed = JSON.parse(json!);
+  const parsed = JSON.parse(json as string);
   expect(parsed["@type"]).toBe("Person");
 });

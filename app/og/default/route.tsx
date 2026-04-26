@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { person, siteConfig } from "#site/content";
-import { interBold, interRegular, ogFontsAvailable } from "@/lib/og-fonts";
+import { getOgFonts } from "@/lib/og-fonts";
 
 export const runtime = "nodejs";
 
@@ -8,10 +8,11 @@ export const runtime = "nodejs";
 // build-time data (person, siteConfig). Identical bytes regardless of any
 // ?attacker=1 input. Fonts loaded at module scope in lib/og-fonts.ts.
 export async function GET() {
-  const fonts = ogFontsAvailable()
+  const og = getOgFonts();
+  const fonts = og
     ? [
-        { name: "Inter", data: interRegular!, weight: 400 as const, style: "normal" as const },
-        { name: "Inter", data: interBold!, weight: 700 as const, style: "normal" as const },
+        { name: "Inter", data: og.regular, weight: 400 as const, style: "normal" as const },
+        { name: "Inter", data: og.bold, weight: 700 as const, style: "normal" as const },
       ]
     : undefined;
 

@@ -13,9 +13,15 @@ function tryLoad(filename: string): ArrayBuffer | undefined {
   return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
 }
 
-export const interRegular = tryLoad("inter.ttf");
-export const interBold = tryLoad("inter-bold.ttf");
+const interRegular = tryLoad("inter.ttf");
+const interBold = tryLoad("inter-bold.ttf");
 
-export function ogFontsAvailable(): boolean {
-  return interRegular !== undefined && interBold !== undefined;
+export type OgFonts = { regular: ArrayBuffer; bold: ArrayBuffer };
+
+// Returns both font buffers as a tuple, or null if either is missing.
+// Single-result API lets callers narrow without non-null assertions on
+// individual exports (which TS can't narrow across module boundaries).
+export function getOgFonts(): OgFonts | null {
+  if (interRegular === undefined || interBold === undefined) return null;
+  return { regular: interRegular, bold: interBold };
 }

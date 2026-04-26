@@ -20,7 +20,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
   }, [projects]);
   const allYears = useMemo(
     () => [...new Set(projects.map((p) => p.year))].sort((a, b) => b - a),
-    [projects],
+    [projects]
   );
   const allTech = useMemo(() => {
     const set = new Set<string>();
@@ -32,7 +32,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
     (p) =>
       (tag === null || (p.tags ?? []).includes(tag)) &&
       (year === null || p.year === year) &&
-      (tech === null || p.tech_stack.includes(tech)),
+      (tech === null || p.tech_stack.includes(tech))
   );
 
   const reset = () => {
@@ -49,7 +49,9 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
         </summary>
         <div className="mt-3 grid gap-3 sm:grid-cols-3 text-sm">
           <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">Tag</span>
+            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">
+              Tag
+            </span>
             <select
               value={tag ?? ""}
               onChange={(e) => setTag(e.target.value || null)}
@@ -64,7 +66,9 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
             </select>
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">Year</span>
+            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">
+              Year
+            </span>
             <select
               value={year?.toString() ?? ""}
               onChange={(e) => setYear(e.target.value ? Number(e.target.value) : null)}
@@ -79,7 +83,9 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
             </select>
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">Tech</span>
+            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">
+              Tech
+            </span>
             <select
               value={tech ?? ""}
               onChange={(e) => setTech(e.target.value || null)}
@@ -106,7 +112,9 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
       </details>
 
       {filtered.length === 0 ? (
-        <p className="mt-6 text-[var(--color-fg-muted)] text-sm">No projects match the selected filters.</p>
+        <p className="mt-6 text-[var(--color-fg-muted)] text-sm">
+          No projects match the selected filters.
+        </p>
       ) : (
         <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (

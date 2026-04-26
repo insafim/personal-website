@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 import { publications } from "#site/content";
-import { interBold, interRegular, ogFontsAvailable } from "@/lib/og-fonts";
+import { getOgFonts } from "@/lib/og-fonts";
 
 export const runtime = "nodejs";
 export const size = { width: 1200, height: 630 };
@@ -14,10 +14,11 @@ export default async function PublicationOgImage({ params }: { params: { slug: s
   const pub = publications.find((p) => p.slug === params.slug);
   if (!pub) return new ImageResponse(<div>Not found</div>, size);
 
-  const fonts = ogFontsAvailable()
+  const og = getOgFonts();
+  const fonts = og
     ? [
-        { name: "Inter", data: interRegular!, weight: 400 as const, style: "normal" as const },
-        { name: "Inter", data: interBold!, weight: 700 as const, style: "normal" as const },
+        { name: "Inter", data: og.regular, weight: 400 as const, style: "normal" as const },
+        { name: "Inter", data: og.bold, weight: 700 as const, style: "normal" as const },
       ]
     : undefined;
 
