@@ -1,10 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Insaf Ismath avatar placeholder">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200" role="img" aria-label="Insaf Ismath monogram">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0f5278"/>
-      <stop offset="100%" stop-color="#2878a0"/>
+    <radialGradient id="bg" cx="0.3" cy="0.3" r="0.9">
+      <stop offset="0%" stop-color="#3a4a8a"/>
+      <stop offset="55%" stop-color="#1f2a5e"/>
+      <stop offset="100%" stop-color="#0f1838"/>
+    </radialGradient>
+    <linearGradient id="ink" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#cdd5ff"/>
     </linearGradient>
   </defs>
-  <rect width="200" height="200" rx="100" fill="url(#bg)"/>
-  <text x="100" y="124" font-family="ui-sans-serif, system-ui, sans-serif" font-size="80" font-weight="700" fill="#fff" text-anchor="middle">II</text>
+  <circle cx="100" cy="100" r="100" fill="url(#bg)"/>
+  <circle cx="100" cy="100" r="92" fill="none" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1"/>
+  <text x="100" y="118" font-family="Iowan Old Style, Charter, Georgia, Cambria, serif" font-style="italic" font-size="86" font-weight="700" fill="url(#ink)" text-anchor="middle" letter-spacing="-2">Ii</text>
+  <circle cx="100" cy="158" r="2" fill="#ffffff" fill-opacity="0.5"/>
 </svg>

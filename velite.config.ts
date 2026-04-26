@@ -19,7 +19,7 @@ const person = defineCollection({
       affiliation: s.string().optional(),
       specializations: s.array(s.string()).min(1),
       bio_short: s.string().min(1).max(280),
-      bio_long: s.mdx(),
+      bio_long: s.markdown(),
       career_timeline: s
         .array(
           s.object({
@@ -67,7 +67,7 @@ const projects = defineCollection({
       tags: s.array(s.string()).optional(),
       cover_image: s.string().optional(),
       og_image: s.string().optional(),
-      body_mdx: s.mdx(),
+      body_mdx: s.markdown(),
     })
     .transform((data) => ({ ...data, permalink: `/projects/${data.slug}` })),
 });
@@ -98,7 +98,7 @@ const publications = defineCollection({
       code_repo_url: externalUrl.optional(),
       related_project_id: s.string().optional(),
       tags: s.array(s.string()).optional(),
-      extended_abstract_mdx: s.mdx().optional(),
+      extended_abstract_mdx: s.markdown().optional(),
       og_image: s.string().optional(),
     })
     .superRefine((data, ctx) => {
