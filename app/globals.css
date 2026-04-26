@@ -9,39 +9,87 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* Light theme defaults (NFR-012 contrast >=4.5:1 normal text). */
-  --color-bg: oklch(99% 0 0);
-  --color-bg-subtle: oklch(96% 0 0);
-  --color-fg: oklch(20% 0 0);
-  --color-fg-muted: oklch(40% 0 0);
-  --color-border: oklch(88% 0 0);
-  --color-accent: oklch(50% 0.18 260);
-  --color-accent-fg: oklch(99% 0 0);
+  /* Light theme — restrained, professional palette. NFR-012 contrast >=4.5:1. */
+  --color-bg: oklch(99% 0.003 240);
+  --color-bg-subtle: oklch(96% 0.005 240);
+  --color-bg-raised: oklch(100% 0 0);
+  --color-fg: oklch(20% 0.015 250);
+  --color-fg-muted: oklch(45% 0.012 250);
+  --color-border: oklch(89% 0.008 240);
+  --color-border-strong: oklch(80% 0.010 240);
+  --color-accent: oklch(42% 0.13 260);
+  --color-accent-soft: oklch(95% 0.025 260);
+  --color-accent-fg: oklch(99% 0.003 240);
+
+  /* Category accents — used on project section rules and category bars only. */
+  --color-enterprise: oklch(48% 0.08 215);
+  --color-enterprise-soft: oklch(95% 0.018 215);
+  --color-research: oklch(45% 0.10 305);
+  --color-research-soft: oklch(95% 0.022 305);
+  --color-independent: oklch(52% 0.10 35);
+  --color-independent-soft: oklch(95% 0.025 35);
+
+  /* Status pills — used on project cards. */
+  --color-status-shipped: oklch(48% 0.10 155);
+  --color-status-shipped-soft: oklch(95% 0.025 155);
+  --color-status-active: oklch(45% 0.12 240);
+  --color-status-active-soft: oklch(95% 0.025 240);
+  --color-status-archived: oklch(50% 0.005 250);
+  --color-status-archived-soft: oklch(94% 0.003 250);
+  --color-status-in-progress: oklch(55% 0.10 75);
+  --color-status-in-progress-soft: oklch(95% 0.025 75);
+
+  /* Card shadows. Disabled under reduced-motion via media query. */
+  --shadow-card: 0 1px 2px oklch(20% 0.015 250 / 0.04), 0 4px 12px oklch(20% 0.015 250 / 0.04);
+  --shadow-card-hover: 0 2px 4px oklch(20% 0.015 250 / 0.06), 0 12px 28px oklch(20% 0.015 250 / 0.08);
 }
 
 /* Dark theme via .dark class (next-themes attribute='class'). */
 .dark {
-  --color-bg: oklch(15% 0 0);
-  --color-bg-subtle: oklch(22% 0 0);
-  --color-fg: oklch(96% 0 0);
-  --color-fg-muted: oklch(70% 0 0);
-  --color-border: oklch(30% 0 0);
-  --color-accent: oklch(75% 0.16 260);
-  --color-accent-fg: oklch(15% 0 0);
+  --color-bg: oklch(16% 0.012 250);
+  --color-bg-subtle: oklch(20% 0.015 250);
+  --color-bg-raised: oklch(22% 0.018 250);
+  --color-fg: oklch(94% 0.005 240);
+  --color-fg-muted: oklch(70% 0.010 240);
+  --color-border: oklch(28% 0.018 250);
+  --color-border-strong: oklch(38% 0.022 250);
+  --color-accent: oklch(72% 0.13 260);
+  --color-accent-soft: oklch(28% 0.06 260);
+  --color-accent-fg: oklch(16% 0.012 250);
+
+  --color-enterprise: oklch(75% 0.10 215);
+  --color-enterprise-soft: oklch(28% 0.04 215);
+  --color-research: oklch(75% 0.12 305);
+  --color-research-soft: oklch(28% 0.05 305);
+  --color-independent: oklch(78% 0.11 50);
+  --color-independent-soft: oklch(28% 0.05 50);
+
+  --color-status-shipped: oklch(75% 0.12 155);
+  --color-status-shipped-soft: oklch(26% 0.05 155);
+  --color-status-active: oklch(75% 0.13 240);
+  --color-status-active-soft: oklch(26% 0.05 240);
+  --color-status-archived: oklch(70% 0.005 250);
+  --color-status-archived-soft: oklch(24% 0.005 250);
+  --color-status-in-progress: oklch(78% 0.12 75);
+  --color-status-in-progress-soft: oklch(26% 0.05 75);
+
+  --shadow-card: 0 1px 2px oklch(0% 0 0 / 0.3), 0 6px 18px oklch(0% 0 0 / 0.35);
+  --shadow-card-hover: 0 2px 4px oklch(0% 0 0 / 0.4), 0 16px 36px oklch(0% 0 0 / 0.45);
 }
 
-/* JS-disabled fallback (NFR-020): respect system preference when no class set.
-   Only applies to <html> without .dark or .light explicit class — next-themes
-   pre-hydration script sets the class before paint when JS is enabled. */
+/* JS-disabled fallback (NFR-020): respect system preference when no class set. */
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --color-bg: oklch(15% 0 0);
-    --color-bg-subtle: oklch(22% 0 0);
-    --color-fg: oklch(96% 0 0);
-    --color-fg-muted: oklch(70% 0 0);
-    --color-border: oklch(30% 0 0);
-    --color-accent: oklch(75% 0.16 260);
-    --color-accent-fg: oklch(15% 0 0);
+    --color-bg: oklch(16% 0.012 250);
+    --color-bg-subtle: oklch(20% 0.015 250);
+    --color-bg-raised: oklch(22% 0.018 250);
+    --color-fg: oklch(94% 0.005 240);
+    --color-fg-muted: oklch(70% 0.010 240);
+    --color-border: oklch(28% 0.018 250);
+    --color-border-strong: oklch(38% 0.022 250);
+    --color-accent: oklch(72% 0.13 260);
+    --color-accent-soft: oklch(28% 0.06 260);
+    --color-accent-fg: oklch(16% 0.012 250);
   }
 }
 
@@ -88,4 +136,53 @@ body {
 .skip-to-content:focus {
   left: 0.5rem;
   top: 0.5rem;
+}
+
+/* Reusable surface — used by project/publication/resource cards. */
+.surface-card {
+  background-color: var(--color-bg-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease;
+}
+.surface-card:hover {
+  border-color: var(--color-border-strong);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+
+/* Small colored bar prefix for section headers. */
+.section-rule {
+  display: inline-block;
+  width: 0.25rem;
+  height: 1.4rem;
+  border-radius: 999px;
+  margin-right: 0.625rem;
+  vertical-align: -0.2rem;
+}
+
+/* Subtle accent halo behind hero — single soft radial, no mesh. */
+.hero-glow {
+  position: relative;
+  isolation: isolate;
+}
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: -8% -10% auto auto;
+  width: 50%;
+  aspect-ratio: 1;
+  background: radial-gradient(circle, var(--color-accent-soft), transparent 65%);
+  filter: blur(48px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Avatar frame — quiet single-color ring, not a rainbow. */
+.avatar-frame {
+  border-radius: 9999px;
+  padding: 0.2rem;
+  background: linear-gradient(155deg, var(--color-accent), var(--color-border-strong));
 }

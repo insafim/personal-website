@@ -21,7 +21,11 @@ const isProd = process.env.VERCEL_ENV === "production";
 
 const cspDirectives = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'", // ADR-010: 'unsafe-inline' tradeoff for RSC hydration
+  // ADR-010: 'unsafe-inline' tradeoff for RSC hydration.
+  // 'unsafe-eval' is dev-only — React's dev runtime calls eval() for source-map
+  // reconstruction across server/client boundaries (Turbopack RSC). Production
+  // never includes it.
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https://avatars.githubusercontent.com https://arxiv.org",
   "font-src 'self' data:",
