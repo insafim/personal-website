@@ -37,6 +37,5 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-# AI dev workflow state and personal source material — kept local
+# AI dev workflow state — kept local
 .claude/
-knowledge/

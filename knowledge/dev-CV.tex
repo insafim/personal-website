@@ -1,0 +1,173 @@
+\documentclass[10pt]{article}
+
+\usepackage[left=0.55in, right=0.55in, top=0.35in, bottom=0.35in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{fontawesome}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\renewcommand{\familydefault}{\sfdefault}
+\linespread{0.96}
+
+% Colors - refined palette
+\definecolor{accent}{RGB}{15, 82, 120}        % Deep teal-navy for section headings
+\definecolor{accentlight}{RGB}{40, 120, 160}   % Lighter teal for name + contact highlights
+\definecolor{midtext}{RGB}{90, 90, 90}         % Softer gray for dates and roles
+\definecolor{rulecolor}{RGB}{170, 205, 220}    % Subtle blue-gray for section rules
+\definecolor{linkblue}{RGB}{40, 100, 160}      % Balanced link color
+
+\hypersetup{colorlinks=true, urlcolor=linkblue}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% Compact lists
+% \setlist[itemize]{
+%     leftmargin=1.2em, label={\color{accentlight}\textbullet},
+%     itemsep=2pt, parsep=0pt, topsep=3pt, partopsep=0pt,
+% }
+
+\setlist[itemize]{
+    leftmargin=1.1em, rightmargin=1.5em, label={\color{accentlight}\textbullet},
+    itemsep=2pt, parsep=0pt, topsep=3pt, partopsep=0pt,
+}
+
+% Section formatting
+\titleformat{\section}
+    {\normalsize\bfseries\color{accent}\scshape}{}{0em}{\MakeUppercase}
+    [\vspace{-0.6em}{\color{rulecolor}\rule{\textwidth}{0.8pt}}]
+\titlespacing{\section}{0pt}{8pt}{4pt}
+
+% Custom commands
+\newcommand{\cventry}[2]{\textbf{#1} \hfill \textcolor{midtext}{#2} \\}
+\newcommand{\cvrole}[2]{\textcolor{midtext}{\textit{#1}} \hfill \textcolor{midtext}{\textit{#2}} \\}
+
+% \usepackage{inconsolata}
+% \newcommand{\stack}[1]{{\footnotesize\ttfamily\textcolor{midtext}{#1}}}
+
+\definecolor{stackgray}{RGB}{40, 40, 40}
+\newcommand{\stack}[1]{{\small\rmfamily\itshape\textcolor{stackgray}{#1}}}
+
+\begin{document}
+
+% ============== HEADER ==============
+\begin{center}
+    {\LARGE\bfseries\textcolor{accent}{INSAF ISMATH}} \\[4pt]
+    {\small Abu Dhabi (UAE Golden Visa) \,$|$\, \href{mailto:i.m.insaf@gmail.com}{\textcolor{accentlight}{i.m.insaf@gmail.com}} \,$|$\, \textcolor{accentlight}{+971 566071157} \,$|$\, \href{https://www.linkedin.com/in/iminsaf}{\faLinkedin\, \textcolor{linkblue}{linkedin.com/in/iminsaf}}}
+\end{center}
+
+\vspace{-1pt}
+
+% ============== PROFILE ==============
+\section{Profile}
+% --- Version A: Use when sending with Profile doc (short, factual) ---
+AI/ML Engineer and Researcher with hands-on experience translating business problems into end-to-end enterprise-scale AI systems that deliver measurable impact, and published research on large multimodal models at top-tier AI conferences including EMNLP and CVPR. Skilled across the full generative AI stack alongside classical ML and scalable data-led solutions.
+% ============== EXPERIENCE ==============
+\section{Professional Experience}
+
+\cventry{2PointZero -- Energy and Consumer investment platform under IHC}{Abu Dhabi, UAE}
+\cvrole{AI Analyst}{Oct 2025 -- Present}
+\vspace{-7pt}
+\begin{itemize}
+    \item Built Omorfia GIS, a geospatial platform for consolidation and expansion decisions across a 134-branch, 8-brand UAE salon network. Composite risk model fuses Google Maps signals, drive-time catchments, WorldPop demographics, and internal financials; H3 hex-grid tessellation identifies expansion zones. \stack{React, MapLibre, Cesium dashboard; FastAPI + MCP backend}
+    \item Built an Avatar AI Voice Agent as a digital delegate for the Company's Growth Day, interacting with C-suite from 20+ portfolio companies in real time. \stack{STT-LLM-TTS pipeline, LiveKit, Anam 3D avatar}
+    \item Built an FTE (Full-Time Equivalent) benchmarking agent that compresses weeks of manual workforce analysis into a conversational query across portfolio companies, grounded on an agentic hybrid RAG retriever. Given sparse and unevenly disclosed workforce data, built a segment-aware ML pipeline that classifies companies into 12 segments, imputes missing fields via iterative LightGBM imputation within each segment, and validates imputed values through multi-LLM majority-vote consensus. \stack{FastAPI, PostgreSQL/pgvector, MCP backend; hybrid RAG (semantic cosine + weighted tsvector), Qwen3 embeddings; PyCaret + LightGBM; Streamlit frontend}
+    \item Led 2PointZero's portfolio rollout of 8,000+ custom GPTs on SAIF (IHC's agentic AI platform), compressing months of manual configuration into an automated pipeline. Identified core functions and roles by sector (retail, beauty \& wellness, media, etc.), generated general and role-specific GPT instructions, mapped employees to GPTs via LLM-driven role, function, and hierarchy matching, and provisioned at scale through Playwright automation. Ran technical rollout sessions with portfolio company teams across the group. \stack{Prompt Engineering, Playwright}
+    \item Represented 2PointZero Innovation Labs in scoping a multi-year research partnership with MBZUAI, presenting business use cases to faculty across workshops spanning multilingual financial NLP, multimodal document intelligence, causal decision intelligence, and AI system evaluation and governance, establishing the path to joint publications, sponsored PhDs, and co-developed IP.
+    \item Built a LangGraph-orchestrated evaluation pipeline that auto-generates ground-truth Q\&A datasets for portfolio analytics agents, with multi-provider parallel answer generation, LLM-as-Judge scoring, and Langfuse traces for audit and comparison, turning ad-hoc agent testing into systematic, reproducible benchmarking. \stack{LangGraph, Langfuse}
+    \item Designed a Power Automate flow for legal request intake that writes a structured list item, fires parallel notifications to the legal team and requester, and provisions a request-scoped SharePoint folder for attachments, replacing manual triage across the legal pipeline. \stack{Power Automate, SharePoint}
+    % \item Developed a LinkedIn Content Writer Agent that learns an executive's stylometry to generate posts and articles in their voice, reducing content turnaround from days to minutes.
+    % \item Adapted Anthropic's PowerPoint Agent Skill and deployed it as a custom company skill within Claude, enabling natural-language, brand-consistent slide generation natively in the app for internal teams.
+\end{itemize}
+
+\vspace{4pt}
+
+\cventry{VisionLabs -- Human and Object Recognition Technologies}{Dubai, UAE}
+\cvrole{AI Research Engineer}{May 2024 -- Aug 2024}
+\vspace{-7pt}
+\begin{itemize}
+    \item Built the descriptor extraction stage of a synthetic-data augmentation pipeline: trained IR-50 + ArcFace baseline on MS1M-RetinaFace-T1 (5M faces, 90K identities) and extracted IR-101 CurricularFace descriptors to compute per-identity class centers. \stack{PyTorch; IR-50/IR-101 (CNNs); ArcFace/CurricularFace (margin losses)}
+    
+    \item Generated per-identity synthetic faces with Arc2Face conditioned on class centers; retraining on mixed real+synthetic data improved face recognition accuracy by 30\% across 7 benchmarks. \stack{Arc2Face (diffusion)}
+\end{itemize}
+
+\vspace{4pt}
+
+\cventry{Intelligent Visual Analytics Lab (IVAL) -- MBZUAI}{Abu Dhabi, UAE}
+\cvrole{Graduate Research Assistant}{Dec 2023 -- Jan 2025}
+\vspace{-7pt}
+\begin{itemize}
+    \item Built an evaluation harness on 20× NVIDIA A100s, orchestrating 1,500+ inference runs across 8 open-source and 2 proprietary LMMs over 3 MCQA benchmarks in under 2 months. Published at EMNLP 2025 Findings. \stack{PyTorch, Hugging Face}
+    \item Built a human-in-the-loop QA generation pipeline for a long-form video benchmark sourcing egocentric (Ego4D) and non-egocentric videos (3-30 min), enabling systematic evaluation of long-form video understanding where existing benchmarks fell short; implemented inference and evaluation code to benchmark 7 open-source and 2 proprietary Video-LMMs. \stack{PyTorch, Hugging Face}
+    \item Introduced Selective Channel Recalibration Attention (SCRA) to ConvNeXt-Large-V2, improving fine-grained image classification accuracy on CUB Birds, FGVC Aircraft, and FoodX while staying within 5\% of baseline compute (FLOPs). \stack{PyTorch, ConvNeXt V2}
+\end{itemize}
+\newpage
+\cventry{Faculty of Engineering -- University of Peradeniya}{Sri Lanka}
+\cvrole{Research Assistant}{Jan 2021 -- Aug 2023}
+\vspace{-7pt}
+\begin{itemize}
+    \item Real-time Multiple Dyadic Interaction Detection: Built a real-time pipeline for detecting co-occurring two-person interactions in crowded surveillance footage, combining YOLOv7 + SORT for spatiotemporal localization, YOLO-Pose for skeleton extraction, and X3D-M + attention for action classification. Published at IEEE ICIIS 2023. \stack{PyTorch; YOLOv7, SORT; X3D-M}
+    \item Solar GHI Nowcasting from Sky Images: Built a physics-informed two-stage system where a classical CV sky-condition classifier routes inputs to regime-specialized ResNet sub-models, achieving 10.80\% nRMSE and 98.88\% Pearson correlation. Published at IEEE ICIIS 2021. \stack{PyTorch, OpenCV; ResNet}
+\end{itemize}
+
+\vspace{4pt}
+
+
+
+% ============== EDUCATION ==============
+\section{Education}
+
+\cventry{Mohamed Bin Zayed University of Artificial Intelligence (MBZUAI)}{Abu Dhabi, UAE}
+\cvrole{Master of Science in Computer Vision}{Aug 2023 -- May 2025}
+\vspace{-7pt}
+\begin{itemize}
+    \item GPA: 3.95/4.0 (Rank 2/36); MBZUAI Full Scholarship (4.6\% acceptance rate).
+    \item Relevant Coursework: Mathematical Foundations of AI, Deep Learning, Probabilistic \& Statistical Inference, Advanced Vision and Language, Visual Object Recognition and Detection, Human and Computer Vision
+    % \item Founding President -- MBZUAI Consulting Club, Mentor -- UGRIP Program (45 undergraduates, 10+ countries)
+\end{itemize}
+
+\vspace{4pt}
+\cventry{University of Peradeniya}{Sri Lanka}
+\cvrole{Bachelor of Science in Electrical \& Electronic Engineering}{Nov 2017 -- Mar 2023}
+\vspace{-7pt}
+\begin{itemize}
+    \item GPA: 3.95/4.0, First Class Honours (Rank 3/100)
+\end{itemize}
+
+\vspace{4pt}
+
+\cventry{Chartered Institute of Management Accountants (CIMA)}{UK}
+\cvrole{CIMA Diploma in Management Accounting (CIMA Dip MA)}{Nov 2016 -- Feb 2018}
+
+% ============== PUBLICATIONS ==============
+\section{Publications}
+
+\begin{itemize}
+    \item \textbf{Promptception: How Sensitive Are Large Multimodal Models to Prompts?} \textit{EMNLP 2025 (Findings).} \href{https://aclanthology.org/2025.findings-emnlp.1302.pdf}{[\textcolor{linkblue}{Paper}]} \\ A 61-prompt evaluation framework across 15 categories measuring prompt sensitivity in 10 LMMs on 3 MCQA benchmarks, revealing up to 15\% accuracy deviation from phrasing alone.
+    \item \textbf{Towards Calibrating Prompt Tuning of Vision-Language Models.} \textit{CVPR 2026.} \href{https://arxiv.org/pdf/2602.19024}{[\textcolor{linkblue}{Paper}]} \\ Dual-regularization calibration framework (mean-variance margin loss + text moment-matching) for prompt-tuned CLIP, reducing Expected Calibration Error across 11 datasets and 7 prompt-tuning methods without sacrificing accuracy.
+    \item \textbf{Real-time Multiple Dyadic Interaction Detection in Surveillance Videos in the Wild.} \textit{IEEE ICIIS 2023.} \href{https://ieeexplore.ieee.org/document/10253565}{[\textcolor{linkblue}{Paper}]} \\ Real-time multi-dyadic interaction detection in crowded surveillance video via a skeleton-based X3D-M model with attention.
+    \item \textbf{Global Horizontal Irradiance Modeling from Sky Images Using ResNet Architectures.} \textit{IEEE ICIIS 2021.} \href{https://ieeexplore.ieee.org/document/9660664}{[\textcolor{linkblue}{Paper}]} \\ Hybrid classification-regression framework combining physics-based sky-condition labeling with condition-specific ResNet nowcasters for solar irradiance prediction.
+\end{itemize}
+
+% ============== SKILLS & LEADERSHIP ==============
+\section{Skills \& Leadership}
+\textbf{GenAI:} LangGraph, LangChain, LlamaIndex, CrewAI, Model Context Protocol (MCP), Langfuse, LLM APIs, Retrieval-Augmented Generation (RAG), structured prompting, LLM-as-Judge evaluation, AI agents \\[2pt]
+\textbf{Deep Learning \& ML:} PyTorch, TensorFlow, OpenCV, Hugging Face, CUDA, distributed multi-GPU inference, PEFT, vision-language models, CNNs (ResNet/ConvNeXt), AutoML (PyCaret), XGBoost, scikit-learn, K-means clustering, pandas, NumPy \\[2pt]
+\textbf{Full-Stack:} Python, FastAPI, Pydantic, Celery; PostgreSQL, pgvector, Qdrant, Redis, SQL; React, TypeScript, MapLibre, CesiumJS, H3, Streamlit; Docker, AWS (SageMaker, S3), Git, GitHub Actions, pytest, Playwright, \LaTeX \\[2pt]
+\textbf{AI Coding Tools:} Claude Code, Codex, GitHub Copilot, Cursor \\[2pt]
+\textbf{Competitive Programming:} IEEEXtreme 15.0 (2021) - Global Rank 161/2,403, Country Rank 9/300 \\[2pt]
+\textbf{Languages:} English (Fluent, IELTS 8.0), Tamil (Native), Sinhala (Native) \\[2pt]
+\vspace{4pt}
+\textbf{Founding President -- MBZUAI Consulting Club} (Jan 2024 -- May 2025)
+\begin{itemize}
+    \item Established the UAE's first inter-university case competition with 7 teams from MBZUAI, NYUAD, and AUS; organized preparatory workshops with BCG and Kearney consultants and secured judges from both firms for the finals.
+    \item Hosted flagship ``Introduction to Consulting: Digital \& Analytics'' session and an AI Industry Panel with the AI Leader from Kearney (Middle East \& Africa); engaged 50+ students.
+\end{itemize}
+\vspace{6pt}
+\textbf{Interests:} Padel, Running, Karting (Yas Marina Circuit), Football, Badminton
+
+\end{document}
