@@ -28,6 +28,8 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
     return [...set].sort();
   }, [projects]);
 
+  const active = tag !== null || year !== null || tech !== null;
+
   const filtered = projects.filter(
     (p) =>
       (tag === null || (p.tags ?? []).includes(tag)) &&
@@ -42,20 +44,22 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
   };
 
   return (
-    <div className="mb-8">
-      <details className="border border-[var(--color-border)] rounded p-3">
-        <summary className="cursor-pointer font-medium text-sm text-[var(--color-fg-muted)]">
-          Filter ({filtered.length} of {projects.length})
+    <div className="mb-10">
+      <details className="surface-elevated">
+        <summary className="cursor-pointer flex items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--color-fg-muted)]">
+          <span className="eyebrow text-[10px]">Filter</span>
+          <span className="text-[var(--color-fg)]">
+            {active ? `${filtered.length} of ${projects.length}` : "All projects"}
+          </span>
+          <span className="ml-auto text-[var(--color-fg-muted)]">▾</span>
         </summary>
-        <div className="mt-3 grid gap-3 sm:grid-cols-3 text-sm">
+        <div className="px-4 pb-4 grid gap-3 sm:grid-cols-3 text-sm border-t border-[var(--color-border)] pt-4">
           <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">
-              Tag
-            </span>
+            <span className="metadata uppercase">Tag</span>
             <select
               value={tag ?? ""}
               onChange={(e) => setTag(e.target.value || null)}
-              className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded px-2 py-1"
+              className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md px-2 py-1.5 focus-visible:border-[var(--color-accent)]"
             >
               <option value="">All</option>
               {allTags.map((t) => (
@@ -66,13 +70,11 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
             </select>
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">
-              Year
-            </span>
+            <span className="metadata uppercase">Year</span>
             <select
               value={year?.toString() ?? ""}
               onChange={(e) => setYear(e.target.value ? Number(e.target.value) : null)}
-              className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded px-2 py-1"
+              className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md px-2 py-1.5 focus-visible:border-[var(--color-accent)]"
             >
               <option value="">All</option>
               {allYears.map((y) => (
@@ -83,13 +85,11 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
             </select>
           </label>
           <label className="flex flex-col gap-1">
-            <span className="text-xs uppercase tracking-wide text-[var(--color-fg-muted)]">
-              Tech
-            </span>
+            <span className="metadata uppercase">Tech</span>
             <select
               value={tech ?? ""}
               onChange={(e) => setTech(e.target.value || null)}
-              className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded px-2 py-1"
+              className="bg-[var(--color-bg)] border border-[var(--color-border)] rounded-md px-2 py-1.5 focus-visible:border-[var(--color-accent)]"
             >
               <option value="">All</option>
               {allTech.map((t) => (
@@ -100,49 +100,52 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
             </select>
           </label>
         </div>
-        {(tag || year || tech) && (
-          <button
-            type="button"
-            onClick={reset}
-            className="mt-3 text-xs underline text-[var(--color-fg-muted)]"
-          >
-            Reset filters
-          </button>
+        {active && (
+          <div className="px-4 pb-4 -mt-2">
+            <button
+              type="button"
+              onClick={reset}
+              className="text-xs underline text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+            >
+              Reset filters
+            </button>
+          </div>
         )}
       </details>
 
-      {filtered.length === 0 ? (
-        <p className="mt-6 text-[var(--color-fg-muted)] text-sm">
-          No projects match the selected filters.
-        </p>
-      ) : (
-        <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p) => (
-            <li key={p.slug}>
-              <Link
-                href={`/projects/${p.slug}`}
-                className="block border border-[var(--color-border)] rounded p-4 hover:border-[var(--color-accent)]"
-              >
-                <div className="flex items-baseline justify-between gap-2 mb-1">
-                  <span className="font-semibold">{p.title}</span>
-                  <span className="text-xs font-mono text-[var(--color-fg-muted)]">{p.year}</span>
-                </div>
-                <p className="text-xs text-[var(--color-fg-muted)] mb-2 capitalize">{p.category}</p>
-                <ul className="flex flex-wrap gap-1">
-                  {p.tech_stack.slice(0, 4).map((t) => (
-                    <li
-                      key={t}
-                      className="text-xs px-1.5 py-0.5 rounded bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)]"
-                    >
-                      {t}
-                    </li>
-                  ))}
-                </ul>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
+      {active &&
+        (filtered.length === 0 ? (
+          <p className="mt-6 text-[var(--color-fg-muted)] text-sm">
+            No projects match the selected filters.
+          </p>
+        ) : (
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((p) => (
+              <li key={p.slug}>
+                <Link
+                  href={`/projects/${p.slug}`}
+                  className="surface-elevated is-interactive block p-4"
+                >
+                  <div className="flex items-baseline justify-between gap-2 mb-1">
+                    <span className="font-semibold">{p.title}</span>
+                    <span className="metadata">{p.year}</span>
+                  </div>
+                  <p className="metadata uppercase mb-2">{p.category}</p>
+                  <ul className="flex flex-wrap gap-1">
+                    {p.tech_stack.slice(0, 4).map((t) => (
+                      <li
+                        key={t}
+                        className="text-xs px-1.5 py-0.5 rounded-md bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border border-[var(--color-border)]"
+                      >
+                        {t}
+                      </li>
+                    ))}
+                  </ul>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ))}
     </div>
   );
 }

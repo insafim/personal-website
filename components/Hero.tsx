@@ -4,14 +4,14 @@ import type { Person } from "#site/content";
 
 export function Hero({ person }: { person: Person }) {
   return (
-    <section className="hero-glow px-4 pt-20 pb-16 max-w-5xl mx-auto">
+    <section className="hero-glow px-4 pt-20 pb-14 max-w-5xl mx-auto">
       <div className="flex flex-col-reverse md:flex-row md:items-center gap-10 md:gap-14">
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-mono uppercase tracking-[0.2em] text-[var(--color-accent)] mb-3">
+          <p className="eyebrow mb-3">
             {person.location}
             {person.affiliation ? ` · ${person.affiliation}` : ""}
           </p>
-          <h1 className="text-4xl md:text-6xl font-bold mb-4 leading-[1.05] tracking-tight">
+          <h1 className="display text-5xl md:text-7xl font-bold mb-4 leading-[1.02] tracking-tight">
             {person.name}
           </h1>
           <p className="text-xl md:text-2xl text-[var(--color-fg-muted)] mb-6 font-medium">
@@ -20,7 +20,7 @@ export function Hero({ person }: { person: Person }) {
           <p className="text-base md:text-lg mb-8 max-w-prose leading-relaxed">
             {person.bio_short}
           </p>
-          <ul className="flex flex-wrap gap-2 mb-8">
+          <ul className="flex flex-wrap gap-2 mb-9">
             {person.specializations.map((s) => (
               <li
                 key={s}

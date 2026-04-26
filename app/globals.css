@@ -8,6 +8,9 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+  /* Editorial display face — system serif chain, zero font payload.
+     Iowan Old Style (Apple), Charter (Apple/Win), Georgia, Cambria. */
+  --font-display: "Iowan Old Style", "Charter", "Georgia", "Cambria", serif;
 
   /* Light theme — restrained, professional palette. NFR-012 contrast >=4.5:1. */
   --color-bg: oklch(99% 0.003 240);
@@ -93,7 +96,7 @@
   }
 }
 
-/* NFR-015 reduced motion: zero out transitions site-wide when requested. */
+/* NFR-015 reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -105,7 +108,7 @@
   }
 }
 
-/* Base body styles — applies tokens. */
+/* Base body. */
 body {
   background-color: var(--color-bg);
   color: var(--color-fg);
@@ -114,14 +117,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Focus-visible ring (NFR-013): keyboard-only focus indicator. */
+/* Focus-visible (NFR-013). */
 :focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-/* Skip-to-content link styling (sr-only until focused). */
+/* Skip-to-content. */
 .skip-to-content {
   position: absolute;
   left: -9999px;
@@ -138,18 +141,95 @@ body {
   top: 0.5rem;
 }
 
-/* Reusable surface — used by project/publication/resource cards. */
-.surface-card {
+/* ---- Editorial typography system ---- */
+
+/* Eyebrow — small uppercase mono accent above titles. */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+/* Display — serif voice for page-level titles. Used sparingly; bodies stay sans. */
+.display {
+  font-family: var(--font-display);
+  font-feature-settings: "ss01", "kern";
+  letter-spacing: -0.015em;
+  line-height: 1.04;
+}
+
+/* Refined metadata — replaces ad-hoc gray spans for years/venues/types. */
+.metadata {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: var(--color-fg-muted);
+}
+
+/* ---- Three surface types per audit recommendation ---- */
+
+/* Default — plain page background; nothing to add. */
+
+/* Elevated — soft panel for featured/grouped content. Default card surface. */
+.surface-elevated {
   background-color: var(--color-bg-raised);
   border: 1px solid var(--color-border);
   border-radius: 0.625rem;
   box-shadow: var(--shadow-card);
   transition: box-shadow 200ms ease, border-color 200ms ease, transform 200ms ease;
 }
-.surface-card:hover {
+.surface-elevated.is-interactive:hover {
   border-color: var(--color-border-strong);
   box-shadow: var(--shadow-card-hover);
   transform: translateY(-2px);
+}
+
+/* Accent — stronger section background for hero bands and curated callouts. */
+.surface-accent {
+  background-color: var(--color-bg-subtle);
+  border: 1px solid var(--color-border);
+  border-radius: 0.875rem;
+  position: relative;
+  overflow: hidden;
+}
+.surface-accent::before {
+  content: "";
+  position: absolute;
+  inset: -20% -20% auto auto;
+  width: 50%;
+  aspect-ratio: 1;
+  background: radial-gradient(circle, var(--color-accent-soft), transparent 65%);
+  filter: blur(48px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.7;
+}
+.surface-accent > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Reusable backdrop for inner-page headers ---- */
+
+/* Page-header band: subtle radial highlight; stays out of the way. */
+.page-header-bg {
+  position: relative;
+  isolation: isolate;
+}
+.page-header-bg::before {
+  content: "";
+  position: absolute;
+  inset: -10% 0 -20% 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 0%, var(--color-accent-soft), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 30%, var(--color-research-soft), transparent 70%);
+  filter: blur(8px);
+  z-index: -1;
+  opacity: 0.6;
+  pointer-events: none;
 }
 
 /* Small colored bar prefix for section headers. */
@@ -162,7 +242,14 @@ body {
   vertical-align: -0.2rem;
 }
 
-/* Subtle accent halo behind hero — single soft radial, no mesh. */
+/* Avatar frame — quiet single-color ring. */
+.avatar-frame {
+  border-radius: 9999px;
+  padding: 0.2rem;
+  background: linear-gradient(155deg, var(--color-accent), var(--color-border-strong));
+}
+
+/* Hero glow — single soft radial behind the hero. */
 .hero-glow {
   position: relative;
   isolation: isolate;
@@ -180,9 +267,13 @@ body {
   opacity: 0.6;
 }
 
-/* Avatar frame — quiet single-color ring, not a rainbow. */
-.avatar-frame {
-  border-radius: 9999px;
-  padding: 0.2rem;
-  background: linear-gradient(155deg, var(--color-accent), var(--color-border-strong));
+/* Connector line — used between timeline entries. */
+.timeline-track {
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--color-border-strong) 8%,
+    var(--color-border-strong) 92%,
+    transparent 100%
+  );
 }

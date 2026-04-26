@@ -1,0 +1,90 @@
+import Link from "next/link";
+import type { Project, Publication } from "#site/content";
+
+type HomeSignalsProps = {
+  latestPublication: Publication | undefined;
+  featuredProject: Project | undefined;
+  currentFocus: string;
+};
+
+export function HomeSignals({
+  latestPublication,
+  featuredProject,
+  currentFocus,
+}: HomeSignalsProps) {
+  return (
+    <section aria-label="Current signals" className="px-4 pb-16 max-w-5xl mx-auto">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {latestPublication && (
+          <SignalCard
+            label="Latest publication"
+            color="research"
+            title={latestPublication.title}
+            meta={`${latestPublication.venue} · ${latestPublication.year}`}
+            href={`/publications/${latestPublication.slug}`}
+          />
+        )}
+        {featuredProject && (
+          <SignalCard
+            label="Featured project"
+            color="enterprise"
+            title={featuredProject.title}
+            meta={`${featuredProject.category} · ${featuredProject.year}`}
+            href={`/projects/${featuredProject.slug}`}
+          />
+        )}
+        <SignalCard
+          label="Currently"
+          color="independent"
+          title={currentFocus}
+          meta="Open to senior AI/ML, FDE, applied scientist roles · Abu Dhabi / Dubai"
+          href="/contact"
+        />
+      </div>
+    </section>
+  );
+}
+
+function SignalCard({
+  label,
+  color,
+  title,
+  meta,
+  href,
+}: {
+  label: string;
+  color: "research" | "enterprise" | "independent";
+  title: string;
+  meta: string;
+  href: string;
+}) {
+  const accent =
+    color === "research"
+      ? "var(--color-research)"
+      : color === "enterprise"
+        ? "var(--color-enterprise)"
+        : "var(--color-independent)";
+
+  return (
+    <Link
+      href={href}
+      className="surface-elevated is-interactive group block p-5 relative overflow-hidden"
+    >
+      <span
+        aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-[3px]"
+        style={{ background: accent }}
+      />
+      <p
+        className="text-[10px] font-mono font-semibold uppercase tracking-[0.18em] mb-2"
+        style={{ color: accent }}
+      >
+        {label}
+      </p>
+      <h3 className="text-base font-semibold leading-snug mb-2 line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
+        {title}
+      </h3>
+      <p className="text-xs text-[var(--color-fg-muted)] line-clamp-2">{meta}</p>
+    </Link>
+  );
+}
