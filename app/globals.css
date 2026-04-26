@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+/* Class-based dark mode for next-themes (ADR-007). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Tailwind v4 CSS-first design tokens. Both themes share token names;
+   .dark class flips the values. Inter font wired from lib/fonts.ts. */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* Light theme defaults (NFR-012 contrast >=4.5:1 normal text). */
+  --color-bg: oklch(99% 0 0);
+  --color-bg-subtle: oklch(96% 0 0);
+  --color-fg: oklch(20% 0 0);
+  --color-fg-muted: oklch(40% 0 0);
+  --color-border: oklch(88% 0 0);
+  --color-accent: oklch(50% 0.18 260);
+  --color-accent-fg: oklch(99% 0 0);
+}
+
+/* Dark theme via .dark class (next-themes attribute='class'). */
+.dark {
+  --color-bg: oklch(15% 0 0);
+  --color-bg-subtle: oklch(22% 0 0);
+  --color-fg: oklch(96% 0 0);
+  --color-fg-muted: oklch(70% 0 0);
+  --color-border: oklch(30% 0 0);
+  --color-accent: oklch(75% 0.16 260);
+  --color-accent-fg: oklch(15% 0 0);
+}
+
+/* JS-disabled fallback (NFR-020): respect system preference when no class set.
+   Only applies to <html> without .dark or .light explicit class — next-themes
+   pre-hydration script sets the class before paint when JS is enabled. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --color-bg: oklch(15% 0 0);
+    --color-bg-subtle: oklch(22% 0 0);
+    --color-fg: oklch(96% 0 0);
+    --color-fg-muted: oklch(70% 0 0);
+    --color-border: oklch(30% 0 0);
+    --color-accent: oklch(75% 0.16 260);
+    --color-accent-fg: oklch(15% 0 0);
+  }
+}
+
+/* NFR-015 reduced motion: zero out transitions site-wide when requested. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Base body styles — applies tokens. */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Focus-visible ring (NFR-013): keyboard-only focus indicator. */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Skip-to-content link styling (sr-only until focused). */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: 0.75rem 1rem;
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+  text-decoration: none;
+  font-weight: 600;
+}
+.skip-to-content:focus {
+  left: 0.5rem;
+  top: 0.5rem;
+}

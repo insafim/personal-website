@@ -1,0 +1,17 @@
+---
+slug: bad-publication-fixture
+title: A publication missing all external identifiers
+authors:
+  - Author One
+authorship_order: first
+venue: Test Venue
+year: 2025
+type: preprint
+abstract: This fixture intentionally omits arxiv_id, doi, AND pdf_url to trigger the at-least-one-of refinement defined in velite.config.ts (NFR-026). Vitest validates that schema.safeParse rejects this fixture with a human-readable message naming the constraint.
+contribution_summary: Test fixture only.
+bibtex: |
+  @misc{bad-fixture,
+    title={A publication missing all external identifiers},
+    year={2025}
+  }
+---

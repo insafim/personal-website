@@ -1,0 +1,34 @@
+site_url: https://insafismath.com
+site_name: Insaf Ismath
+default_locale: en
+analytics_domain: ""
+feature_flags:
+  analytics_enabled: false
+  search: true
+  reading_order: true
+  broken_link_audit: false
+  demo_embeds: false
+  scholarly_article_jsonld: true
+ai_crawler_allowlist:
+  - Googlebot
+  - Bingbot
+  - GPTBot
+  - ClaudeBot
+  - PerplexityBot
+  - Google-Extended
+  - CCBot
+nav:
+  primary:
+    - { label: About,        href: /about,        order: 1 }
+    - { label: Projects,     href: /projects,     order: 2 }
+    - { label: Publications, href: /publications, order: 3 }
+    - { label: Resources,    href: /resources,    order: 4 }
+    - { label: Hobbies,      href: /hobbies,      order: 5 }
+    - { label: Contact,      href: /contact,      order: 6 }
+  footer:
+    - { label: Sitemap, href: /sitemap.xml, order: 1, external: false }
+    - { label: Source,  href: "https://github.com/insafim/personal-website", order: 2, external: true }
+  social:
+    - { label: GitHub,   href: "https://github.com/iminsaf",                  order: 1 }
+    - { label: LinkedIn, href: "https://www.linkedin.com/in/iminsaf",         order: 2 }
+    - { label: Scholar,  href: "https://scholar.google.com/citations?user=insafismath", order: 3 }

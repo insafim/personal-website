@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Build output
+.next/
+out/
+.velite/
+*.tsbuildinfo
+
+# Environments
+.env
+.env.local
+.env.*.local
+
+# Vercel
+.vercel/
+
+# Test artifacts
+coverage/
+playwright-report/
+test-results/
+tests/traces/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# AI dev workflow state and personal source material — kept local
+.claude/
+knowledge/

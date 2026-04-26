@@ -1,0 +1,45 @@
+name: Lighthouse CI + Playwright Smoke
+
+on:
+  deployment_status:
+
+jobs:
+  lhci:
+    if: github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Lighthouse CI (median of 5)
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ github.event.deployment_status.target_url }}
+            ${{ github.event.deployment_status.target_url }}/about
+            ${{ github.event.deployment_status.target_url }}/projects
+            ${{ github.event.deployment_status.target_url }}/publications
+            ${{ github.event.deployment_status.target_url }}/resources
+            ${{ github.event.deployment_status.target_url }}/hobbies
+          configPath: ./lighthouserc.js
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+
+      - name: Playwright smoke
+        env:
+          PLAYWRIGHT_BASE_URL: ${{ github.event.deployment_status.target_url }}
+        run: pnpm exec playwright test
