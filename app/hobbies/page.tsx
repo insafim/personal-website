@@ -115,20 +115,36 @@ export default function HobbiesPage() {
                           >
                             {h.title}
                           </h3>
-                          {h.logo && (
-                            <span
-                              aria-hidden="true"
-                              className="shrink-0 inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-md bg-[var(--color-bg-raised)] border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)]"
-                            >
-                              <Image
-                                src={h.logo}
-                                alt=""
-                                width={80}
-                                height={80}
-                                className="h-full w-full object-contain p-1.5"
-                              />
-                            </span>
-                          )}
+                          {/* See CareerTimeline for the dark-mode logo legibility design. */}
+                          {h.logo && (() => {
+                            const hasDark = !!h.logo_dark;
+                            const frameBg = hasDark
+                              ? "bg-[var(--color-bg-raised)]"
+                              : "logo-frame-light";
+                            return (
+                              <span
+                                aria-hidden="true"
+                                className={`shrink-0 inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-md border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)] ${frameBg}`}
+                              >
+                                <Image
+                                  src={h.logo}
+                                  alt=""
+                                  width={80}
+                                  height={80}
+                                  className={`h-full w-full object-contain p-1.5 ${hasDark ? "dark:hidden" : ""}`}
+                                />
+                                {hasDark && (
+                                  <Image
+                                    src={h.logo_dark as string}
+                                    alt=""
+                                    width={80}
+                                    height={80}
+                                    className="hidden dark:block h-full w-full object-contain p-1.5"
+                                  />
+                                )}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <p className="text-base text-[var(--color-fg-muted)] mb-5 max-w-prose leading-relaxed">
                           {h.description}

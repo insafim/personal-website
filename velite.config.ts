@@ -62,6 +62,16 @@ const companies = defineCollection({
     // Site-relative path to the logo image (e.g. /assets/companies/2pointzero.svg).
     // Optional: when absent, the timeline renders the org name only.
     logo: s.string().regex(/^\//, "logo must be a site-relative path starting with /").optional(),
+    // Optional dark-mode variant. Provide a light-on-transparent version when
+    // the default `logo` is dark-on-transparent (which would be invisible on
+    // a dark surface). When set, the timeline shows `logo` in light mode and
+    // `logo_dark` in dark mode, and the container uses the theme-aware bg.
+    // When unset, the container falls back to .logo-frame-light so a single
+    // PNG stays legible across themes.
+    logo_dark: s
+      .string()
+      .regex(/^\//, "logo_dark must be a site-relative path starting with /")
+      .optional(),
   }),
 });
 
@@ -75,6 +85,11 @@ const schools = defineCollection({
     url: externalUrl.optional(),
     location: s.string().optional(),
     logo: s.string().regex(/^\//, "logo must be a site-relative path starting with /").optional(),
+    // See Company.logo_dark above for the dark-variant rationale.
+    logo_dark: s
+      .string()
+      .regex(/^\//, "logo_dark must be a site-relative path starting with /")
+      .optional(),
   }),
 });
 
@@ -229,6 +244,11 @@ const hobbies = defineCollection({
     // single column showing only the title; the accent bar on the left
     // remains unconditionally regardless of this field.
     logo: s.string().regex(/^\//, "logo must be a site-relative path starting with /").optional(),
+    // See Company.logo_dark above for the dark-variant rationale.
+    logo_dark: s
+      .string()
+      .regex(/^\//, "logo_dark must be a site-relative path starting with /")
+      .optional(),
   }),
 });
 

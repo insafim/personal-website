@@ -18,23 +18,49 @@ export function CareerTimeline({ entries }: { entries: readonly CareerRow[] }) {
           {/*
            * Logo on the left rail. When a company has no logo, fall back to a
            * small accent bullet so the timeline visual rhythm survives.
+           *
+           * Dark-mode legibility: when the company has only `logo` (typically a
+           * dark-on-transparent PNG), the container is forced to .logo-frame-light
+           * so the same image stays visible in dark mode. When `logo_dark` is
+           * also provided, the container keeps the theme-aware bg-bg-raised
+           * surface and the two <Image> elements toggle visibility via the
+           * project's `.dark` class variant.
            */}
-          <span
-            aria-hidden="true"
-            className="absolute -left-24 md:-left-28 top-0 flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-md bg-[var(--color-bg-raised)] border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)]"
-          >
-            {e.company.logo ? (
-              <Image
-                src={e.company.logo}
-                alt=""
-                width={96}
-                height={96}
-                className="h-full w-full object-contain p-1"
-              />
-            ) : (
-              <span className="w-3 h-3 rounded-full bg-[var(--color-accent)]" />
-            )}
-          </span>
+          {(() => {
+            const hasDark = !!e.company.logo_dark;
+            const frameBg = hasDark
+              ? "bg-[var(--color-bg-raised)]"
+              : "logo-frame-light";
+            return (
+              <span
+                aria-hidden="true"
+                className={`absolute -left-24 md:-left-28 top-0 flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-md border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)] ${frameBg}`}
+              >
+                {e.company.logo ? (
+                  <>
+                    <Image
+                      src={e.company.logo}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className={`h-full w-full object-contain p-1 ${hasDark ? "dark:hidden" : ""}`}
+                    />
+                    {hasDark && (
+                      <Image
+                        src={e.company.logo_dark as string}
+                        alt=""
+                        width={96}
+                        height={96}
+                        className="hidden dark:block h-full w-full object-contain p-1"
+                      />
+                    )}
+                  </>
+                ) : (
+                  <span className="w-3 h-3 rounded-full bg-[var(--color-accent)]" />
+                )}
+              </span>
+            );
+          })()}
           <p className="metadata mb-1">{e.year_range}</p>
           <h3 className="text-lg font-semibold leading-snug">
             <span>{e.role}</span>

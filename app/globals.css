@@ -295,6 +295,17 @@ main {
   }
 }
 
+/* Logo container background. The default surface is theme-aware
+   (--color-bg-raised) which goes dark in dark mode, hiding any
+   dark-on-transparent brand PNG. Content files that provide only `logo`
+   render inside .logo-frame-light, which is always near-white so the same
+   PNG stays legible across themes. Content files that also provide
+   `logo_dark` keep the theme-aware bg and let the rendering component
+   swap the image; that path uses no extra class. */
+.logo-frame-light {
+  background-color: oklch(97% 0.005 240);
+}
+
 /* Connector line - used between timeline entries. */
 .timeline-track {
   background: linear-gradient(

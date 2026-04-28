@@ -78,6 +78,32 @@ test("publications eyebrow shows 'N papers' count and no year-group H2s", async 
   await expect(yearHeadings).toHaveCount(0);
 });
 
+test("timeline logo containers use logo-frame-light when no logo_dark variant is set", async ({ page }) => {
+  // Contract: dark-on-transparent brand PNGs must remain visible across both
+  // light and dark themes. The container for entries lacking a `logo_dark`
+  // field gets .logo-frame-light (always-light surface). No content currently
+  // ships logo_dark, so EVERY rendered logo container must carry the class.
+  // This stronger equality (rather than count > 0) catches a partial
+  // regression that strips the class from some entries but not others.
+  // When the first `logo_dark` is added to a YAML, this assertion must be
+  // updated: split the count between .logo-frame-light (entries without
+  // logo_dark) and the theme-aware branch (entries with logo_dark, which
+  // render two <Image> elements toggled by .dark class on <html>).
+  await page.goto("/about");
+  // Count timeline entries (one <li> per career/education row). Every entry
+  // currently renders a logo container, so the .logo-frame-light count must
+  // equal this count exactly. A descendant `img` selector would be fragile
+  // because Next.js Image may wrap the rendered <img> differently per release.
+  const careerEntries = page.locator("section:has(h2:text-is('Career')) ol li");
+  const educationEntries = page.locator("section:has(h2:text-is('Education')) ol li");
+  const totalEntries = (await careerEntries.count()) + (await educationEntries.count());
+  expect(totalEntries).toBeGreaterThan(0);
+  const lightFrames = page.locator(
+    "section:has(h2:text-is('Career')) .logo-frame-light, section:has(h2:text-is('Education')) .logo-frame-light"
+  );
+  await expect(lightFrames).toHaveCount(totalEntries);
+});
+
 test("about timelines render logo images for wired companies and schools", async ({ page }) => {
   // Each entry whose YAML carries a `logo:` field must render an <img> on the
   // left rail of the timeline. Catches: yaml `logo:` deletion (entry silently

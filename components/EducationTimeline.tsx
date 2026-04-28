@@ -20,22 +20,42 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
       />
       {entries.map((e) => (
         <li key={`${e.year_range}-${e.school.slug}`} className="relative">
-          <span
-            aria-hidden="true"
-            className="absolute -left-24 md:-left-28 top-0 flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-md bg-[var(--color-bg-raised)] border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)]"
-          >
-            {e.school.logo ? (
-              <Image
-                src={e.school.logo}
-                alt=""
-                width={96}
-                height={96}
-                className="h-full w-full object-contain p-1"
-              />
-            ) : (
-              <span className="w-3 h-3 rounded-full bg-[var(--color-accent)]" />
-            )}
-          </span>
+          {/* See CareerTimeline for the dark-mode logo legibility design. */}
+          {(() => {
+            const hasDark = !!e.school.logo_dark;
+            const frameBg = hasDark
+              ? "bg-[var(--color-bg-raised)]"
+              : "logo-frame-light";
+            return (
+              <span
+                aria-hidden="true"
+                className={`absolute -left-24 md:-left-28 top-0 flex items-center justify-center w-20 h-20 md:w-24 md:h-24 rounded-md border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)] ${frameBg}`}
+              >
+                {e.school.logo ? (
+                  <>
+                    <Image
+                      src={e.school.logo}
+                      alt=""
+                      width={96}
+                      height={96}
+                      className={`h-full w-full object-contain p-1 ${hasDark ? "dark:hidden" : ""}`}
+                    />
+                    {hasDark && (
+                      <Image
+                        src={e.school.logo_dark as string}
+                        alt=""
+                        width={96}
+                        height={96}
+                        className="hidden dark:block h-full w-full object-contain p-1"
+                      />
+                    )}
+                  </>
+                ) : (
+                  <span className="w-3 h-3 rounded-full bg-[var(--color-accent)]" />
+                )}
+              </span>
+            );
+          })()}
           <p className="metadata mb-1">{e.year_range}</p>
           <h3 className="text-lg font-semibold leading-snug">
             <span>{e.degree}</span>
