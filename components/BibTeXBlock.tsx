@@ -2,8 +2,33 @@
 
 import { useState } from "react";
 
-export function BibTeXBlock({ bibtex }: { bibtex: string }) {
+interface BibTeXBlockProps {
+  bibtex: string;
+  // Optional Distill-style prose citation rendered above the BibTeX <pre>.
+  // Source: https://distill.pub/2021/gnn-intro/
+  citation?: string;
+}
+
+export function BibTeXBlock({ bibtex, citation }: BibTeXBlockProps) {
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+
+  const fallbackCopy = () => {
+    const textarea = document.createElement("textarea");
+    textarea.value = bibtex;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    try {
+      return document.execCommand("copy");
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  };
 
   const onCopy = async () => {
     try {
@@ -11,27 +36,46 @@ export function BibTeXBlock({ bibtex }: { bibtex: string }) {
         await navigator.clipboard.writeText(bibtex);
         setStatus("copied");
         setTimeout(() => setStatus("idle"), 2500);
+      } else if (fallbackCopy()) {
+        setStatus("copied");
+        setTimeout(() => setStatus("idle"), 2500);
       } else {
         setStatus("failed");
       }
     } catch {
-      setStatus("failed");
+      if (fallbackCopy()) {
+        setStatus("copied");
+        setTimeout(() => setStatus("idle"), 2500);
+      } else {
+        setStatus("failed");
+      }
     }
   };
 
   return (
-    <div className="my-6">
-      <div className="flex items-center justify-between gap-3 mb-2">
-        <span className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)]">BibTeX</span>
+    <section className="surface-elevated my-8 overflow-hidden">
+      {citation && (
+        <div className="border-b border-[var(--color-border)] px-5 py-4 md:px-6">
+          <p className="eyebrow mb-2">Cited as</p>
+          <p className="text-sm leading-relaxed text-[var(--color-fg-muted)]">
+            For attribution in academic contexts, please cite this work as:
+          </p>
+          <p className="mt-2 text-sm italic leading-relaxed text-[var(--color-fg)]">
+            {citation}
+          </p>
+        </div>
+      )}
+      <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-5 py-4 md:px-6">
+        <span className="eyebrow">BibTeX</span>
         <button
           type="button"
           onClick={onCopy}
-          className="px-3 py-1 text-sm rounded border border-[var(--color-border)] hover:bg-[var(--color-bg-subtle)]"
+          className="inline-flex items-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-3 py-1.5 text-sm font-medium text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
         >
           {status === "copied" ? "Copied!" : "Copy"}
         </button>
       </div>
-      <pre className="overflow-x-auto p-3 rounded bg-[var(--color-bg-subtle)] text-sm">
+      <pre className="overflow-x-auto bg-[var(--color-bg-subtle)] p-5 text-sm leading-relaxed md:p-6">
         <code>{bibtex}</code>
       </pre>
       <p aria-live="polite" className="sr-only">
@@ -41,6 +85,6 @@ export function BibTeXBlock({ bibtex }: { bibtex: string }) {
             ? "Copy failed"
             : ""}
       </p>
-    </div>
+    </section>
   );
 }

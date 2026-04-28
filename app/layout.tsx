@@ -8,8 +8,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://insafismath.com"),
   title: {
-    default: "Insaf Ismath — AI/ML Engineer & Researcher",
-    template: "%s — Insaf Ismath",
+    default: "Insaf Ismath - AI/ML Engineer & Researcher",
+    template: "%s - Insaf Ismath",
   },
   description:
     "AI/ML Engineer translating business problems into end-to-end enterprise-scale AI systems, with published research on large multimodal models at EMNLP and CVPR.",
@@ -24,7 +24,14 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={inter.variable}>
-      <body>
+      {/*
+       * suppressHydrationWarning on <body> too: browser extensions like
+       * Grammarly inject `data-new-gr-c-s-check-loaded` and
+       * `data-gr-ext-installed` attributes on the body before React hydrates,
+       * producing a noisy console error that is not actionable from our code.
+       * Source: https://nextjs.org/docs/messages/react-hydration-error
+       */}
+      <body suppressHydrationWarning>
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>

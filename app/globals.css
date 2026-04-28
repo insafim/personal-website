@@ -9,11 +9,11 @@
 @theme {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SF Mono", Menlo, monospace;
-  /* Editorial display face — system serif chain, zero font payload.
+  /* Editorial display face - system serif chain, zero font payload.
      Iowan Old Style (Apple), Charter (Apple/Win), Georgia, Cambria. */
   --font-display: "Iowan Old Style", "Charter", "Georgia", "Cambria", serif;
 
-  /* Light theme — restrained, professional palette. NFR-012 contrast >=4.5:1. */
+  /* Light theme - restrained, professional palette. NFR-012 contrast >=4.5:1. */
   --color-bg: oklch(99% 0.003 240);
   --color-bg-subtle: oklch(96% 0.005 240);
   --color-bg-raised: oklch(100% 0 0);
@@ -25,7 +25,7 @@
   --color-accent-soft: oklch(95% 0.025 260);
   --color-accent-fg: oklch(99% 0.003 240);
 
-  /* Category accents — used on project section rules and category bars only. */
+  /* Category accents - used on project section rules and category bars only. */
   --color-enterprise: oklch(48% 0.08 215);
   --color-enterprise-soft: oklch(95% 0.018 215);
   --color-research: oklch(45% 0.10 305);
@@ -33,7 +33,7 @@
   --color-independent: oklch(52% 0.10 35);
   --color-independent-soft: oklch(95% 0.025 35);
 
-  /* Status pills — used on project cards. */
+  /* Status pills - used on project cards. */
   --color-status-shipped: oklch(48% 0.10 155);
   --color-status-shipped-soft: oklch(95% 0.025 155);
   --color-status-active: oklch(45% 0.12 240);
@@ -112,10 +112,24 @@
 /* Base body. */
 body {
   background-color: var(--color-bg);
+  background-image:
+    radial-gradient(circle at top left, var(--color-accent-soft), transparent 30%),
+    radial-gradient(circle at 85% 10%, var(--color-research-soft), transparent 24%),
+    linear-gradient(to bottom, color-mix(in oklch, var(--color-bg) 92%, white), var(--color-bg));
   color: var(--color-fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+}
+
+main {
+  min-height: calc(100dvh - 10rem);
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-fg);
 }
 
 /* Focus-visible (NFR-013). */
@@ -144,7 +158,7 @@ body {
 
 /* ---- Editorial typography system ---- */
 
-/* Eyebrow — small uppercase mono accent above titles. */
+/* Eyebrow - small uppercase mono accent above titles. */
 .eyebrow {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -154,7 +168,7 @@ body {
   font-weight: 600;
 }
 
-/* Display — serif voice for page-level titles. Used sparingly; bodies stay sans. */
+/* Display - serif voice for page-level titles. Used sparingly; bodies stay sans. */
 .display {
   font-family: var(--font-display);
   font-feature-settings: "ss01", "kern";
@@ -162,7 +176,7 @@ body {
   line-height: 1.04;
 }
 
-/* Refined metadata — replaces ad-hoc gray spans for years/venues/types. */
+/* Refined metadata - replaces ad-hoc gray spans for years/venues/types. */
 .metadata {
   font-family: var(--font-mono);
   font-size: 0.72rem;
@@ -172,9 +186,9 @@ body {
 
 /* ---- Three surface types per audit recommendation ---- */
 
-/* Default — plain page background; nothing to add. */
+/* Default - plain page background; nothing to add. */
 
-/* Elevated — soft panel for featured/grouped content. Default card surface. */
+/* Elevated - soft panel for featured/grouped content. Default card surface. */
 .surface-elevated {
   background-color: var(--color-bg-raised);
   border: 1px solid var(--color-border);
@@ -188,7 +202,7 @@ body {
   transform: translateY(-2px);
 }
 
-/* Accent — stronger section background for hero bands and curated callouts. */
+/* Accent - stronger section background for hero bands and curated callouts. */
 .surface-accent {
   background-color: var(--color-bg-subtle);
   border: 1px solid var(--color-border);
@@ -243,14 +257,14 @@ body {
   vertical-align: -0.2rem;
 }
 
-/* Avatar frame — quiet single-color ring. */
+/* Avatar frame - quiet single-color ring. */
 .avatar-frame {
   border-radius: 9999px;
   padding: 0.2rem;
   background: linear-gradient(155deg, var(--color-accent), var(--color-border-strong));
 }
 
-/* Hero glow — single soft radial behind the hero. */
+/* Hero glow - single soft radial behind the hero. */
 .hero-glow {
   position: relative;
   isolation: isolate;
@@ -268,7 +282,7 @@ body {
   opacity: 0.6;
 }
 
-/* Connector line — used between timeline entries. */
+/* Connector line - used between timeline entries. */
 .timeline-track {
   background: linear-gradient(
     to bottom,

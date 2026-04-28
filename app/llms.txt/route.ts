@@ -11,22 +11,22 @@ export function GET() {
 > ${person.bio_short}
 
 ## About
-- ${base}/about — Insaf's narrative + career timeline.
+- ${base}/about - Insaf's narrative + career timeline.
 
 ## Projects
-- ${base}/projects — Enterprise, Research, and Independent project work, grouped by category.
+- ${base}/projects - Enterprise, Research, and Independent project work, grouped by category.
 
 ## Publications
-- ${base}/publications — Research publications with abstracts, BibTeX, arXiv/DOI/PDF links.
+- ${base}/publications - Research publications with abstracts, BibTeX, arXiv/DOI/PDF links.
 
 ## Resources
-- ${base}/resources — Curated talks, repositories, models, and writing — each annotated with why it matters.
+- ${base}/resources - Curated talks, repositories, models, and writing - each annotated with why it matters.
 
-## Hobbies
-- ${base}/hobbies — Padel, karting, running, football — the human side.
+## Beyond
+- ${base}/hobbies - Leadership, extracurricular activities, sports, and the things Insaf shows up for outside the day job.
 
 ## Contact
-- ${base}/contact — Email + social links (no consent banner; cookieless).
+- ${base}/contact - Email + social links (no consent banner; cookieless).
 `;
 
   return new Response(body, {

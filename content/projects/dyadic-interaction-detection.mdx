@@ -4,9 +4,9 @@ title: Real-Time Multi-Dyadic Interaction Detection in Crowded Surveillance Vide
 category: research
 status: shipped
 year: 2023
-problem: Surveillance video in the wild has multiple two-person interactions happening simultaneously in a crowded frame — and most action-recognition pipelines were trained on single-actor clips, so they collapse when interactions overlap. A real-time pipeline needed to localize each pair, isolate them, and classify the interaction without dropping frames.
+problem: Surveillance video in the wild has multiple two-person interactions happening simultaneously in a crowded frame - and most action-recognition pipelines were trained on single-actor clips, so they collapse when interactions overlap. A real-time pipeline needed to localize each pair, isolate them, and classify the interaction without dropping frames.
 approach: Built a three-stage pipeline. YOLOv7 + SORT for spatiotemporal localization of person tracks, YOLO-Pose for skeleton extraction on each tracked subject, and X3D-M with attention for interaction classification on the dyad's stacked skeleton sequence. The skeleton-only classification stage is what kept it real-time on commodity hardware. Published at IEEE ICIIS 2023.
-role: Pipeline architect and implementation lead — detection, tracking, pose, and classifier integration.
+role: Pipeline architect and implementation lead - detection, tracking, pose, and classifier integration.
 scale_metrics:
   - { label: Detection,              value: "YOLOv7 + SORT" }
   - { label: Pose,                   value: "YOLO-Pose" }
@@ -27,8 +27,8 @@ external_links:
 ## Why skeletons, not RGB
 
 Running an RGB-based action classifier per-pair across a crowded frame doesn't fit
-the real-time budget. Skeletons are a 100× smaller representation and — for
-two-person interactions — carry most of the discriminative signal.
+the real-time budget. Skeletons are a 100× smaller representation and - for
+two-person interactions - carry most of the discriminative signal.
 
 ## Where it broke
 

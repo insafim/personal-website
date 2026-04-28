@@ -1,12 +1,12 @@
 ---
 slug: omorfia-gis
-title: Omorfia GIS — Right-sizing a 134-branch UAE salon network
+title: Omorfia GIS - Right-sizing a 134-branch UAE salon network
 category: enterprise
 status: shipped
 year: 2025
 problem: An 8-brand, 134-branch UAE salon group needed objective evidence about which branches to retain, consolidate, or relocate, and where to expand. Existing decisions were anecdotal; financial signals alone missed location dynamics.
 approach: Built a geospatial decision platform ingesting Google Maps signals, TravelTime drive-time isochrones, WorldPop demographics, and internal financials. Designed a composite risk model to classify branches and an H3 hex-grid tessellation of the UAE for expansion zones. Delivered as a React + MapLibre + Cesium dashboard and a FastAPI backend exposed through ChatGPT Actions and an MCP server integrated with Claude.
-role: End-to-end owner — data ingestion, modeling, frontend, and stakeholder demos.
+role: End-to-end owner - data ingestion, modeling, frontend, and stakeholder demos.
 scale_metrics:
   - { label: Branches modeled,      value: "134" }
   - { label: Brands consolidated,   value: "8" }
@@ -27,9 +27,9 @@ tags: [geospatial, fastapi, mcp, retail-analytics]
 
 The platform is split into three planes:
 
-1. **Data plane** — nightly batch ingestion of Google Maps signals, TravelTime isochrones, and
+1. **Data plane** - nightly batch ingestion of Google Maps signals, TravelTime isochrones, and
    WorldPop demographics into PostGIS, joined to internal financials.
-2. **Analytics plane** — composite risk scoring and H3 tessellation; PostGIS spatial joins for
+2. **Analytics plane** - composite risk scoring and H3 tessellation; PostGIS spatial joins for
    trade-area analysis.
-3. **Experience plane** — React + MapLibre/Cesium dashboard for analysts; ChatGPT Actions + MCP
+3. **Experience plane** - React + MapLibre/Cesium dashboard for analysts; ChatGPT Actions + MCP
    server for natural-language strategic questions.

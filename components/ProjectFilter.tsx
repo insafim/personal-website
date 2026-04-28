@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import type { Project } from "#site/content";
 
 // US-027 (could-have): client-side filter on tag, year, tech_stack.
-// Velite-emitted JSON is small, so client filtering is trivial — no need for
+// Velite-emitted JSON is small, so client filtering is trivial - no need for
 // a search index at this scale.
 
 export function ProjectFilter({ projects }: { projects: Project[] }) {

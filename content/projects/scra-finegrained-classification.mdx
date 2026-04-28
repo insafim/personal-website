@@ -5,8 +5,8 @@ category: research
 status: shipped
 year: 2024
 problem: ConvNeXt-V2 is competitive on ImageNet but loses ground on fine-grained classification (CUB Birds, FGVC Aircraft, FoodX) where class-discriminative features live in narrow channel subspaces. Adding generic attention helps a little but tends to inflate FLOPs without proportionate accuracy gain.
-approach: Designed Selective Channel Recalibration Attention — a lightweight attention module that recalibrates only a learned subset of channels rather than all of them — and integrated it into ConvNeXt-Large-V2. SCRA improved fine-grained accuracy on CUB, Aircraft, and FoodX while keeping total FLOPs within 5% of the baseline.
-role: Architecture and training — proposed the module, integrated it into ConvNeXt-V2, and ran the fine-grained evaluation suite.
+approach: Designed Selective Channel Recalibration Attention - a lightweight attention module that recalibrates only a learned subset of channels rather than all of them - and integrated it into ConvNeXt-Large-V2. SCRA improved fine-grained accuracy on CUB, Aircraft, and FoodX while keeping total FLOPs within 5% of the baseline.
+role: Architecture and training - proposed the module, integrated it into ConvNeXt-V2, and ran the fine-grained evaluation suite.
 scale_metrics:
   - { label: Backbone,               value: "ConvNeXt-Large-V2" }
   - { label: Datasets,               value: "CUB Birds, FGVC Aircraft, FoodX" }
@@ -20,5 +20,5 @@ tags: [vision, attention, fine-grained, classification]
 ## Why "selective" matters
 
 Recalibrating every channel costs FLOPs proportional to channel count. Fine-grained
-features only live in a small subset — so learning *which* channels to recalibrate
+features only live in a small subset - so learning *which* channels to recalibrate
 buys you most of the benefit at a fraction of the compute.

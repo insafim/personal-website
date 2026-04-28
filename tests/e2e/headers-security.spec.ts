@@ -22,7 +22,7 @@ test("HSTS header includes preload", async ({ request }) => {
   const res = await request.get("/");
   const hsts = res.headers()["strict-transport-security"];
   // In production builds via headers() we set max-age=63072000 includeSubDomains preload.
-  // (When testing against localhost dev, header may be absent — guard.)
+  // (When testing against localhost dev, header may be absent - guard.)
   if (hsts) {
     expect(hsts).toMatch(/max-age=63072000/);
     expect(hsts).toMatch(/includeSubDomains/);

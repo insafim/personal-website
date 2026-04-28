@@ -18,9 +18,9 @@ test("focus order traverses Nav links and ThemeToggle", async ({ page }) => {
 });
 
 test("BibTeX copy works via keyboard Enter", async ({ page }) => {
-  await page.goto("/publications/sample-multimodal-llm-emnlp");
-  const button = page.getByRole("button", { name: /Copy/i });
+  await page.goto("/publications/promptception-emnlp2025");
+  const button = page.locator("section").filter({ hasText: "BibTeX" }).getByRole("button");
   await button.focus();
   await page.keyboard.press("Enter");
-  await expect(button).toContainText(/Copied/i, { timeout: 1500 });
+  await expect(button).toHaveText(/Copied/i, { timeout: 1500 });
 });

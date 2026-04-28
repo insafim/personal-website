@@ -54,8 +54,18 @@ const securityHeaders = [
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  ...(isDev ? { allowedDevOrigins: ["127.0.0.1", "localhost"] } : {}),
   images: {
     formats: ["image/avif", "image/webp"],
+    // Allow author-controlled SVG logos (e.g. content/companies/visionlabs.svg)
+    // to flow through the next/image optimizer. SVGs are treated as untrusted
+    // by default; the contentDispositionType + contentSecurityPolicy below
+    // make them download-not-execute and sandbox any embedded scripts.
+    // Safe here because all SVGs are committed to the repo, not user-uploaded.
+    // Source: https://nextjs.org/docs/app/api-reference/config/next-config-js/images#dangerouslyallowsvg
+    dangerouslyAllowSVG: true,
+    contentDispositionType: "attachment",
+    contentSecurityPolicy: "default-src 'none'; script-src 'none'; sandbox;",
   },
   async headers() {
     return [
@@ -69,10 +79,16 @@ const config = {
           { key: "Cache-Control", value: "public, immutable, no-transform, max-age=31536000" },
         ],
       },
-      {
-        source: "/_next/static/(.*)",
-        headers: [{ key: "Cache-Control", value: "public, immutable, max-age=31536000" }],
-      },
+      // Static assets get long-lived immutable cache only in production builds.
+      // Next.js warns when this is set in dev because it interferes with HMR.
+      ...(isDev
+        ? []
+        : [
+            {
+              source: "/_next/static/(.*)",
+              headers: [{ key: "Cache-Control", value: "public, immutable, max-age=31536000" }],
+            },
+          ]),
     ];
   },
   async redirects() {

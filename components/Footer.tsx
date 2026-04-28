@@ -4,37 +4,43 @@ export function Footer() {
   const social = (siteConfig.nav?.social ?? []).slice().sort((a, b) => a.order - b.order);
   const footerLinks = (siteConfig.nav?.footer ?? []).slice().sort((a, b) => a.order - b.order);
   const year = new Date().getFullYear();
+  const links = [...footerLinks, ...social.map((item) => ({ ...item, external: true }))];
 
   return (
-    <div className="px-4 py-8 border-t border-[var(--color-border)] text-sm text-[var(--color-fg-muted)] flex flex-col md:flex-row md:items-center md:justify-between gap-3">
-      <p>
-        © {year} {siteConfig.site_name}
-      </p>
-      <ul className="flex flex-wrap gap-4">
-        {footerLinks.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              {...(link.external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
-              className="hover:text-[var(--color-fg)] transition-colors"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-        {social.map((s) => (
-          <li key={s.href}>
-            <a
-              href={s.href}
-              rel="noopener noreferrer"
-              target="_blank"
-              className="hover:text-[var(--color-fg)] transition-colors"
-            >
-              {s.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div className="border-t border-[var(--color-border)] px-4 py-8 md:py-10">
+      <div className="mx-auto max-w-6xl">
+        <div className="surface-elevated px-5 py-6 md:px-6 md:py-7">
+          <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-xl">
+              <p className="display text-2xl font-semibold tracking-tight text-[var(--color-fg)] md:text-3xl">
+                {siteConfig.site_name}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-muted)] md:text-base">
+                Research, projects, writing, and the occasional side trail outside work.
+              </p>
+            </div>
+
+            <ul className="flex flex-wrap gap-2 md:max-w-md md:justify-end">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    {...(link.external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-3 py-1.5 text-sm text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-fg)]"
+                  >
+                    <span>{link.label}</span>
+                    {link.external && <span aria-hidden="true">↗</span>}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="mt-6 border-t border-[var(--color-border)] pt-5 text-sm text-[var(--color-fg-muted)]">
+            <p className="metadata">© {year} {siteConfig.site_name}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

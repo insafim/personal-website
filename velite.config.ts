@@ -6,7 +6,9 @@ const externalUrl = s.string().url();
 const relativePath = s.string().regex(/^\//, "must be a relative path starting with /");
 const slug = s.slug("global");
 
-// Entity 1 — Person (singleton)
+// Entity 1: Person (singleton). Career and education rows live in their own
+// per-file collections (career/, education/) so each role/degree is one small
+// file and company/school logos can be reused across sections.
 const person = defineCollection({
   name: "Person",
   pattern: "person.mdx",
@@ -20,16 +22,6 @@ const person = defineCollection({
       specializations: s.array(s.string()).min(1),
       bio_short: s.string().min(1).max(280),
       bio_long: s.markdown(),
-      career_timeline: s
-        .array(
-          s.object({
-            year_range: s.string(),
-            role: s.string(),
-            org: s.string(),
-            summary: s.string(),
-          })
-        )
-        .min(1),
       avatar_url: s.string(),
       og_image_default: s.string(),
       email_obfuscated: s.string().min(1),
@@ -38,11 +30,80 @@ const person = defineCollection({
       linkedin_url: externalUrl,
       orcid_id: s.string().optional(),
       arxiv_author_url: externalUrl.optional(),
+      // Stable public URL for a downloadable CV (e.g. /assets/cv/insaf-cv.pdf).
+      // Optional: when absent, the CV download link is hidden site-wide.
+      cv_url: s.string().regex(/^\//, "cv_url must be a site-relative path starting with /").optional(),
       additional_social_links: s
         .array(s.object({ platform: s.string(), url: externalUrl }))
         .optional(),
     })
     .transform((data) => ({ ...data })),
+});
+
+// Entity 1a: Company (one file per organisation worked at). Referenced by
+// career entries and, in future, project_meta / publication affiliations.
+const companies = defineCollection({
+  name: "Company",
+  pattern: "companies/**/*.yaml",
+  schema: s.object({
+    slug: s.string().regex(/^[a-z0-9-]+$/, "slug must be kebab-case"),
+    name: s.string(),
+    url: externalUrl.optional(),
+    location: s.string().optional(),
+    // Site-relative path to the logo image (e.g. /assets/companies/2pointzero.svg).
+    // Optional: when absent, the timeline renders the org name only.
+    logo: s.string().regex(/^\//, "logo must be a site-relative path starting with /").optional(),
+  }),
+});
+
+// Entity 1b: School (one file per institution). Same pattern as companies.
+const schools = defineCollection({
+  name: "School",
+  pattern: "schools/**/*.yaml",
+  schema: s.object({
+    slug: s.string().regex(/^[a-z0-9-]+$/, "slug must be kebab-case"),
+    name: s.string(),
+    url: externalUrl.optional(),
+    location: s.string().optional(),
+    logo: s.string().regex(/^\//, "logo must be a site-relative path starting with /").optional(),
+  }),
+});
+
+// Entity 1c: Career entry (one file per role). `company` is the slug of a
+// content/companies/*.yaml file; cross-reference is validated at consumer time
+// in lib/timeline.ts (Velite collections cannot superRefine across each other).
+const career = defineCollection({
+  name: "CareerEntry",
+  pattern: "career/**/*.yaml",
+  schema: s.object({
+    // Display order on the timeline (1 = newest, ascending). Lets the user
+    // reorder rows without renaming files or fiddling with dates.
+    order: s.number().int().min(1),
+    year_range: s.string(),
+    role: s.string(),
+    company: s.string().regex(/^[a-z0-9-]+$/, "company must be a kebab-case slug matching content/companies/*.yaml"),
+    summary: s.string(),
+    // Optional LinkedIn-style metadata; rendered as small chips next to the role.
+    employment_type: s.string().optional(),  // e.g. "Internship", "Part-time", "Full-time"
+    mode: s.string().optional(),             // e.g. "On-site", "Hybrid", "Remote"
+  }),
+});
+
+// Entity 1d: Education entry (one file per degree). `school` is the slug of a
+// content/schools/*.yaml file.
+const education = defineCollection({
+  name: "EducationEntry",
+  pattern: "education/**/*.yaml",
+  schema: s.object({
+    order: s.number().int().min(1),
+    year_range: s.string(),
+    degree: s.string(),
+    school: s.string().regex(/^[a-z0-9-]+$/, "school must be a kebab-case slug matching content/schools/*.yaml"),
+    summary: s.string(),
+    // Optional richer fields rendered as extra lines below the degree.
+    grade: s.string().optional(),       // e.g. "3.95/4.00 (First Class Honors)"
+    activities: s.string().optional(),  // e.g. "Founding President - MBZUAI Consulting Club"
+  }),
 });
 
 // Entity 2 — Project
@@ -138,7 +199,12 @@ const resources = defineCollection({
   }),
 });
 
-// Entity 5 — Hobby
+// Entity 5 — Hobby (rendered under "Beyond"). Covers sports, leadership,
+// extracurricular activities, and miscellaneous interests. Grouped by `category`
+// on the page (app/hobbies/page.tsx); the schema leaves `category` optional and
+// the page coerces missing values to "interest" so this collection has no
+// uncategorised orphans at render time. The coercion lives in the page, not
+// the schema — keep them in sync if a second consumer of `hobbies` is added.
 const hobbies = defineCollection({
   name: "Hobby",
   pattern: "hobbies/**/*.mdx",
@@ -148,6 +214,12 @@ const hobbies = defineCollection({
     anecdotes: s.array(s.string()).min(1),
     icon: s.string().optional(),
     order: s.number().int().optional(),
+    category: s.enum(["sport", "leadership", "extracurricular", "interest"]).optional(),
+    // Site-relative path to an org logo (e.g. /assets/orgs/aiesec.png).
+    // Optional — when absent, the card's two-column header collapses to a
+    // single column showing only the title; the accent bar on the left
+    // remains unconditionally regardless of this field.
+    logo: s.string().regex(/^\//, "logo must be a site-relative path starting with /").optional(),
   }),
 });
 
@@ -243,7 +315,19 @@ export default defineConfig({
     name: "[name]-[hash:6].[ext]",
     clean: true,
   },
-  collections: { person, projects, publications, resources, hobbies, redirects, siteConfig },
+  collections: {
+    person,
+    companies,
+    schools,
+    career,
+    education,
+    projects,
+    publications,
+    resources,
+    hobbies,
+    redirects,
+    siteConfig,
+  },
   mdx: {
     rehypePlugins: [
       [

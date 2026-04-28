@@ -39,6 +39,7 @@ export function HomeSignals({
           title={currentFocus}
           meta="Open to senior AI/ML, FDE, applied scientist roles · Abu Dhabi / Dubai"
           href="/contact"
+          live
         />
       </div>
     </section>
@@ -51,12 +52,17 @@ function SignalCard({
   title,
   meta,
   href,
+  live = false,
 }: {
   label: string;
   color: "research" | "enterprise" | "independent";
   title: string;
   meta: string;
   href: string;
+  // When true, renders a pulsing accent dot next to the label as a "now"
+  // freshness signal. Animation is gated by motion-safe so reduced-motion
+  // users see a static dot. Pattern borrowed from leerob.com.
+  live?: boolean;
 }) {
   const accent =
     color === "research"
@@ -68,6 +74,7 @@ function SignalCard({
   return (
     <Link
       href={href}
+      data-live={live ? "" : undefined}
       className="surface-elevated is-interactive group block p-5 relative overflow-hidden"
     >
       <span
@@ -76,9 +83,18 @@ function SignalCard({
         style={{ background: accent }}
       />
       <p
-        className="text-[10px] font-mono font-semibold uppercase tracking-[0.18em] mb-2"
+        className={`text-[10px] font-mono font-semibold uppercase tracking-[0.18em] mb-2${
+          live ? " inline-flex items-center gap-1.5" : ""
+        }`}
         style={{ color: accent }}
       >
+        {live && (
+          <span
+            aria-hidden="true"
+            className="inline-block w-1.5 h-1.5 rounded-full motion-safe:animate-pulse"
+            style={{ background: accent }}
+          />
+        )}
         {label}
       </p>
       <h3 className="text-base font-semibold leading-snug mb-2 line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">

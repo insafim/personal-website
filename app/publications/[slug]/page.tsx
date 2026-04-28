@@ -2,12 +2,32 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { publications } from "#site/content";
 import { BibTeXBlock } from "@/components/BibTeXBlock";
+import { PageIntro } from "@/components/PageIntro";
 import { ScholarlyArticleJsonLd } from "@/components/ScholarlyArticleJsonLd";
 import { buildMetadata } from "@/lib/metadata";
+import { buildProseCitation } from "@/lib/publications";
 
 interface Params {
   params: Promise<{ slug: string }>;
 }
+
+const AUTHORSHIP_LABEL = {
+  first: "First author",
+  "co-first": "Co-first author",
+  middle: "Contributing author",
+  senior: "Senior author",
+  last: "Last author",
+  corresponding: "Corresponding author",
+} as const;
+
+const TYPE_LABEL = {
+  conference: "Conference",
+  journal: "Journal",
+  workshop: "Workshop",
+  preprint: "Preprint",
+  thesis: "Thesis",
+  "tech-report": "Tech report",
+} as const;
 
 export function generateStaticParams() {
   return publications.map((p) => ({ slug: p.slug }));
@@ -30,103 +50,106 @@ export default async function PublicationDetailPage({ params }: Params) {
   const pub = publications.find((p) => p.slug === slug);
   if (!pub) notFound();
 
+  const links = [
+    pub.arxiv_id
+      ? { label: `arXiv ${pub.arxiv_id}`, href: `https://arxiv.org/abs/${pub.arxiv_id}` }
+      : null,
+    pub.doi ? { label: "DOI", href: `https://doi.org/${pub.doi}` } : null,
+    pub.pdf_url ? { label: "PDF", href: pub.pdf_url } : null,
+    pub.code_repo_url ? { label: "Code", href: pub.code_repo_url } : null,
+  ].filter((link): link is { label: string; href: string } => Boolean(link));
+
   return (
-    <article className="px-4 py-12 max-w-3xl mx-auto">
-      <header className="mb-6">
-        <p className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)] mb-2">
-          {pub.venue} · {pub.year} · {pub.type}
-        </p>
-        <h1 className="text-3xl md:text-4xl font-bold mb-3">{pub.title}</h1>
-        <p className="text-[var(--color-fg-muted)]">
-          {pub.authors.map((a) => (
-            <span
-              key={a}
-              className={a === "Insaf Ismath" ? "font-semibold text-[var(--color-fg)]" : ""}
-            >
-              {a}
-              {a !== pub.authors[pub.authors.length - 1] ? ", " : ""}
+    <div className="px-4 max-w-5xl mx-auto pt-12 pb-20">
+      <PageIntro
+        eyebrow={pub.venue}
+        title={pub.title}
+        description={pub.abstract}
+        variant="accent"
+        utility={
+          <div className="flex flex-wrap gap-2 md:justify-end">
+            <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[var(--color-bg-raised)] px-3 py-1 text-sm text-[var(--color-fg-muted)]">
+              {pub.year}
             </span>
-          ))}{" "}
-          <span className="text-xs uppercase tracking-wide opacity-70">
-            ({pub.authorship_order} author)
-          </span>
+            <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[var(--color-bg-raised)] px-3 py-1 text-sm text-[var(--color-fg-muted)]">
+              {TYPE_LABEL[pub.type]}
+            </span>
+            <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[var(--color-bg-raised)] px-3 py-1 text-sm text-[var(--color-fg-muted)]">
+              {AUTHORSHIP_LABEL[pub.authorship_order]}
+            </span>
+          </div>
+        }
+      />
+
+      <div className="grid gap-6 md:grid-cols-2 mb-8">
+        <section className="surface-elevated px-6 py-6 md:px-7 md:py-7">
+          <p className="eyebrow mb-3">Authors</p>
+          <p className="text-base leading-relaxed text-[var(--color-fg-muted)]">
+            {pub.authors.map((a) => (
+              <span
+                key={a}
+                className={a === "Insaf Ismath" ? "font-semibold text-[var(--color-fg)]" : ""}
+              >
+                {a}
+                {a !== pub.authors[pub.authors.length - 1] ? ", " : ""}
+              </span>
+            ))}
+          </p>
+          <p className="metadata uppercase mt-4">{AUTHORSHIP_LABEL[pub.authorship_order]}</p>
+        </section>
+
+        <section className="surface-elevated px-6 py-6 md:px-7 md:py-7">
+          <p className="eyebrow mb-3">Links</p>
+          {links.length > 0 ? (
+            <ul className="flex flex-wrap gap-2">
+              {links.map((link) => (
+                <li key={link.href}>
+                  <a
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-3 py-1.5 text-sm text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-fg)]"
+                    href={link.href}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    <span>{link.label}</span>
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-[var(--color-fg-muted)]">No external links available.</p>
+          )}
+        </section>
+      </div>
+
+      <section className="surface-accent px-6 py-7 md:px-8 md:py-9 mb-8">
+        <p className="eyebrow mb-3">Contribution</p>
+        <p className="max-w-3xl text-base leading-relaxed text-[var(--color-fg)] md:text-lg">
+          {pub.contribution_summary}
         </p>
-      </header>
-
-      <section className="mb-6">
-        <h2 className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)] mb-2">
-          Abstract
-        </h2>
-        <p>{pub.abstract}</p>
       </section>
-
-      <section className="mb-6">
-        <h2 className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)] mb-2">
-          Contribution
-        </h2>
-        <p>{pub.contribution_summary}</p>
-      </section>
-
-      <ul className="flex flex-wrap gap-3 mb-6 text-sm">
-        {pub.arxiv_id && (
-          <li>
-            <a
-              className="underline"
-              href={`https://arxiv.org/abs/${pub.arxiv_id}`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              arXiv:{pub.arxiv_id}
-            </a>
-          </li>
-        )}
-        {pub.doi && (
-          <li>
-            <a
-              className="underline"
-              href={`https://doi.org/${pub.doi}`}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              DOI:{pub.doi}
-            </a>
-          </li>
-        )}
-        {pub.pdf_url && (
-          <li>
-            <a className="underline" href={pub.pdf_url} rel="noopener noreferrer" target="_blank">
-              PDF
-            </a>
-          </li>
-        )}
-        {pub.code_repo_url && (
-          <li>
-            <a
-              className="underline"
-              href={pub.code_repo_url}
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Code
-            </a>
-          </li>
-        )}
-      </ul>
 
       {/* US-028 extended landing: render extended_abstract_mdx when present. */}
       {pub.extended_abstract_mdx && (
         <section className="mt-8">
-          <h2 className="text-xl font-semibold mb-3">Extended abstract</h2>
+          <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight mb-4">
+            Extended abstract
+          </h2>
           <div
-            className="prose prose-neutral dark:prose-invert max-w-none"
+            className="prose prose-neutral dark:prose-invert max-w-none
+                       prose-headings:display prose-headings:tracking-tight
+                       prose-h2:text-2xl prose-h2:md:text-3xl prose-h2:mt-10 prose-h2:mb-4
+                       prose-p:leading-relaxed prose-p:text-[var(--color-fg)]
+                       prose-strong:text-[var(--color-fg)] prose-strong:font-semibold
+                       prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:underline"
             // biome-ignore lint/security/noDangerouslySetInnerHtml: Velite-compiled MDX (build-time, author-controlled).
             dangerouslySetInnerHTML={{ __html: pub.extended_abstract_mdx }}
           />
         </section>
       )}
 
-      <BibTeXBlock bibtex={pub.bibtex} />
+      <BibTeXBlock bibtex={pub.bibtex} citation={buildProseCitation(pub)} />
       <ScholarlyArticleJsonLd publication={pub} />
-    </article>
+    </div>
   );
 }

@@ -75,13 +75,17 @@ app/                 # Next.js App Router routes (about, projects, publications,
 components/          # React components
 lib/                 # Helpers (metadata, JSON-LD, fonts, content readers)
 content/             # MDX source content
-  person.mdx           # Singleton — bio, social links, career timeline
+  person.mdx           # Singleton: bio, social links, profile
+  site-config.yaml     # Nav, social links, feature flags, AI crawler allowlist
+  redirects.yaml       # URL redirects (compiled into next.config redirects)
   projects/            # One MDX file per project
   publications/        # One MDX file per publication
   resources/           # Talks, repos, models, writing
-  hobbies/             # Padel, karting, running, football
-  redirects.yaml       # URL redirects (compiled into next.config redirects)
-  site-config.yaml     # Nav, social links, feature flags, AI crawler allowlist
+  hobbies/             # Padel, karting, running, football, etc.
+  career/              # Career timeline entries
+  education/           # Education entries
+  schools/             # School records
+  companies/           # Company records (logos, names, links)
 public/              # Static assets
 scripts/             # Build-time helpers (redirect validation, etc.)
 tests/
@@ -94,16 +98,53 @@ tests/
 
 ## Adding content
 
-All site content is MDX in `content/`. Velite validates frontmatter against the Zod schemas in `velite.config.ts` — `pnpm content:build` will fail loudly on schema violations.
+All site content lives in `content/`. Most collections are MDX (frontmatter + body); a few timeline-style collections (career, education, schools, companies) are plain YAML. Velite validates content against the Zod schemas in `velite.config.ts`, and `pnpm content:build` will fail loudly on schema violations. The fastest workflow: copy an existing file in the same folder as a template, change the fields (and body, for MDX), save, and `pnpm dev` will hot-reload via the Velite watcher.
 
-- **New project** → `content/projects/<slug>.mdx`
-- **New publication** → `content/publications/<slug>.mdx`
-- **New resource** → `content/resources/<slug>.mdx`
-- **New hobby** → `content/hobbies/<slug>.mdx`
+### Where each type of content lives
 
-Use the existing files (e.g. `content/projects/omorfia-gis.mdx`) as templates for required frontmatter fields.
+**Site-wide config**
 
-Site-wide settings (nav order, social links, feature flags) live in `content/site-config.yaml`. Identity (bio, avatar, career timeline, social URLs) lives in `content/person.mdx`.
+| File | What it controls |
+| --- | --- |
+| `content/site-config.yaml` | Site name, nav order, social links, feature flags, AI crawler allowlist |
+| `content/person.mdx` | Bio, profile photo, social links, identity-level info |
+| `content/redirects.yaml` | URL redirects (compiled into `next.config.mjs`) |
+
+**Section content (one file per entry)**
+
+| Add a new... | Create file at | Template to copy |
+| --- | --- | --- |
+| Project | `content/projects/<slug>.mdx` | `content/projects/omorfia-gis.mdx` |
+| Publication | `content/publications/<slug>.mdx` | `content/publications/promptception-emnlp2025.mdx` |
+| Resource (talk, repo, writing) | `content/resources/<slug>.mdx` | `content/resources/sample-talk.mdx` |
+| Hobby | `content/hobbies/<slug>.mdx` | `content/hobbies/padel.mdx` |
+| Career timeline entry | `content/career/<slug>.yaml` | `content/career/2024-visionlabs-research-engineer.yaml` |
+| Education entry | `content/education/<slug>.yaml` | `content/education/msc-mbzuai.yaml` |
+| School record | `content/schools/<slug>.yaml` | `content/schools/mbzuai.yaml` |
+| Company record | `content/companies/<slug>.yaml` | `content/companies/visionlabs.yaml` |
+
+For collections with detail pages (projects, publications, resources, hobbies), the `<slug>` becomes the URL segment, e.g. `/projects/<slug>`. Keep those slugs lowercase, hyphenated, and stable, since changing one breaks inbound links unless you add a redirect to `content/redirects.yaml`. The career, education, schools, and companies collections do not produce routed pages, so their filenames are reference keys only.
+
+### Where assets live
+
+Static assets that go with content (images, PDFs, logos) belong under `public/assets/`:
+
+```
+public/assets/
+  profile/         # Profile photos
+  projects/        # Project hero images / screenshots
+  publications/    # Publication thumbnails / PDFs
+  companies/       # Company logos
+  schools/         # School logos / crests
+  orgs/            # Organisation logos (hobbies, clubs)
+  cv/              # CV PDFs
+```
+
+Reference them from MDX with an absolute path, e.g. `/assets/projects/my-project.png`.
+
+### Adding a new field to a collection
+
+If you need a frontmatter field that doesn't exist yet, add it to the matching schema in `velite.config.ts`, then update content files to populate it, then run `pnpm content:build` to regenerate types. Routes in `app/` consume the typed output, so the new field becomes available there once the build succeeds.
 
 ## Redirects
 

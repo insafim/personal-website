@@ -11,7 +11,7 @@ export function EmailContact({ obfuscated }: { obfuscated: string }) {
     setEmail(decodeEmail(obfuscated));
   }, [obfuscated]);
 
-  // Mounted with JS — render mailto: anchor.
+  // Mounted with JS - render mailto: anchor.
   if (email && revealed) {
     return (
       <a
@@ -24,7 +24,7 @@ export function EmailContact({ obfuscated }: { obfuscated: string }) {
     );
   }
 
-  // Pre-mount or pre-reveal: show button (no @ in raw HTML — NFR-009).
+  // Pre-mount or pre-reveal: show button (no @ in raw HTML - NFR-009).
   return (
     <button
       type="button"

@@ -33,7 +33,7 @@ export default function ProjectsPage() {
       <PageIntro
         eyebrow="Selected work"
         title="Projects"
-        description="Production AI systems shipped at 2PointZero, research from MBZUAI and Peradeniya, and independent work — grouped by where the work lived."
+        description="Production AI systems shipped at 2PointZero, research from MBZUAI and Peradeniya, and independent work - grouped by where the work lived."
       />
       <ProjectFilter projects={projects} />
       <div className="space-y-16">

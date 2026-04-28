@@ -26,6 +26,9 @@ playwright-report/
 test-results/
 tests/traces/
 
+# Local working artifacts (visual snapshots, scratch)
+.tmp/
+
 # Editors
 .vscode/
 .idea/

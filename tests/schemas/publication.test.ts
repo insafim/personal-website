@@ -3,7 +3,7 @@ import { z } from "zod";
 
 // Re-derive the Publication refinement contract for unit testing without
 // importing velite.config.ts (which has side effects). Mirrors velite.config.ts
-// exactly per ADR-012 — keep in sync.
+// exactly per ADR-012 - keep in sync.
 const publicationRefinement = z
   .object({
     arxiv_id: z.string().optional(),

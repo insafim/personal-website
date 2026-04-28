@@ -6,10 +6,25 @@ import { PersonJsonLd } from "@/components/PersonJsonLd";
 import { buildMetadata } from "@/lib/metadata";
 import { sortByYearDesc } from "@/lib/publications";
 
-export const metadata: Metadata = buildMetadata({
+const HOME_TITLE = "Insaf Ismath - AI/ML Engineer & Researcher";
+
+const baseMetadata = buildMetadata({
   path: "/",
   description: person.bio_short,
 });
+
+export const metadata: Metadata = {
+  ...baseMetadata,
+  title: { absolute: HOME_TITLE },
+  openGraph: {
+    ...baseMetadata.openGraph,
+    title: HOME_TITLE,
+  },
+  twitter: {
+    ...baseMetadata.twitter,
+    title: HOME_TITLE,
+  },
+};
 
 export default function HomePage() {
   const latestPublication = sortByYearDesc(publications)[0];

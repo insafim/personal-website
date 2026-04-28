@@ -1,79 +1,85 @@
 import type { Project } from "#site/content";
 
+const CATEGORY_LABEL: Record<Project["category"], string> = {
+  enterprise: "Enterprise",
+  research: "Research",
+  independent: "Independent",
+};
+
+const STATUS_LABEL: Record<Project["status"], string> = {
+  shipped: "Shipped",
+  active: "Active",
+  archived: "Archived",
+  "in-progress": "In progress",
+};
+
 export function ProjectMeta({ project }: { project: Project }) {
+  const summaryRows = [
+    { label: "Category", value: CATEGORY_LABEL[project.category] },
+    { label: "Status", value: STATUS_LABEL[project.status] },
+    { label: "Role", value: project.role },
+    { label: "Year", value: String(project.year) },
+  ];
+
   return (
-    <div className="space-y-6">
-      <dl className="grid gap-4 md:grid-cols-2">
-        <div>
-          <dt className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)]">Problem</dt>
-          <dd className="mt-1">{project.problem}</dd>
-        </div>
-        <div>
-          <dt className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)]">Approach</dt>
-          <dd className="mt-1">{project.approach}</dd>
-        </div>
-        <div>
-          <dt className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)]">Role</dt>
-          <dd className="mt-1">{project.role}</dd>
-        </div>
-        <div>
-          <dt className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)]">Year</dt>
-          <dd className="mt-1">{project.year}</dd>
-        </div>
-      </dl>
+    <div className="space-y-5">
+      <section className="surface-elevated p-5 md:p-6">
+        <p className="eyebrow mb-4">Project details</p>
+        <dl className="space-y-4 text-sm">
+          {summaryRows.map((row) => (
+            <div key={row.label} className="grid grid-cols-[5.5rem_1fr] gap-3">
+              <dt className="metadata uppercase">{row.label}</dt>
+              <dd className="leading-relaxed text-[var(--color-fg)]">{row.value}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
 
       {project.scale_metrics && project.scale_metrics.length > 0 && (
-        <table className="border-collapse w-full text-sm">
-          <caption className="text-left text-sm uppercase tracking-wide text-[var(--color-fg-muted)] mb-2">
-            Scale & metrics
-          </caption>
-          <tbody>
+        <section className="surface-elevated p-5 md:p-6">
+          <p className="eyebrow mb-4">Scale and metrics</p>
+          <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
             {project.scale_metrics.map((m) => (
-              <tr key={m.label} className="border-t border-[var(--color-border)]">
-                <th
-                  scope="row"
-                  className="text-left py-2 pr-4 font-normal text-[var(--color-fg-muted)]"
-                >
-                  {m.label}
-                </th>
-                <td className="py-2 font-mono">{m.value}</td>
-              </tr>
+              <div key={m.label} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-4 py-3">
+                <dd className="text-lg font-semibold tabular-nums text-[var(--color-fg)]">{m.value}</dd>
+                <dt className="metadata uppercase mt-1">{m.label}</dt>
+              </div>
             ))}
-          </tbody>
-        </table>
+          </dl>
+        </section>
       )}
 
-      <div>
-        <h3 className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)] mb-2">
-          Tech stack
-        </h3>
+      <section className="surface-elevated p-5 md:p-6">
+        <p className="eyebrow mb-4">Tech stack</p>
         <ul className="flex flex-wrap gap-2">
           {project.tech_stack.map((t) => (
-            <li key={t} className="px-2 py-1 text-xs rounded border border-[var(--color-border)]">
+            <li
+              key={t}
+              className="rounded-full border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-2.5 py-1 text-xs text-[var(--color-fg-muted)]"
+            >
               {t}
             </li>
           ))}
         </ul>
-      </div>
+      </section>
 
       {project.lessons_learned && (
-        <div>
-          <h3 className="text-sm uppercase tracking-wide text-[var(--color-fg-muted)] mb-2">
-            Lessons learned
-          </h3>
-          <p>{project.lessons_learned}</p>
-        </div>
+        <section className="surface-accent px-5 py-6 md:px-6 md:py-7">
+          <p className="eyebrow mb-3">Lessons learned</p>
+          <p className="leading-relaxed text-[var(--color-fg)]">{project.lessons_learned}</p>
+        </section>
       )}
 
       {project.github_url && (
-        <div>
+        <div className="flex">
           <a
             href={project.github_url}
             rel="noopener noreferrer"
             target="_blank"
-            className="inline-block px-3 py-2 rounded bg-[var(--color-accent)] text-[var(--color-accent-fg)] text-sm font-medium"
+            className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-4 py-2 text-sm font-semibold text-[var(--color-accent-fg)] transition-opacity hover:opacity-90"
           >
-            View on GitHub →
+            <span>View on GitHub</span>
+            <span aria-hidden="true">↗</span>
           </a>
         </div>
       )}

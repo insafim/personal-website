@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { person } from "#site/content";
 import { CareerTimeline } from "@/components/CareerTimeline";
+import { EducationTimeline } from "@/components/EducationTimeline";
 import { PageIntro } from "@/components/PageIntro";
 import { PersonJsonLd } from "@/components/PersonJsonLd";
 import { ProfileFacts } from "@/components/ProfileFacts";
 import { buildMetadata } from "@/lib/metadata";
+import { getCareerRows, getEducationRows } from "@/lib/timeline";
 
 export const metadata: Metadata = buildMetadata({
   path: "/about",
@@ -14,6 +16,8 @@ export const metadata: Metadata = buildMetadata({
 });
 
 export default function AboutPage() {
+  const careerRows = getCareerRows();
+  const educationRows = getEducationRows();
   return (
     <div className="px-4 max-w-6xl mx-auto pt-12 pb-20">
       <PageIntro
@@ -36,7 +40,7 @@ export default function AboutPage() {
             dangerouslySetInnerHTML={{ __html: person.bio_long }}
           />
 
-          <section>
+          <section className="mb-14">
             <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight mb-2 flex items-center">
               <span className="section-rule bg-[var(--color-accent)]" aria-hidden="true" />
               Career
@@ -44,8 +48,21 @@ export default function AboutPage() {
             <p className="text-sm text-[var(--color-fg-muted)] mb-8 ml-[0.875rem]">
               Most recent first.
             </p>
-            <CareerTimeline entries={person.career_timeline} />
+            <CareerTimeline entries={careerRows} />
           </section>
+
+          {educationRows.length > 0 && (
+            <section>
+              <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight mb-2 flex items-center">
+                <span className="section-rule bg-[var(--color-accent)]" aria-hidden="true" />
+                Education
+              </h2>
+              <p className="text-sm text-[var(--color-fg-muted)] mb-8 ml-[0.875rem]">
+                Most recent first.
+              </p>
+              <EducationTimeline entries={educationRows} />
+            </section>
+          )}
         </div>
 
         <ProfileFacts person={person} />

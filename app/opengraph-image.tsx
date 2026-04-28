@@ -3,7 +3,7 @@ import { person, siteConfig } from "#site/content";
 import { getOgFonts } from "@/lib/og-fonts";
 
 export const runtime = "nodejs";
-export const alt = `${person.name} — ${person.title}`;
+export const alt = `${person.name} - ${person.title}`;
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+const runPerfBudgets = process.env.CI || process.env.PLAYWRIGHT_PERF_BUDGET === "1";
+
 interface Sample {
   url: string;
   budgetKb: number;
@@ -13,6 +15,11 @@ const samples: Sample[] = [
 
 for (const s of samples) {
   test(`page weight under ${s.budgetKb}KB on ${s.url}`, async ({ page }) => {
+    test.skip(
+      !runPerfBudgets,
+      "Page-weight budgets are only reliable against a production-oriented build. Set PLAYWRIGHT_PERF_BUDGET=1 to run locally."
+    );
+
     let totalBytes = 0;
     page.on("response", async (response) => {
       const headers = response.headers();

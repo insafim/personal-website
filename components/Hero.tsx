@@ -3,6 +3,15 @@ import Link from "next/link";
 import type { Person } from "#site/content";
 
 export function Hero({ person }: { person: Person }) {
+  const highlights = [
+    { label: "Based in", value: person.location },
+    ...(person.affiliation ? [{ label: "Currently", value: person.affiliation }] : []),
+    {
+      label: "Focus",
+      value: person.specializations.slice(0, 2).join(" · "),
+    },
+  ];
+
   return (
     <section className="hero-glow px-4 pt-20 pb-14 max-w-5xl mx-auto">
       <div className="flex flex-col-reverse md:flex-row md:items-center gap-10 md:gap-14">
@@ -49,6 +58,19 @@ export function Hero({ person }: { person: Person }) {
             >
               Get in touch →
             </Link>
+          </div>
+
+          <div className="surface-elevated mt-8 px-5 py-4 md:px-6 md:py-5">
+            <dl className="grid gap-4 sm:grid-cols-3">
+              {highlights.map((item) => (
+                <div key={item.label}>
+                  <dt className="metadata uppercase mb-1">{item.label}</dt>
+                  <dd className="text-sm leading-relaxed text-[var(--color-fg)] md:text-base">
+                    {item.value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </div>
         <div className="shrink-0 self-start md:self-center">

@@ -7,7 +7,7 @@ export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
-  // Mount guard to avoid hydration mismatch — server can't know the client's theme.
+  // Mount guard to avoid hydration mismatch - server can't know the client's theme.
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
@@ -23,7 +23,7 @@ export function ThemeToggle() {
       aria-label={`Switch to ${next} theme`}
       aria-pressed={isDark}
       onClick={() => setTheme(next)}
-      className="inline-flex items-center justify-center w-8 h-8 rounded text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] focus-visible:outline-none"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full text-[var(--color-fg-muted)] transition-colors hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-fg)] focus-visible:outline-none"
     >
       {isDark ? "☼" : "☾"}
     </button>

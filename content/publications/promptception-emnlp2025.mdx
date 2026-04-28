@@ -5,13 +5,13 @@ authors:
   - Insaf Ismath
   - others
 authorship_order: first
-venue: Findings of the Association for Computational Linguistics — EMNLP 2025
+venue: Findings of the Association for Computational Linguistics - EMNLP 2025
 year: 2025
 type: conference
 abstract: |
-  Large multimodal models (LMMs) are routinely evaluated by reporting a single accuracy number per benchmark, but those numbers are silently a function of the prompt phrasing. Promptception introduces a 61-prompt evaluation framework spanning 15 prompt categories — task framing, role priming, output format, refusal phrasing, and so on — and uses it to measure how much LMM accuracy actually moves under cosmetic prompt variations. Across 10 LMMs (8 open-source, 2 proprietary) on 3 multiple-choice question-answering benchmarks, the framework reveals up to 15 accuracy points of deviation attributable to phrasing alone, surfacing a robustness axis that single-number evaluation hides.
+  Large multimodal models (LMMs) are routinely evaluated by reporting a single accuracy number per benchmark, but those numbers are silently a function of the prompt phrasing. Promptception introduces a 61-prompt evaluation framework spanning 15 prompt categories - task framing, role priming, output format, refusal phrasing, and so on - and uses it to measure how much LMM accuracy actually moves under cosmetic prompt variations. Across 10 LMMs (8 open-source, 2 proprietary) on 3 multiple-choice question-answering benchmarks, the framework reveals up to 15 accuracy points of deviation attributable to phrasing alone, surfacing a robustness axis that single-number evaluation hides.
 contribution_summary: |
-  Insaf led the evaluation pipeline — a 1,500+ run distributed inference harness on 20× NVIDIA A100s that orchestrated the full prompt grid across 10 models and 3 benchmarks in under two months, and built the results-aggregation layer that produced the per-category sensitivity findings.
+  Insaf led the evaluation pipeline - a 1,500+ run distributed inference harness on 20× NVIDIA A100s that orchestrated the full prompt grid across 10 models and 3 benchmarks in under two months, and built the results-aggregation layer that produced the per-category sensitivity findings.
 pdf_url: https://aclanthology.org/2025.findings-emnlp.1302.pdf
 bibtex: |
   @inproceedings{ismath2025promptception,
@@ -28,12 +28,12 @@ tags: [multimodal, lmm, evaluation, prompt-sensitivity, mcqa]
 ## Headline finding
 
 Up to **15 accuracy points** of deviation across an LMM's outputs from prompt
-phrasing alone — same model, same questions, different prompt frame. That moves
+phrasing alone - same model, same questions, different prompt frame. That moves
 "which model is best?" from a number into a distribution.
 
 ## Why a 61-prompt × 15-category grid
 
 Single-prompt evaluation conflates *capability* with *prompt fit*. A grid of phrasings
 grouped into interpretable categories lets the swing be attributed to *which kind* of
-prompt change a model is sensitive to — task framing, role priming, output format,
-refusal phrasing — instead of producing one collapsed delta.
+prompt change a model is sensitive to - task framing, role priming, output format,
+refusal phrasing - instead of producing one collapsed delta.

@@ -11,7 +11,8 @@ test("home renders core content without JS", async ({ page }) => {
 
 test("about renders bio + timeline without JS", async ({ page }) => {
   await page.goto("/about");
-  await expect(page.locator("h1")).toContainText("About");
+  await expect(page.locator("h1")).toContainText("Insaf Ismath");
+  await expect(page.getByRole("heading", { name: /Career/i })).toBeVisible();
   await expect(page.locator("ol li").first()).toBeVisible();
 });
 

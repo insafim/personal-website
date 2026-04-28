@@ -23,11 +23,12 @@ nav:
     - { label: Projects,     href: /projects,     order: 2 }
     - { label: Publications, href: /publications, order: 3 }
     - { label: Resources,    href: /resources,    order: 4 }
-    - { label: Hobbies,      href: /hobbies,      order: 5 }
+    # Label is "Beyond" but the route stays /hobbies for backward
+    # compatibility (existing inbound links / OG cards). To rename the URL,
+    # also move app/hobbies -> app/beyond and add a redirect entry.
+    - { label: Beyond,       href: /hobbies,      order: 5 }
     - { label: Contact,      href: /contact,      order: 6 }
-  footer:
-    - { label: Sitemap, href: /sitemap.xml, order: 1, external: false }
-    - { label: Source,  href: "https://github.com/insafim/personal-website", order: 2, external: true }
+  footer: []
   social:
     - { label: GitHub,   href: "https://github.com/iminsaf",                  order: 1 }
     - { label: LinkedIn, href: "https://www.linkedin.com/in/iminsaf",         order: 2 }

@@ -38,16 +38,20 @@ const CATEGORY_LABEL: Record<Project["category"], string> = {
 
 type ProjectCardProps = { project: Project; featured?: boolean };
 
+// Exported so the unit test in tests/lib/project-pulse.test.ts can verify the
+// status→pulse contract content-independently. All current projects ship with
+// status:"shipped", so the e2e test's positive branch (active project = pulsing
+// dot) cannot be exercised against the live content fixture.
+export function activeDotPulseClass(status: Project["status"]): string {
+  return status === "active" ? "motion-safe:animate-pulse" : "";
+}
+
 export function ProjectCard({ project, featured = false }: ProjectCardProps) {
   const status = STATUS_PALETTE[project.status];
   const truncate = featured ? 260 : 140;
 
   return (
-    <article
-      className={`surface-elevated is-interactive relative h-full flex flex-col overflow-hidden ${
-        featured ? "" : ""
-      }`}
-    >
+    <article className="surface-elevated is-interactive relative h-full flex flex-col overflow-hidden">
       <div
         className={`absolute inset-y-0 left-0 ${featured ? "w-1.5" : "w-1"} ${CATEGORY_BAR[project.category]}`}
         aria-hidden="true"
@@ -57,7 +61,16 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
           <span
             className={`inline-flex items-center gap-1.5 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] rounded-full ${status.bg} ${status.text}`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${status.dot}`} aria-hidden="true" />
+            {/*
+             * Pulsing dot only when the project is actively in flight, so the
+             * "active" pill reads as live signal vs the static shipped/archived
+             * states. motion-safe gates the animation for prefers-reduced-motion
+             * users (NFR-015 reduced-motion guard already in app/globals.css).
+             */}
+            <span
+              className={`w-1.5 h-1.5 rounded-full ${status.dot} ${activeDotPulseClass(project.status)}`}
+              aria-hidden="true"
+            />
             {project.status}
           </span>
           {featured && (
@@ -85,19 +98,50 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
           {project.problem.slice(0, truncate)}
           {project.problem.length > truncate ? "…" : ""}
         </p>
-        {featured && project.scale_metrics && project.scale_metrics.length > 0 && (
-          <dl className="grid grid-cols-3 gap-3 mb-5 pb-5 border-b border-[var(--color-border)]">
-            {project.scale_metrics.slice(0, 3).map((m) => (
-              <div key={m.label}>
-                <dd className="text-base md:text-lg font-semibold text-[var(--color-fg)] tabular-nums">
-                  {m.value}
-                </dd>
-                <dt className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-fg-muted)] mt-0.5">
-                  {m.label}
-                </dt>
-              </div>
-            ))}
-          </dl>
+        {/*
+         * Hero-metric pattern (Brittany Chiang-style "100k+ Installs"): promote
+         * the first scale_metric to display-size as the card's anchor number,
+         * keep the rest at small text below. Inspired by:
+         * https://brittanychiang.com (verified 2026-04-27).
+         *
+         * `?.[0]` is required (not just `[0]`) because tsconfig sets
+         * `noUncheckedIndexedAccess: true`, so array index access returns
+         * `T | undefined` and must be guarded.
+         *
+         * `data-hero-metric` is a load-bearing e2e selector, not a styling
+         * hook - it anchors tests/e2e/smoke.spec.ts. Do not remove it.
+         */}
+        {featured && project.scale_metrics?.[0] && (
+          <div
+            data-hero-metric=""
+            className="mb-5 pb-5 border-b border-[var(--color-border)]"
+          >
+            <div className="flex items-baseline gap-3 mb-3 flex-wrap">
+              <span
+                data-metric-value=""
+                className="display tabular-nums text-4xl md:text-5xl font-bold leading-none tracking-tight text-[var(--color-fg)]"
+              >
+                {project.scale_metrics[0].value}
+              </span>
+              <span className="text-[11px] uppercase tracking-[0.14em] text-[var(--color-fg-muted)] font-medium">
+                {project.scale_metrics[0].label}
+              </span>
+            </div>
+            {project.scale_metrics.length > 1 && (
+              <dl className="grid grid-cols-2 gap-4">
+                {project.scale_metrics.slice(1, 3).map((m) => (
+                  <div key={m.label}>
+                    <dt className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-fg-muted)]">
+                      {m.label}
+                    </dt>
+                    <dd className="text-sm font-semibold text-[var(--color-fg)] tabular-nums mt-0.5">
+                      {m.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            )}
+          </div>
         )}
         <ul className="flex flex-wrap gap-1.5 mt-auto">
           {project.tech_stack.slice(0, featured ? 8 : 5).map((t) => (

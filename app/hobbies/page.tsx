@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import { hobbies } from "#site/content";
+import Image from "next/image";
+import { type Hobby, hobbies } from "#site/content";
 import { PageIntro } from "@/components/PageIntro";
 import { buildMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = buildMetadata({
   path: "/hobbies",
-  title: "Hobbies",
-  description: "Padel, karting, running, football — the human side.",
+  title: "Beyond",
+  description:
+    "Clubs, communities, sports, and the things I show up for outside the day job.",
 });
 
 type Accent = { fg: string; soft: string };
@@ -17,56 +19,136 @@ const ACCENTS: readonly [Accent, Accent, Accent, Accent] = [
   { fg: "var(--color-accent)", soft: "var(--color-accent-soft)" },
 ];
 
+// Category display order + section labels. Entries without a category fall
+// into "interest" by default so the page never has uncategorised orphans.
+type Category = NonNullable<Hobby["category"]>;
+const CATEGORY_ORDER: ReadonlyArray<{ key: Category; label: string; blurb: string }> = [
+  {
+    key: "leadership",
+    label: "Leadership",
+    blurb: "Roles where I've owned the agenda - founding, organising, mentoring.",
+  },
+  {
+    key: "extracurricular",
+    label: "Extracurricular",
+    blurb: "Clubs, competitions, and student bodies.",
+  },
+  {
+    key: "sport",
+    label: "Sports",
+    blurb: "What keeps me moving when the laptop closes.",
+  },
+  {
+    key: "interest",
+    label: "Interests",
+    blurb: "Other things worth surfacing.",
+  },
+];
+
 export default function HobbiesPage() {
   const sorted = [...hobbies].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+  const grouped = new Map<Category, Hobby[]>();
+  for (const h of sorted) {
+    const cat = (h.category ?? "interest") as Category;
+    const list = grouped.get(cat) ?? [];
+    list.push(h);
+    grouped.set(cat, list);
+  }
+
+  // Counter that runs across all groups so accent colour rotation stays varied
+  // even when one category has many entries.
+  let cardIndex = 0;
 
   return (
     <div className="px-4 max-w-4xl mx-auto pt-12 pb-20">
       <PageIntro
-        eyebrow="The human side"
-        title="Off the keyboard"
-        description="What I'm doing when I'm not in a terminal. Each one teaches me something I bring back to work."
+        eyebrow="Off the clock"
+        title="Beyond"
+        description="Leadership, extracurriculars, sports, and the things I show up for outside the day job. Each one teaches me something I bring back to work."
       />
 
-      <div className="space-y-12">
-        {sorted.map((h, i) => {
-          const accent: Accent = ACCENTS[(i % 4) as 0 | 1 | 2 | 3];
+      <div className="space-y-16">
+        {CATEGORY_ORDER.map(({ key, label, blurb }) => {
+          const items = grouped.get(key) ?? [];
+          if (items.length === 0) return null;
           return (
-            <section key={h.title} className="surface-elevated relative overflow-hidden">
-              <span
-                aria-hidden="true"
-                className="absolute inset-y-0 left-0 w-1.5"
-                style={{ background: accent.fg }}
-              />
-              <div className="p-6 md:p-8 pl-7 md:pl-9">
-                <div className="flex items-baseline gap-3 mb-3">
-                  <h2
-                    className="display text-3xl md:text-4xl font-bold tracking-tight"
-                    style={{ color: accent.fg }}
+            <section key={key}>
+              <div className="mb-6">
+                <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight flex items-center mb-1">
+                  <span className="section-rule bg-[var(--color-accent)]" aria-hidden="true" />
+                  {label}
+                  <span
+                    aria-label={`${items.length} ${label.toLowerCase()}`}
+                    className="ml-auto metadata text-sm tabular-nums text-[var(--color-fg-muted)] font-normal"
                   >
-                    {h.title}
-                  </h2>
-                  <span className="metadata" style={{ background: accent.soft, color: accent.fg }}>
-                    <span className="px-2 py-0.5 rounded-full">
-                      № {String(i + 1).padStart(2, "0")}
-                    </span>
+                    {items.length}
                   </span>
-                </div>
-                <p className="text-base md:text-lg text-[var(--color-fg-muted)] mb-6 max-w-prose leading-relaxed">
-                  {h.description}
+                </h2>
+                <p className="text-sm text-[var(--color-fg-muted)] ml-[0.875rem] max-w-2xl">
+                  {blurb}
                 </p>
-                <ul className="space-y-3">
-                  {h.anecdotes.map((a) => (
-                    <li key={a.slice(0, 60)} className="flex gap-3 leading-relaxed">
+              </div>
+              <div className="space-y-6">
+                {items.map((h) => {
+                  const accent = ACCENTS[(cardIndex++ % 4) as 0 | 1 | 2 | 3];
+                  return (
+                    <article
+                      key={h.title}
+                      className="surface-elevated relative overflow-hidden"
+                    >
                       <span
                         aria-hidden="true"
-                        className="mt-2 w-1 h-1 rounded-full shrink-0"
+                        className="absolute inset-y-0 left-0 w-1.5"
                         style={{ background: accent.fg }}
                       />
-                      <span className="text-[var(--color-fg)]">{a}</span>
-                    </li>
-                  ))}
-                </ul>
+                      <div className="p-6 md:p-8 pl-7 md:pl-9">
+                        {/*
+                         * Two-column header: title on the left, optional org
+                         * logo on the right. When `logo` is absent (e.g. the
+                         * sport entries), the title fills the row alone and
+                         * the layout collapses gracefully.
+                         */}
+                        <div className="flex items-start justify-between gap-4 mb-2">
+                          <h3
+                            className="display text-2xl md:text-3xl font-bold tracking-tight"
+                            style={{ color: accent.fg }}
+                          >
+                            {h.title}
+                          </h3>
+                          {h.logo && (
+                            <span
+                              aria-hidden="true"
+                              className="shrink-0 inline-flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-md bg-[var(--color-bg-raised)] border border-[var(--color-border-strong)] overflow-hidden shadow-[var(--shadow-card)]"
+                            >
+                              <Image
+                                src={h.logo}
+                                alt=""
+                                width={80}
+                                height={80}
+                                className="h-full w-full object-contain p-1.5"
+                              />
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-base text-[var(--color-fg-muted)] mb-5 max-w-prose leading-relaxed">
+                          {h.description}
+                        </p>
+                        <ul className="space-y-3">
+                          {h.anecdotes.map((a) => (
+                            <li key={a.slice(0, 60)} className="flex gap-3 leading-relaxed">
+                              <span
+                                aria-hidden="true"
+                                className="mt-2 w-1 h-1 rounded-full shrink-0"
+                                style={{ background: accent.fg }}
+                              />
+                              <span className="text-[var(--color-fg)]">{a}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             </section>
           );

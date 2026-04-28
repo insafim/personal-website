@@ -1,0 +1,7 @@
+order: 2
+year_range: May 2024 - Aug 2024
+role: AI Research Engineer
+company: visionlabs
+employment_type: Internship
+mode: Hybrid
+summary: Face recognition with synthetic data augmentation. Built descriptor-extraction and synthetic-augmentation stages of a face-recognition pipeline; mixed real+synthetic training improved accuracy by 30% across 7 benchmarks.

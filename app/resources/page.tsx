@@ -8,34 +8,45 @@ export const metadata: Metadata = buildMetadata({
   path: "/resources",
   title: "Resources",
   description:
-    "Curated talks, repositories, models, and writing — each annotated with why it matters.",
+    "Curated talks, repositories, models, and writing - each annotated with why it matters.",
 });
 
 const KINDS: Array<{
   key: "talk" | "repo" | "model" | "writing";
   label: string;
+  // Singular form used by the count's aria-label when items.length === 1, so
+  // assistive tech reads "1 talk" instead of the grammatically wrong "1 talks".
+  singular: string;
   blurb: string;
 }> = [
-  { key: "talk", label: "Talks", blurb: "Conference talks and recorded sessions worth your time." },
+  {
+    key: "talk",
+    label: "Talks",
+    singular: "talk",
+    blurb: "Conference talks and recorded sessions worth your time.",
+  },
   {
     key: "repo",
     label: "Repositories",
-    blurb: "Code I keep coming back to — for ideas, primitives, or the way they're built.",
+    singular: "repository",
+    blurb: "Code I keep coming back to - for ideas, primitives, or the way they're built.",
   },
   {
     key: "model",
     label: "Models",
+    singular: "model",
     blurb: "Open-weight models I've tested or shipped against.",
   },
   {
     key: "writing",
     label: "Writing",
+    singular: "writing",
     blurb: "Essays, papers, and posts that changed how I think.",
   },
 ];
 
 export default function ResourcesPage() {
-  // US-029 (could-have): suggested reading order — show items with reading_order
+  // US-029 (could-have): suggested reading order - show items with reading_order
   // ascending, then the rest grouped by kind.
   const readingOrderEnabled = siteConfig.feature_flags.reading_order;
   const ordered = readingOrderEnabled
@@ -49,7 +60,7 @@ export default function ResourcesPage() {
       <PageIntro
         eyebrow="Curated"
         title="Resources"
-        description="A short, opinionated reading list — talks, repositories, models, and writing that have shaped how I work, with a one-line annotation on each."
+        description="A short, opinionated reading list - talks, repositories, models, and writing that have shaped how I work, with a one-line annotation on each."
       />
 
       {ordered.length > 0 && (
@@ -89,16 +100,36 @@ export default function ResourcesPage() {
       )}
 
       <div className="space-y-12">
-        {KINDS.map(({ key, label, blurb }) => {
+        {KINDS.map(({ key, label, singular, blurb }) => {
           const items = resources.filter((r) => r.kind === key);
           if (items.length === 0) return null;
           return (
             <section key={key}>
               <div className="mb-5">
+                {/*
+                 * Hit-count pattern (Simon Willison-style /tags/<slug>): a bare
+                 * right-aligned count signals section weight at a glance.
+                 * Inspired by: https://simonwillison.net/tags/ (verified 2026-04-27).
+                 *
+                 * `data-resource-count` is a load-bearing e2e selector - see
+                 * tests/e2e/smoke.spec.ts for the assertion contract.
+                 */}
+                {/*
+                 * items-center keeps the .section-rule decorative bar centered
+                 * on the heading's cross-axis (its `vertical-align` tuning is
+                 * ignored once the bar is a flex child, but center alignment
+                 * yields the same visual result as the prior non-flex layout).
+                 */}
                 <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight flex items-center mb-1">
                   <span className="section-rule bg-[var(--color-accent)]" aria-hidden="true" />
                   {label}
-                  <span className="ml-3 text-sm font-normal metadata">({items.length})</span>
+                  <span
+                    data-resource-count=""
+                    aria-label={`${items.length} ${items.length === 1 ? singular : label.toLowerCase()}`}
+                    className="ml-auto metadata text-sm tabular-nums text-[var(--color-fg-muted)] font-normal"
+                  >
+                    {items.length}
+                  </span>
                 </h2>
                 <p className="text-sm text-[var(--color-fg-muted)] ml-[0.875rem] max-w-2xl">
                   {blurb}

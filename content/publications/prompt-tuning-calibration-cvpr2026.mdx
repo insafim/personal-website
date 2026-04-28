@@ -9,7 +9,7 @@ venue: CVPR 2026
 year: 2026
 type: conference
 abstract: |
-  Prompt tuning has become the standard way to adapt vision-language models like CLIP to downstream tasks, but tuned prompts consistently degrade *calibration* — the model becomes more confident than it should be — even when accuracy improves. This paper proposes a dual-regularization calibration framework combining a mean-variance margin loss with text moment-matching, reducing Expected Calibration Error across 11 datasets and 7 prompt-tuning methods without sacrificing classification accuracy.
+  Prompt tuning has become the standard way to adapt vision-language models like CLIP to downstream tasks, but tuned prompts consistently degrade *calibration* - the model becomes more confident than it should be - even when accuracy improves. This paper proposes a dual-regularization calibration framework combining a mean-variance margin loss with text moment-matching, reducing Expected Calibration Error across 11 datasets and 7 prompt-tuning methods without sacrificing classification accuracy.
 contribution_summary: |
   Contributed to the empirical evaluation across 11 datasets and 7 prompt-tuning methods, and to the analysis showing that the dual-regularization framework reduces miscalibration without trading off the accuracy gains the underlying prompt-tuning methods provide.
 arxiv_id: "2602.19024"
@@ -30,7 +30,7 @@ tags: [vlm, clip, prompt-tuning, calibration, ece]
 
 Prompt tuning improves accuracy on a downstream task, but a model that becomes
 *more confident* about its wrong answers is often worse downstream than the
-zero-shot baseline — especially in selective-prediction or human-in-the-loop
+zero-shot baseline - especially in selective-prediction or human-in-the-loop
 settings. Calibration is the missing axis the accuracy-only metric hides.
 
 ## What the dual-regularization does

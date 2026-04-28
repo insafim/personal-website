@@ -21,6 +21,40 @@ const TYPE_LABEL: Record<Publication["type"], string> = {
   "tech-report": "Tech report",
 };
 
+/*
+ * Distill-style TYPE badges (verified at https://distill.pub).
+ *
+ * Three-tier palette so the badge communicates editorial weight at a glance:
+ *  - Peer-reviewed venues (conference, journal) take the accent tint - the
+ *    strongest signal of credibility and the most common case.
+ *  - Workshop sits between peer-reviewed and unreviewed and gets a neutral
+ *    raised surface so it reads as "reviewed but lighter".
+ *  - Preprint / thesis / tech-report stay on the muted bg-subtle palette so
+ *    they don't compete with the first-author research accent bar that
+ *    already sits to the left of the card.
+ *
+ * Risk note from .claude/research/personal-websites-inspiration.md (§6):
+ * use --color-fg-muted border on non-distinguishing types; reserve the
+ * accent fill for the strong tier only.
+ */
+// Exported so unit tests in tests/lib/ can verify the palette contract
+// (peer-reviewed types use accent-soft; others don't) without depending on
+// the publication content fixture, which today is conference-only.
+export const TYPE_PALETTE: Record<Publication["type"], string> = {
+  conference:
+    "bg-[var(--color-accent-soft)] text-[var(--color-accent)] border-[var(--color-accent)]/30",
+  journal:
+    "bg-[var(--color-accent-soft)] text-[var(--color-accent)] border-[var(--color-accent)]/30",
+  workshop:
+    "bg-[var(--color-bg-raised)] text-[var(--color-fg)] border-[var(--color-border-strong)]",
+  preprint:
+    "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
+  thesis:
+    "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
+  "tech-report":
+    "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
+};
+
 export function PublicationCard({ publication: p }: { publication: Publication }) {
   const isFirst = p.authorship_order === "first" || p.authorship_order === "co-first";
 
@@ -34,7 +68,14 @@ export function PublicationCard({ publication: p }: { publication: Publication }
       )}
       <div className={`${isFirst ? "pl-3" : ""}`}>
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-[0.12em] bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border border-[var(--color-border)]">
+          {/*
+           * data-pub-type is a load-bearing e2e selector - see
+           * tests/e2e/smoke.spec.ts for the assertion contract. Don't remove.
+           */}
+          <span
+            data-pub-type={p.type}
+            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-[0.12em] border ${TYPE_PALETTE[p.type]}`}
+          >
             {TYPE_LABEL[p.type]}
           </span>
           {isFirst && (
