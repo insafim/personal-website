@@ -156,12 +156,25 @@ Edit `content/redirects.yaml`; entries are compiled into Next.js redirects at bu
 
 The site deploys to **Vercel** on push to `main`.
 
-1. Connect the repo to a Vercel project.
-2. Set `NEXT_PUBLIC_SITE_URL=https://insafismath.com` in **Production** environment variables. Use the Vercel preview URL (or omit) for **Preview**.
-3. Add `insafismath.com` (and `www.insafismath.com`) as custom domains in Vercel — see [Connecting the domain](#connecting-the-domain) below.
-4. Vercel auto-detects Next.js — no build/output overrides needed.
+1. In Vercel, **Add New → Project → Import** the GitHub repo. Vercel auto-detects Next.js, so leave the framework, build, and output settings at their defaults.
+2. Add `NEXT_PUBLIC_SITE_URL=https://insafismath.com` to the **Production** environment. Use the Vercel preview URL (or omit) for **Preview**. Type the Key by hand rather than pasting; Vercel rejects keys with trailing whitespace or non `[A-Z0-9_]` characters.
+3. Add the custom domains:
+   - Add `insafismath.com` as a Production domain. **Uncheck** Vercel's default "Redirect insafismath.com to www.insafismath.com" checkbox; we want the apex as primary, not the redirect target. See [Apex vs www](#apex-vs-www-which-one-is-canonical) for the rationale.
+   - Add `www.insafismath.com` separately, this time as `Redirect to Another Domain → insafismath.com` with redirect type **308 Permanent Redirect**.
+   - Then point DNS at Vercel: see [Connecting the domain](#connecting-the-domain) below.
 
 Security headers (CSP, HSTS, X-Frame-Options, Permissions-Policy) are applied via `next.config.mjs`. Non-production deployments emit `X-Robots-Tag: noindex, nofollow` so previews don't get indexed.
+
+### Apex vs www: which one is canonical
+
+`insafismath.com` (the **apex**) is the canonical / primary host. `www.insafismath.com` is configured as a 308 permanent redirect to the apex. Reasons:
+
+- **Code consistency.** `NEXT_PUBLIC_SITE_URL` is set to `https://insafismath.com`, and the canonical tags, `og:url` Open Graph metadata, JSON-LD, and every URL in `sitemap.xml` are derived from that env var. The primary serving host must match, or search engines see a contradiction between what the HTML claims is canonical and what is actually served.
+- **Brevity.** `insafismath.com` is shorter on a CV, business card, or in conversation than `www.insafismath.com`.
+- **Modern convention.** Most current platforms publish on the apex (`github.com`, `vercel.com`, `stripe.com`, `notion.so`). The `www.` prefix is a 1990s artifact from when organisations distinguished web servers (`www.`) from FTP (`ftp.`) and mail (`mail.`).
+- **No technical drawback on Vercel.** The historical reason to prefer `www.` (DNS providers that did not allow CNAME on the apex, plus IP-pinning fragility) does not apply when DNS is delegated to Vercel nameservers, since Vercel resolves the apex internally.
+
+If you ever want to flip the canonical to `www.`, three things have to change together: the `NEXT_PUBLIC_SITE_URL` env var, the primary domain in Vercel, and the redirect direction. None of them work in isolation.
 
 ### Connecting the domain
 
@@ -173,7 +186,7 @@ Pick **one** of the two options below depending on whether you want Vercel to ru
 
 Best if you don't already host email or other services on this domain. Vercel manages everything.
 
-1. **Vercel** → project → **Settings → Domains** → **Add** → enter `insafismath.com`. Add `www.insafismath.com` too; pick which one is primary (apex is conventional — Vercel auto-redirects `www` → apex).
+1. **Vercel** → project → **Settings → Domains** → **Add Existing**. Add the domains in the order described in step 3 of [Deployment](#deployment) above (apex first as Production, then `www.` as a 308 redirect to the apex). Vercel's UI defaults to the apex-to-www redirect direction; uncheck that checkbox so the apex stays primary.
 2. Vercel shows two nameservers, e.g. `ns1.vercel-dns.com` and `ns2.vercel-dns.com`.
 3. At the **registrar** (where the domain was purchased), open the domain's settings → **Nameservers** → switch from "default" to "custom" → paste both Vercel nameservers → save.
 4. Wait 5 min – 48 h for propagation. Vercel auto-issues a Let's Encrypt certificate once the domain resolves.
@@ -186,10 +199,10 @@ In the registrar's DNS panel, add:
 
 | Type  | Name  | Value                  | Notes |
 |-------|-------|------------------------|-------|
-| A     | `@`   | `76.76.21.21`          | apex → Vercel |
+| A     | `@`   | `216.198.79.1`         | apex (current Vercel anycast IP; legacy `76.76.21.21` still resolves but is the deprecated address) |
 | CNAME | `www` | `cname.vercel-dns.com` | www subdomain |
 
-Some registrars don't allow CNAME on `@`; use the A record above for the apex. Some require a trailing dot (`cname.vercel-dns.com.`).
+Some registrars don't allow CNAME on `@`; use the A record above for the apex. Some require a trailing dot (`cname.vercel-dns.com.`). The exact values shown in your project's **Settings → Domains → DNS Records** tab are authoritative; if Vercel migrates the range again, copy from there.
 
 Then in **Vercel → Settings → Domains**, add both `insafismath.com` and `www.insafismath.com`. Vercel verifies the records and provisions TLS automatically.
 
@@ -208,6 +221,30 @@ Then in **Vercel → Settings → Domains**, add both `insafismath.com` and `www
 - **`www` cert pending** — usually means the CNAME hasn't propagated yet. Wait, then click **Refresh** in Vercel.
 - **HSTS preload** — `next.config.mjs` sends `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload`. Do **not** submit the domain to the [HSTS preload list](https://hstspreload.org/) until every subdomain you'll ever want is HTTPS-only — backing out is slow.
 - **Slow propagation** — if previous DNS records had a long TTL (hours/days), propagation follows that old TTL, not the new record's TTL.
+- **Env var key validation**: Vercel rejects environment variable keys that contain anything other than `[A-Z0-9_]` or that start with a digit. Pasting a key into the Vercel UI can carry trailing whitespace; type the key by hand if you hit an "invalid characters" error.
+- **Vercel IP migration**: Vercel rotated its anycast IP from `76.76.21.21` to `216.198.79.1` during 2025. The legacy IP still resolves for backwards compatibility, but the DNS Records tab in your project's domain settings is the authoritative source for the value to use today.
+
+### Day-to-day updates
+
+After the initial setup, the production workflow is:
+
+```bash
+# 1. Edit content or code locally
+$EDITOR content/projects/my-new-project.mdx
+
+# 2. (optional) Sanity-check the build
+pnpm content:build   # validates frontmatter against the Velite schema
+pnpm dev             # live preview at http://localhost:3000
+
+# 3. Commit and push
+git add content/projects/my-new-project.mdx
+git commit -m "add my-new-project"
+git push origin main
+```
+
+Vercel watches the `main` branch and triggers a fresh build on every push. Builds take roughly 90 seconds. The previous deployment stays live until the new one succeeds, so a broken build cannot take the site down. Vercel sends an email on every deploy result.
+
+For a content-only change, no other action is required. For a config change (e.g. a new env var, a redirect, a security header), set the value in Vercel's project settings before pushing the code that depends on it; otherwise the first build after the push will run without the new value.
 
 ## CI
 
