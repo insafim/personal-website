@@ -13,7 +13,25 @@ export default defineConfig({
     baseURL: BASE_URL,
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  // Two projects so mobile-only assertions (no horizontal scroll, hamburger
+  // visibility) run at a phone viewport while the rest of the suite stays on
+  // Desktop Chrome. testMatch / testIgnore segregate the spec files between
+  // them so each runs in exactly one project.
+  projects: [
+    {
+      name: "chromium",
+      use: { ...devices["Desktop Chrome"] },
+      testIgnore: /mobile\.spec\.ts/,
+    },
+    {
+      // Pixel 5 (not iPhone 13) so the project keeps the same browser engine
+      // as the desktop project. Switching to a WebKit device would force CI
+      // to install a second browser binary just for one spec file.
+      name: "mobile",
+      use: { ...devices["Pixel 5"] },
+      testMatch: /mobile\.spec\.ts/,
+    },
+  ],
   ...(process.env.PLAYWRIGHT_BASE_URL
     ? {}
     : {

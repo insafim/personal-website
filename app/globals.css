@@ -112,15 +112,25 @@
 /* Base body. */
 body {
   background-color: var(--color-bg);
+  /* Mobile uses a flat vertical gradient only; the corner-anchored radial
+     accents below (top-left, 85% 10%) were tuned for desktop widths and
+     produced a visible seam on narrow viewports. */
   background-image:
-    radial-gradient(circle at top left, var(--color-accent-soft), transparent 30%),
-    radial-gradient(circle at 85% 10%, var(--color-research-soft), transparent 24%),
     linear-gradient(to bottom, color-mix(in oklch, var(--color-bg) 92%, white), var(--color-bg));
   color: var(--color-fg);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   min-height: 100dvh;
+}
+
+@media (min-width: 768px) {
+  body {
+    background-image:
+      radial-gradient(circle at top left, var(--color-accent-soft), transparent 30%),
+      radial-gradient(circle at 85% 10%, var(--color-research-soft), transparent 24%),
+      linear-gradient(to bottom, color-mix(in oklch, var(--color-bg) 92%, white), var(--color-bg));
+  }
 }
 
 main {
@@ -264,22 +274,25 @@ main {
   background: linear-gradient(155deg, var(--color-accent), var(--color-border-strong));
 }
 
-/* Hero glow - single soft radial behind the hero. */
+/* Hero glow - single soft radial behind the hero. Desktop-only; on a phone
+   viewport the 50%-wide blob compresses to a visible right-edge band. */
 .hero-glow {
   position: relative;
   isolation: isolate;
 }
-.hero-glow::before {
-  content: "";
-  position: absolute;
-  inset: -8% -10% auto auto;
-  width: 50%;
-  aspect-ratio: 1;
-  background: radial-gradient(circle, var(--color-accent-soft), transparent 65%);
-  filter: blur(48px);
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.6;
+@media (min-width: 768px) {
+  .hero-glow::before {
+    content: "";
+    position: absolute;
+    inset: -8% -10% auto auto;
+    width: 50%;
+    aspect-ratio: 1;
+    background: radial-gradient(circle, var(--color-accent-soft), transparent 65%);
+    filter: blur(48px);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.6;
+  }
 }
 
 /* Connector line - used between timeline entries. */
