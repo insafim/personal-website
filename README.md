@@ -98,6 +98,8 @@ tests/
 
 ## Adding content
 
+> Quick reference for non-developers: see [`docs/CONTENT.md`](docs/CONTENT.md) for a tighter "where do I edit X" cheatsheet. The detailed reference below is the source of truth.
+
 All site content lives in `content/`. Most collections are MDX (frontmatter + body); a few timeline-style collections (career, education, schools, companies) are plain YAML. Velite validates content against the Zod schemas in `velite.config.ts`, and `pnpm content:build` will fail loudly on schema violations. The fastest workflow: copy an existing file in the same folder as a template, change the fields (and body, for MDX), save, and `pnpm dev` will hot-reload via the Velite watcher.
 
 ### Where each type of content lives
