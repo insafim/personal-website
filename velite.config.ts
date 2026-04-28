@@ -25,6 +25,15 @@ const person = defineCollection({
       avatar_url: s.string(),
       og_image_default: s.string(),
       email_obfuscated: s.string().min(1),
+      // Optional phone in display format (digits and spaces, prefixed with +).
+      // The contact page derives two hrefs from this single value:
+      //   tel:    strips whitespace only (keeps the + prefix).
+      //   wa.me/  strips all non-digits (drops the + as well; wa.me wants
+      //           digits only after the slash).
+      phone: s
+        .string()
+        .regex(/^\+[\d\s]+$/, "phone must start with + and contain only digits and spaces")
+        .optional(),
       github_url: externalUrl,
       scholar_url: externalUrl,
       linkedin_url: externalUrl,

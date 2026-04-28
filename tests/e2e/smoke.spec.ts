@@ -379,6 +379,38 @@ test("contact page renders reveal-email button", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Reveal contact email/i })).toBeVisible();
 });
 
+test("contact page renders phone and WhatsApp action links from person.phone", async ({ page }) => {
+  // Contract (per content/person.mdx + app/contact/page.tsx):
+  //   tel:   strips whitespace from the display number.
+  //   wa.me: strips ALL non-digits (so the leading + is gone, leaving the
+  //          E.164 digits). This is wa.me's required format.
+  // Catches: deletion of the phone block when person.phone is set, regression
+  // in the strip rules, or swapping the two link targets.
+  await page.goto("/contact");
+  const callLink = page.locator('a[href^="tel:"]');
+  await expect(callLink).toHaveCount(1);
+  await expect(callLink).toHaveAttribute("href", /^tel:\+\d+$/);
+
+  const whatsappLink = page.locator('a[href*="wa.me"]');
+  await expect(whatsappLink).toHaveCount(1);
+  // wa.me requires digits only after the slash, no leading +.
+  await expect(whatsappLink).toHaveAttribute("href", /^https:\/\/wa\.me\/\d+$/);
+
+  // Visible display number paragraph: catches deletion of the human-readable
+  // <p>{person.phone}</p> element above the action buttons. The text query
+  // matches against the rendered text node directly, not aria-label.
+  await expect(page.getByText("+971 56 607 1157", { exact: true })).toBeVisible();
+
+  // getByRole("link", { name }) resolves the accessible name. Both action
+  // links carry an aria-label (Call <number> / Open WhatsApp chat with
+  // <number>), so the regex matches against aria-label, not the inner span
+  // text. If the aria-label prefix is renamed in the future, these
+  // assertions break - intentional, because the leading word is the user-
+  // visible action verb to assistive tech.
+  await expect(page.getByRole("link", { name: /^Call/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Open WhatsApp chat with/i })).toBeVisible();
+});
+
 test("404 renders branded fallback", async ({ page }) => {
   const res = await page.goto("/this-page-definitely-does-not-exist");
   expect(res?.status()).toBe(404);
