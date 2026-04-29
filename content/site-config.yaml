@@ -30,6 +30,6 @@ nav:
     - { label: Contact,      href: /contact,      order: 6 }
   footer: []
   social:
-    - { label: GitHub,   href: "https://github.com/iminsaf",                  order: 1 }
+    - { label: GitHub,   href: "https://github.com/insafim",                  order: 1 }
     - { label: LinkedIn, href: "https://www.linkedin.com/in/iminsaf",         order: 2 }
     - { label: Scholar,  href: "https://scholar.google.com/citations?user=insafismath", order: 3 }
