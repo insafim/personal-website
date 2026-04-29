@@ -30,7 +30,6 @@ export default function HomePage() {
   const latestPublication = sortByYearDesc(publications)[0];
   const featuredProject =
     projects.find((p) => p.category === "enterprise" && p.status === "shipped") ?? projects[0];
-  const currentFocus = "Production AI at 2PointZero (IHC)";
 
   return (
     <>
@@ -38,7 +37,6 @@ export default function HomePage() {
       <HomeSignals
         latestPublication={latestPublication}
         featuredProject={featuredProject}
-        currentFocus={currentFocus}
       />
       <PersonJsonLd />
     </>

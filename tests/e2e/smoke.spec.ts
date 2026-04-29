@@ -5,17 +5,6 @@ test("home renders hero with name", async ({ page }) => {
   await expect(page.locator("h1")).toContainText("Insaf Ismath");
 });
 
-test("home renders exactly one live 'Currently' SignalCard", async ({ page }) => {
-  await page.goto("/");
-  // data-live marks the "now" freshness signal - must be applied to exactly one card.
-  const liveCards = page.locator("[data-live]");
-  await expect(liveCards).toHaveCount(1);
-  await expect(liveCards.first()).toContainText(/Currently/i);
-  // Pulsing dot is the user-visible deliverable; assert the decorative span exists
-  // inside the eyebrow paragraph so deleting the dot fails this test.
-  await expect(liveCards.first().locator("p > span[aria-hidden='true']")).toBeVisible();
-});
-
 test("about renders career timeline", async ({ page }) => {
   await page.goto("/about");
   await expect(page.locator("h1")).toContainText("Insaf Ismath");

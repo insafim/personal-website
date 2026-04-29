@@ -4,17 +4,17 @@ import type { Project, Publication } from "#site/content";
 type HomeSignalsProps = {
   latestPublication: Publication | undefined;
   featuredProject: Project | undefined;
-  currentFocus: string;
 };
 
-export function HomeSignals({
-  latestPublication,
-  featuredProject,
-  currentFocus,
-}: HomeSignalsProps) {
+// Two cards by design (latest publication + featured project) so the home page
+// stays a tight scannable pitch and lets the about page own narrative content
+// like "currently" / "open to roles". The SignalCard `live` prop is intentionally
+// preserved for future use (e.g. a now-page-style update) even though no card
+// sets it today.
+export function HomeSignals({ latestPublication, featuredProject }: HomeSignalsProps) {
   return (
     <section aria-label="Current signals" className="px-4 pb-16 max-w-5xl mx-auto">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         {latestPublication && (
           <SignalCard
             label="Latest publication"
@@ -33,14 +33,6 @@ export function HomeSignals({
             href={`/projects/${featuredProject.slug}`}
           />
         )}
-        <SignalCard
-          label="Currently"
-          color="independent"
-          title={currentFocus}
-          meta="Open to senior AI/ML, FDE, applied scientist roles · Abu Dhabi / Dubai"
-          href="/contact"
-          live
-        />
       </div>
     </section>
   );
