@@ -1,7 +1,6 @@
 import Link from "next/link";
 import type { Publication } from "#site/content";
-
-const AUTHOR_NAME = "Insaf Ismath";
+import { isSelfAuthor } from "@/lib/publications";
 
 const AUTHORSHIP_LABEL: Record<Publication["authorship_order"], string> = {
   first: "First author",
@@ -47,10 +46,8 @@ export const TYPE_PALETTE: Record<Publication["type"], string> = {
     "bg-[var(--color-accent-soft)] text-[var(--color-accent)] border-[var(--color-accent)]/30",
   workshop:
     "bg-[var(--color-bg-raised)] text-[var(--color-fg)] border-[var(--color-border-strong)]",
-  preprint:
-    "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
-  thesis:
-    "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
+  preprint: "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
+  thesis: "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
   "tech-report":
     "bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border-[var(--color-border)]",
 };
@@ -60,13 +57,16 @@ export function PublicationCard({ publication: p }: { publication: Publication }
 
   return (
     <article className="surface-elevated is-interactive relative p-5 md:p-6 overflow-hidden">
-      {isFirst && (
-        <span
-          aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-1 bg-[var(--color-research)]"
-        />
-      )}
-      <div className={`${isFirst ? "pl-3" : ""}`}>
+      {/*
+       * Research accent bar renders on every card. The "First author" badge
+       * carries the authorship signal; the bar is now a flat-list visual
+       * rhythm cue rather than an authorship marker.
+       */}
+      <span
+        aria-hidden="true"
+        className="absolute inset-y-0 left-0 w-1 bg-[var(--color-research)]"
+      />
+      <div className="pl-3">
         <div className="flex flex-wrap items-center gap-2 mb-3">
           {/*
            * data-pub-type is a load-bearing e2e selector - see
@@ -97,10 +97,7 @@ export function PublicationCard({ publication: p }: { publication: Publication }
 
         <p className="text-sm text-[var(--color-fg-muted)] mb-2 leading-relaxed">
           {p.authors.map((a, i) => (
-            <span
-              key={a}
-              className={a === AUTHOR_NAME ? "font-semibold text-[var(--color-fg)]" : ""}
-            >
+            <span key={a} className={isSelfAuthor(a) ? "font-semibold text-[var(--color-fg)]" : ""}>
               {a}
               {i < p.authors.length - 1 ? ", " : ""}
             </span>

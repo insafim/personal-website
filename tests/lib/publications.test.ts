@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildProseCitation } from "../../lib/publications";
+import { buildProseCitation, isSelfAuthor } from "../../lib/publications";
 
 // Minimal stand-in for the Publication shape - only fields buildProseCitation reads.
 type CitableLike = {
@@ -61,5 +61,54 @@ describe("buildProseCitation", () => {
       make({ authors: ["Benjamin Sanchez-Lengeling"], title: "X", venue: "Distill", year: 2021 }) as never
     );
     expect(out).toBe('Sanchez-Lengeling, "X", Distill, 2021.');
+  });
+
+  // Production MDX uses these author-name shapes. Pinning them in unit tests
+  // catches a regression where buildProseCitation is wired to use isSelfAuthor
+  // (which would collapse all aliases to a single bucket) instead of the
+  // last-whitespace-token surname extraction the prose citation pattern uses.
+  it("handles 'Mohamed Insaf Ismithdeen' (multi-author) producing 'Ismithdeen, et al.'", () => {
+    const out = buildProseCitation(
+      make({
+        authors: ["Mohamed Insaf Ismithdeen", "Other"],
+        title: "Promptception",
+        venue: "EMNLP",
+        year: 2025,
+      }) as never
+    );
+    expect(out).toBe('Ismithdeen, et al., "Promptception", EMNLP, 2025.');
+  });
+
+  it("handles initials-only 'I. M. Insaf' by taking 'Insaf' as the surname token", () => {
+    const out = buildProseCitation(
+      make({ authors: ["I. M. Insaf"], title: "GHI", venue: "ICIIS", year: 2021 }) as never
+    );
+    expect(out).toBe('Insaf, "GHI", ICIIS, 2021.');
+  });
+});
+
+describe("isSelfAuthor", () => {
+  // The alias list in lib/publications.ts is the single source of truth for
+  // bold-byline rendering across PublicationCard and the detail page; this
+  // suite locks the contract so adding/removing an alias is an explicit edit.
+  it("matches the canonical short name", () => {
+    expect(isSelfAuthor("Insaf Ismath")).toBe(true);
+  });
+
+  it("matches the full legal name as it appears in the CVPR/Promptception MDX", () => {
+    expect(isSelfAuthor("Mohamed Insaf Ismithdeen")).toBe(true);
+  });
+
+  it("matches the IEEE-initials byline used in the ICIIS papers", () => {
+    expect(isSelfAuthor("I. M. Insaf")).toBe(true);
+  });
+
+  it("does not match unrelated co-authors", () => {
+    expect(isSelfAuthor("Other Person")).toBe(false);
+    expect(isSelfAuthor("Ashshak Sharifdeen")).toBe(false);
+  });
+
+  it("is case-sensitive (matches the rendered byline exactly, no normalisation)", () => {
+    expect(isSelfAuthor("insaf ismath")).toBe(false);
   });
 });

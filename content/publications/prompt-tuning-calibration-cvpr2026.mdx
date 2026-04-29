@@ -2,40 +2,37 @@
 slug: prompt-tuning-calibration-cvpr2026
 title: Towards Calibrating Prompt Tuning of Vision-Language Models
 authors:
-  - Insaf Ismath
-  - others
+  - Ashshak Sharifdeen
+  - Fahad Shamshad
+  - Muhammad Akhtar Munir
+  - Abhishek Basu
+  - Mohamed Insaf Ismithdeen
+  - Jeyapriyan Jeyamohan
+  - Chathurika Sewwandi Silva
+  - Karthik Nandakumar
+  - Muhammad Haris Khan
 authorship_order: middle
 venue: CVPR 2026
+venue_logo: /assets/publications/cvpr-2026-logo.png
 year: 2026
 type: conference
 abstract: |
-  Prompt tuning has become the standard way to adapt vision-language models like CLIP to downstream tasks, but tuned prompts consistently degrade *calibration* - the model becomes more confident than it should be - even when accuracy improves. This paper proposes a dual-regularization calibration framework combining a mean-variance margin loss with text moment-matching, reducing Expected Calibration Error across 11 datasets and 7 prompt-tuning methods without sacrificing classification accuracy.
+  Prompt tuning of large-scale vision-language models such as CLIP enables efficient task adaptation without updating model weights. However, it often leads to poor confidence calibration and unreliable predictive uncertainty. We address this problem by proposing a calibration framework that enhances predictive reliability while preserving the geometry of the pretrained CLIP embedding space, which is required for robust generalization. Our approach extends the standard cross-entropy loss with two complementary regularizers: (1) a mean-variance margin penalty that stabilizes inter-class logit margins by maximizing their average while minimizing dispersion, mitigating underconfidence and overconfidence spikes; and (2) a text moment-matching loss that aligns the first and second moments of tuned text embeddings with their frozen CLIP counterparts, preserving semantic dispersion crucial for generalization. Through extensive experiments across 7 prompt-tuning methods and 11 diverse datasets, we demonstrate that our approach significantly reduces the Expected Calibration Error (ECE) compared to competitive calibration techniques on both base and novel classes.
 contribution_summary: |
   Contributed to the empirical evaluation across 11 datasets and 7 prompt-tuning methods, and to the analysis showing that the dual-regularization framework reduces miscalibration without trading off the accuracy gains the underlying prompt-tuning methods provide.
 arxiv_id: "2602.19024"
 pdf_url: https://arxiv.org/pdf/2602.19024
+code_repo_url: https://github.com/ashshaksharifdeen/TCPT
+hide_bibtex: true
 bibtex: |
-  @inproceedings{ismath2026prompttuningcalibration,
+  @misc{sharifdeen2026calibratingprompttuningvisionlanguage,
     title         = {Towards Calibrating Prompt Tuning of Vision-Language Models},
-    author        = {Ismath, Insaf and others},
-    booktitle     = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+    author        = {Ashshak Sharifdeen and Fahad Shamshad and Muhammad Akhtar Munir and Abhishek Basu and Mohamed Insaf Ismithdeen and Jeyapriyan Jeyamohan and Chathurika Sewwandi Silva and Karthik Nandakumar and Muhammad Haris Khan},
     year          = {2026},
     eprint        = {2602.19024},
-    archivePrefix = {arXiv}
+    archivePrefix = {arXiv},
+    primaryClass  = {cs.CV},
+    url           = {https://arxiv.org/abs/2602.19024}
   }
 tags: [vlm, clip, prompt-tuning, calibration, ece]
 ---
-
-## Why calibration matters here
-
-Prompt tuning improves accuracy on a downstream task, but a model that becomes
-*more confident* about its wrong answers is often worse downstream than the
-zero-shot baseline - especially in selective-prediction or human-in-the-loop
-settings. Calibration is the missing axis the accuracy-only metric hides.
-
-## What the dual-regularization does
-
-The mean-variance margin loss penalizes confident wrong predictions; the text
-moment-matching term keeps the tuned prompt embedding close to the original CLIP
-text distribution, which is the part of the model that was actually well-calibrated
-to begin with. Together they reduce ECE without sacrificing the accuracy lift.

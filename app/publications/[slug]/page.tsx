@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { publications } from "#site/content";
 import { BibTeXBlock } from "@/components/BibTeXBlock";
 import { PageIntro } from "@/components/PageIntro";
 import { ScholarlyArticleJsonLd } from "@/components/ScholarlyArticleJsonLd";
 import { buildMetadata } from "@/lib/metadata";
-import { buildProseCitation } from "@/lib/publications";
+import { buildProseCitation, isSelfAuthor } from "@/lib/publications";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -57,10 +58,24 @@ export default async function PublicationDetailPage({ params }: Params) {
     pub.doi ? { label: "DOI", href: `https://doi.org/${pub.doi}` } : null,
     pub.pdf_url ? { label: "PDF", href: pub.pdf_url } : null,
     pub.code_repo_url ? { label: "Code", href: pub.code_repo_url } : null,
+    pub.project_page_url ? { label: "Website", href: pub.project_page_url } : null,
   ].filter((link): link is { label: string; href: string } => Boolean(link));
 
   return (
     <div className="px-4 max-w-5xl mx-auto pt-12 pb-20">
+      {pub.venue_logo && (
+        <div className="mb-4 flex items-center">
+          <span className="logo-frame-light inline-flex h-16 w-auto items-center justify-center rounded-md border border-[var(--color-border-strong)] px-3 py-2 shadow-[var(--shadow-card)]">
+            <Image
+              src={pub.venue_logo}
+              alt={`${pub.venue} logo`}
+              width={160}
+              height={64}
+              className="h-12 w-auto object-contain"
+            />
+          </span>
+        </div>
+      )}
       <PageIntro
         eyebrow={pub.venue}
         title={pub.title}
@@ -88,7 +103,7 @@ export default async function PublicationDetailPage({ params }: Params) {
             {pub.authors.map((a) => (
               <span
                 key={a}
-                className={a === "Insaf Ismath" ? "font-semibold text-[var(--color-fg)]" : ""}
+                className={isSelfAuthor(a) ? "font-semibold text-[var(--color-fg)]" : ""}
               >
                 {a}
                 {a !== pub.authors[pub.authors.length - 1] ? ", " : ""}
@@ -148,7 +163,13 @@ export default async function PublicationDetailPage({ params }: Params) {
         </section>
       )}
 
-      <BibTeXBlock bibtex={pub.bibtex} citation={buildProseCitation(pub)} />
+      {/*
+       * hide_bibtex (velite.config.ts) gates the BibTeX + "Cited as" block on
+       * a per-publication basis. The bibtex field is still required by the
+       * schema because it feeds SSG metadata + ScholarlyArticle JSON-LD; only
+       * the visible UI block is suppressed.
+       */}
+      {!pub.hide_bibtex && <BibTeXBlock bibtex={pub.bibtex} citation={buildProseCitation(pub)} />}
       <ScholarlyArticleJsonLd publication={pub} />
     </div>
   );

@@ -13,14 +13,11 @@ export const metadata: Metadata = buildMetadata({
 
 export default function PublicationsPage() {
   const sorted = sortByYearDesc(publications);
-  const count = sorted.length;
 
   return (
     <div className="px-4 max-w-4xl mx-auto pt-12 pb-20">
       <PageIntro
-        eyebrow={`${count} ${count === 1 ? "paper" : "papers"}`}
         title="Publications"
-        description="Peer-reviewed work on multimodal LLMs, vision-language calibration, and computer vision - with abstracts, BibTeX, and direct links to PDFs."
         utility={
           <a
             href={profile.scholar_url}

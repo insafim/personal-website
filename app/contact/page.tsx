@@ -12,7 +12,6 @@ export const metadata: Metadata = buildMetadata({
 });
 
 const REACH_OUT_REASONS = [
-  "Senior AI/ML, Forward Deployed Engineer, or AI Applied Scientist roles in Abu Dhabi or Dubai",
   "Research collaborations on multimodal LLMs, vision-language calibration, or evaluation",
   "Speaking, podcast, or panel invitations on enterprise AI and applied research",
 ];

@@ -2,17 +2,22 @@
 slug: dyadic-interaction-iciis2023
 title: Real-time Multiple Dyadic Interaction Detection in Surveillance Videos in the Wild
 authors:
-  - Insaf Ismath
-  - others
+  - I. M. Insaf
+  - A. A. P. Perera
+  - R. Thushara
+  - G. M. R. I. Godaliyadda
+  - M. P. B. Ekanayake
+  - H. M. V. R. Herath
+  - J. B. Ekanayake
 authorship_order: first
 venue: IEEE ICIIS 2023
+venue_logo: /assets/publications/iciis-logo.jpeg
 year: 2023
 type: conference
 abstract: |
-  Surveillance video in the wild contains multiple two-person interactions happening simultaneously in a crowded frame, and most action-recognition pipelines - trained on single-actor or single-pair clips - collapse under that overlap. This paper presents a real-time pipeline that combines YOLOv7 + SORT for spatiotemporal localization, YOLO-Pose for skeleton extraction, and an X3D-M backbone with attention for dyadic interaction classification, jointly delivering crowded-scene multi-dyadic detection at real-time framerates.
+  Social distancing measures are proposed as the primary strategy to curb the spread of pandemics caused by respiratory pathogens. Therefore, non-intrusive techniques to identify human-human interactions in public spaces play an important role in curtailing disease spread. This paper proposes a novel computer vision-based system that identifies multiple co-occurring dyadic, or two-person, interactions in crowded scenarios and classifies them into six action classes. Human skeletons are extracted from RGB videos to eliminate background noise, thereby improving overall detection accuracy. Two classifier approaches are used: X3D-M and X3D-M + Attention. The latter achieves higher classification accuracy due to the attention layer's ability to capture long-distance interdependence across video frames. The efficacy of the proposed model was evaluated on two different datasets comprising more than 5,000 frames, enabling robust detection across different environments. To the best of our knowledge, the proposed model is the first dyadic interaction detector designed for in-the-wild scenarios, making it suitable for use in public spaces to identify and mitigate the transmission of respiratory diseases.
 contribution_summary: |
   Designed and implemented the full three-stage pipeline - detection, tracking, pose extraction, and skeleton-based interaction classification - and validated it on crowded surveillance footage where prior single-pair methods break down.
-pdf_url: https://ieeexplore.ieee.org/document/10253565
 doi: "10.1109/ICIIS58898.2023.10253565"
 bibtex: |
   @inproceedings{ismath2023dyadic,

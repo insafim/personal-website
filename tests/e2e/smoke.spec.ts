@@ -57,17 +57,38 @@ test("education timeline renders Grade and Activities lines for wired entries", 
   await expect(eduSection.getByText(/Activities:/).first()).toBeVisible();
 });
 
-test("publications eyebrow shows 'N papers' count and no year-group H2s", async ({ page }) => {
+test("publications page renders flat list with no year-group H2s", async ({ page }) => {
   // Mutation: restoring year-grouped H2s on /publications. The flat-list
-  // structure is the contract the user requested; this asserts both the
-  // eyebrow format and the absence of year-prefix H2s.
+  // structure is the contract the user requested; the eyebrow + description
+  // were removed in changes_v2 (the page header is now title-only).
   await page.goto("/publications");
-  await expect(page.getByText(/^\d+ papers?$/).first()).toBeVisible();
+  await expect(page.locator("h1")).toContainText("Publications");
+  // Anchor on actual card render so a broken Velite content load does not
+  // pass silently after the eyebrow count was removed (the old "N papers"
+  // assertion implicitly proved content loaded).
+  const cards = page.locator("ul article.surface-elevated");
+  expect(await cards.count()).toBeGreaterThanOrEqual(1);
   const yearHeadings = page.locator("h2").filter({ hasText: /^\d{4}$/ });
   await expect(yearHeadings).toHaveCount(0);
 });
 
-test("timeline logo containers use logo-frame-light when no logo_dark variant is set", async ({ page }) => {
+test("every publication card renders the research accent bar", async ({ page }) => {
+  // changes_v2 dropped the isFirst gate so the purple --color-research bar
+  // renders on every card, not only first-author papers. Mutation guarded:
+  // restoring the {isFirst && ...} wrapper in PublicationCard.tsx.
+  await page.goto("/publications");
+  const cards = page.locator("ul article.surface-elevated");
+  const cardCount = await cards.count();
+  expect(cardCount).toBeGreaterThanOrEqual(1);
+  const bars = page.locator(
+    "ul article.surface-elevated > span.absolute.inset-y-0.left-0.w-1"
+  );
+  await expect(bars).toHaveCount(cardCount);
+});
+
+test("timeline logo containers use logo-frame-light when no logo_dark variant is set", async ({
+  page,
+}) => {
   // Contract: dark-on-transparent brand PNGs must remain visible across both
   // light and dark themes. The container for entries lacking a `logo_dark`
   // field gets .logo-frame-light (always-light surface). No content currently
@@ -172,9 +193,7 @@ test("active project status dot pulses; non-active projects do not", async ({ pa
   // Selector pins to the dot's exact dimensions (w-1.5 h-1.5) so a regression
   // that pulses a different round span inside a card still fails.
   await page.goto("/projects");
-  const activeStatusPills = page.locator(
-    'span.rounded-full[class*="status-active-soft"]'
-  );
+  const activeStatusPills = page.locator('span.rounded-full[class*="status-active-soft"]');
   const pulsingDots = page.locator(
     'span[aria-hidden="true"].motion-safe\\:animate-pulse.rounded-full.w-1\\.5.h-1\\.5'
   );
@@ -233,17 +252,15 @@ test("projects index renders at least one hero-metric block on a featured card",
   // a regression that strips the size utilities is caught.
   const valueSpan = heroMetrics.first().locator("[data-metric-value]");
   await expect(valueSpan).toBeVisible();
-  const fontSize = await valueSpan.evaluate(
-    (el) => Number.parseFloat(getComputedStyle(el).fontSize)
+  const fontSize = await valueSpan.evaluate((el) =>
+    Number.parseFloat(getComputedStyle(el).fontSize)
   );
   expect(fontSize).toBeGreaterThanOrEqual(36);
 
   // Exclusivity: the hero-metric block must NOT be applied to non-featured cards.
   // At least one card on the page must lack the attribute, otherwise the
   // featured-only contract has been broken (e.g. attribute spread to all cards).
-  const cardsWithoutHero = page.locator(
-    "article.surface-elevated:not(:has([data-hero-metric]))"
-  );
+  const cardsWithoutHero = page.locator("article.surface-elevated:not(:has([data-hero-metric]))");
   expect(await cardsWithoutHero.count()).toBeGreaterThan(0);
 });
 
@@ -316,8 +333,28 @@ test("publication detail renders Cited-as prose block above BibTeX", async ({ pa
   await expect(
     page.getByText(/For attribution in academic contexts, please cite this work as/i)
   ).toBeVisible();
-  await expect(page.getByText(/Ismath, et al\., "Promptception/)).toBeVisible();
+  // Surname is the last whitespace token of the first author's full byline; the
+  // Promptception MDX now lists "Mohamed Insaf Ismithdeen" so the prose
+  // citation surfaces as "Ismithdeen, et al., ...".
+  await expect(page.getByText(/Ismithdeen, et al\., "Promptception/)).toBeVisible();
   await expect(page.getByText("BibTeX")).toBeVisible();
+});
+
+test("publication detail suppresses Cited-as + BibTeX when hide_bibtex is true", async ({
+  page,
+}) => {
+  // CVPR 2026 carries hide_bibtex: true so the BibTeXBlock (and its embedded
+  // "Cited as" prose-citation header) must not render. Mutation guarded:
+  // removing the !pub.hide_bibtex guard in app/publications/[slug]/page.tsx.
+  await page.goto("/publications/prompt-tuning-calibration-cvpr2026");
+  await expect(page.locator("h1")).toContainText(
+    "Towards Calibrating Prompt Tuning of Vision-Language Models"
+  );
+  await expect(page.getByText("Cited as")).toHaveCount(0);
+  // BibTeX appears nowhere in the visible DOM. Use a strict role/text query
+  // that ignores the BibTeXBlock chunk-preload script src (which contains the
+  // string "BibTeXBlock_tsx" but is not rendered text).
+  await expect(page.getByText("BibTeX", { exact: true })).toHaveCount(0);
 });
 
 test("resources page renders kind sections", async ({ page }) => {
@@ -423,7 +460,9 @@ test("social links carry brand-icon SVGs in Footer and Contact aside", async ({ 
   await expect(footerGithub.locator("svg")).toHaveCount(1);
 });
 
-test("contact page renders phone and WhatsApp action links from profile.phone", async ({ page }) => {
+test("contact page renders phone and WhatsApp action links from profile.phone", async ({
+  page,
+}) => {
   // Contract (per content/profile.mdx + app/contact/page.tsx):
   //   tel:   strips whitespace from the display number.
   //   wa.me: strips ALL non-digits (so the leading + is gone, leaving the

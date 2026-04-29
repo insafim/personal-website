@@ -48,7 +48,10 @@ const profile = defineCollection({
       arxiv_author_url: externalUrl.optional(),
       // Stable public URL for a downloadable CV (e.g. /assets/cv/insaf-cv.pdf).
       // Optional: when absent, the CV download link is hidden site-wide.
-      cv_url: s.string().regex(/^\//, "cv_url must be a site-relative path starting with /").optional(),
+      cv_url: s
+        .string()
+        .regex(/^\//, "cv_url must be a site-relative path starting with /")
+        .optional(),
       additional_social_links: s
         .array(s.object({ platform: s.string(), url: externalUrl }))
         .optional(),
@@ -135,11 +138,13 @@ const career = defineCollection({
     order: s.number().int().min(1),
     year_range: s.string(),
     role: s.string(),
-    company: s.string().regex(/^[a-z0-9-]+$/, "company must be a kebab-case slug matching content/companies/*.yaml"),
+    company: s
+      .string()
+      .regex(/^[a-z0-9-]+$/, "company must be a kebab-case slug matching content/companies/*.yaml"),
     summary: s.string(),
     // Optional LinkedIn-style metadata; rendered as small chips next to the role.
-    employment_type: s.string().optional(),  // e.g. "Internship", "Part-time", "Full-time"
-    mode: s.string().optional(),             // e.g. "On-site", "Hybrid", "Remote"
+    employment_type: s.string().optional(), // e.g. "Internship", "Part-time", "Full-time"
+    mode: s.string().optional(), // e.g. "On-site", "Hybrid", "Remote"
   }),
 });
 
@@ -152,11 +157,13 @@ const education = defineCollection({
     order: s.number().int().min(1),
     year_range: s.string(),
     degree: s.string(),
-    school: s.string().regex(/^[a-z0-9-]+$/, "school must be a kebab-case slug matching content/schools/*.yaml"),
+    school: s
+      .string()
+      .regex(/^[a-z0-9-]+$/, "school must be a kebab-case slug matching content/schools/*.yaml"),
     summary: s.string(),
     // Optional richer fields rendered as extra lines below the degree.
-    grade: s.string().optional(),       // e.g. "3.95/4.00 (First Class Honors)"
-    activities: s.string().optional(),  // e.g. "Founding President - MBZUAI Consulting Club"
+    grade: s.string().optional(), // e.g. "3.95/4.00 (First Class Honors)"
+    activities: s.string().optional(), // e.g. "Founding President - MBZUAI Consulting Club"
   }),
 });
 
@@ -211,10 +218,28 @@ const publications = defineCollection({
         .optional(),
       bibtex: s.string().min(1),
       code_repo_url: externalUrl.optional(),
+      // Optional companion project page (e.g. a GitHub Pages site or paper
+      // landing page). Surfaced as the "Website" link chip on the detail page
+      // alongside arXiv/DOI/PDF/Code.
+      project_page_url: externalUrl.optional(),
       related_project_id: s.string().optional(),
       tags: s.array(s.string()).optional(),
       extended_abstract_mdx: s.markdown().optional(),
       og_image: s.string().optional(),
+      // Site-relative path to the venue's brand logo (e.g. /assets/publications/cvpr-2026-logo.png).
+      // Rendered above the PageIntro on the detail page only — it does not
+      // appear on the publications index card. Logos live under public/assets/
+      // following the same convention as company/school logos.
+      venue_logo: s
+        .string()
+        .regex(/^\//, "venue_logo must be a site-relative path starting with /")
+        .optional(),
+      // When true, suppresses the BibTeX + "Cited as" prose-citation block on
+      // the detail page. Set on entries whose author group has explicitly
+      // requested no public BibTeX (e.g. preprints under embargo). The bibtex
+      // field itself is still required for SSG metadata + JSON-LD; only the
+      // visible UI block is gated.
+      hide_bibtex: s.boolean().optional(),
     })
     .superRefine((data, ctx) => {
       // NFR-026: at least one of arxiv_id, doi, pdf_url must be present

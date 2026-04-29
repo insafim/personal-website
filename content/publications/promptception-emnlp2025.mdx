@@ -2,24 +2,31 @@
 slug: promptception-emnlp2025
 title: "Promptception: How Sensitive Are Large Multimodal Models to Prompts?"
 authors:
-  - Insaf Ismath
-  - others
+  - Mohamed Insaf Ismithdeen
+  - Muhammad Uzair Khattak
+  - Salman Khan
 authorship_order: first
 venue: Findings of the Association for Computational Linguistics - EMNLP 2025
+venue_logo: /assets/publications/emnlp-2025-logo.jpg
 year: 2025
 type: conference
 abstract: |
-  Large multimodal models (LMMs) are routinely evaluated by reporting a single accuracy number per benchmark, but those numbers are silently a function of the prompt phrasing. Promptception introduces a 61-prompt evaluation framework spanning 15 prompt categories - task framing, role priming, output format, refusal phrasing, and so on - and uses it to measure how much LMM accuracy actually moves under cosmetic prompt variations. Across 10 LMMs (8 open-source, 2 proprietary) on 3 multiple-choice question-answering benchmarks, the framework reveals up to 15 accuracy points of deviation attributable to phrasing alone, surfacing a robustness axis that single-number evaluation hides.
+  Despite the success of Large Multimodal Models (LMMs) in recent years, prompt design for LMMs in Multiple-Choice Question Answering (MCQA) remains poorly understood. We show that even minor variations in prompt phrasing and structure can lead to accuracy deviations of up to 15% for certain prompts and models. This variability poses a challenge for transparent and fair LMM evaluation, as models often report their best-case performance using carefully selected prompts. To address this, we introduce Promptception, a systematic framework for evaluating prompt sensitivity in LMMs. It consists of 61 prompt types, spanning 15 categories and 6 supercategories, each targeting specific aspects of prompt formulation, and is used to evaluate 10 LMMs ranging from lightweight open-source models to GPT-4o and Gemini 1.5 Pro, across 3 MCQA benchmarks: MMStar, MMMU-Pro, and MVBench. Our findings reveal that proprietary models exhibit greater sensitivity to prompt phrasing, reflecting tighter alignment with instruction semantics, while open-source models are steadier but struggle with nuanced and complex phrasing. Based on this analysis, we propose Prompting Principles tailored to proprietary and open-source LMMs, enabling more robust and fair model evaluation.
 contribution_summary: |
   Insaf led the evaluation pipeline - a 1,500+ run distributed inference harness on 20× NVIDIA A100s that orchestrated the full prompt grid across 10 models and 3 benchmarks in under two months, and built the results-aggregation layer that produced the per-category sensitivity findings.
+arxiv_id: "2509.03986"
 pdf_url: https://aclanthology.org/2025.findings-emnlp.1302.pdf
+code_repo_url: https://github.com/insafim/Promptception
+project_page_url: https://insafim.github.io/Promptception/
 bibtex: |
-  @inproceedings{ismath2025promptception,
-    title     = {Promptception: How Sensitive Are Large Multimodal Models to Prompts?},
-    author    = {Ismath, Insaf and others},
-    booktitle = {Findings of the Association for Computational Linguistics: EMNLP 2025},
-    year      = {2025},
-    url       = {https://aclanthology.org/2025.findings-emnlp.1302.pdf}
+  @misc{ismithdeen2025promptceptionsensitivelargemultimodal,
+    title         = {Promptception: How Sensitive Are Large Multimodal Models to Prompts?},
+    author        = {Mohamed Insaf Ismithdeen and Muhammad Uzair Khattak and Salman Khan},
+    year          = {2025},
+    eprint        = {2509.03986},
+    archivePrefix = {arXiv},
+    primaryClass  = {cs.CV},
+    url           = {https://arxiv.org/abs/2509.03986}
   }
 related_project_id: lmm-prompt-sensitivity-eval
 tags: [multimodal, lmm, evaluation, prompt-sensitivity, mcqa]
@@ -37,3 +44,4 @@ Single-prompt evaluation conflates *capability* with *prompt fit*. A grid of phr
 grouped into interpretable categories lets the swing be attributed to *which kind* of
 prompt change a model is sensitive to - task framing, role priming, output format,
 refusal phrasing - instead of producing one collapsed delta.
+
