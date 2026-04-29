@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { profile, siteConfig } from "#site/content";
 import { EmailContact } from "@/components/EmailContact";
 import { PageIntro } from "@/components/PageIntro";
+import { SocialIcon } from "@/components/SocialIcon";
 import { buildMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = buildMetadata({
@@ -101,7 +102,10 @@ export default function ContactPage() {
                   target="_blank"
                   className="group flex items-center justify-between gap-3 px-3 py-2 -mx-3 rounded-md hover:bg-[var(--color-bg-subtle)] transition-colors"
                 >
-                  <span className="text-sm font-medium text-[var(--color-fg)]">{s.label}</span>
+                  <span className="inline-flex items-center gap-2 text-sm font-medium text-[var(--color-fg)]">
+                    <SocialIcon label={s.label} size={16} />
+                    <span>{s.label}</span>
+                  </span>
                   <span
                     aria-hidden="true"
                     className="text-[var(--color-fg-muted)] group-hover:text-[var(--color-accent)] transition-colors"

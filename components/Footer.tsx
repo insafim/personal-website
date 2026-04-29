@@ -1,4 +1,5 @@
 import { siteConfig } from "#site/content";
+import { SocialIcon } from "@/components/SocialIcon";
 
 export function Footer() {
   const social = (siteConfig.nav?.social ?? []).slice().sort((a, b) => a.order - b.order);
@@ -28,6 +29,7 @@ export function Footer() {
                     {...(link.external ? { rel: "noopener noreferrer", target: "_blank" } : {})}
                     className="inline-flex items-center gap-1.5 rounded-full border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-3 py-1.5 text-sm text-[var(--color-fg-muted)] transition-colors hover:border-[var(--color-border-strong)] hover:text-[var(--color-fg)]"
                   >
+                    <SocialIcon label={link.label} />
                     <span>{link.label}</span>
                     {link.external && <span aria-hidden="true">↗</span>}
                   </a>

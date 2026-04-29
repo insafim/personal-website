@@ -405,6 +405,35 @@ test("contact page renders reveal-email button", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Reveal contact email/i })).toBeVisible();
 });
 
+test("social links carry brand-icon SVGs in Footer and Contact aside", async ({ page }) => {
+  // The SocialIcon component renders an inline <svg> alongside each social
+  // label (GitHub / LinkedIn / Scholar). Catches: deletion of the SocialIcon
+  // import, the icon-key map regressing to an empty object, or a rename of
+  // the social labels in site-config.yaml that breaks the label-to-icon
+  // lookup. The labels are aria-hidden on the SVG, so the assertion targets
+  // the link's accessible name (label text) and counts the inline svg
+  // children separately.
+  await page.goto("/contact");
+
+  const githubLink = page.locator('aside a[href*="github.com"]');
+  await expect(githubLink).toHaveCount(1);
+  await expect(githubLink.locator("svg")).toHaveCount(1);
+
+  const linkedinLink = page.locator('aside a[href*="linkedin.com"]');
+  await expect(linkedinLink).toHaveCount(1);
+  await expect(linkedinLink.locator("svg")).toHaveCount(1);
+
+  const scholarLink = page.locator('aside a[href*="scholar.google"]');
+  await expect(scholarLink).toHaveCount(1);
+  await expect(scholarLink.locator("svg")).toHaveCount(1);
+
+  // Footer carries the same three social links; verify icons there too.
+  await page.goto("/");
+  const footerGithub = page.locator('footer a[href*="github.com"]');
+  await expect(footerGithub).toHaveCount(1);
+  await expect(footerGithub.locator("svg")).toHaveCount(1);
+});
+
 test("contact page renders phone and WhatsApp action links from profile.phone", async ({ page }) => {
   // Contract (per content/profile.mdx + app/contact/page.tsx):
   //   tel:   strips whitespace from the display number.
