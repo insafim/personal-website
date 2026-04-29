@@ -1,4 +1,4 @@
-import { person, siteConfig } from "#site/content";
+import { profile, siteConfig } from "#site/content";
 
 export const runtime = "nodejs";
 
@@ -8,7 +8,7 @@ export function GET() {
   const base = siteConfig.site_url;
   const body = `# ${siteConfig.site_name}
 
-> ${person.bio_short}
+> ${profile.bio_short}
 
 ## About
 - ${base}/about - Insaf's narrative + career timeline.

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { person, publications } from "#site/content";
+import { profile, publications } from "#site/content";
 import { PageIntro } from "@/components/PageIntro";
 import { PublicationCard } from "@/components/PublicationCard";
 import { buildMetadata } from "@/lib/metadata";
@@ -23,7 +23,7 @@ export default function PublicationsPage() {
         description="Peer-reviewed work on multimodal LLMs, vision-language calibration, and computer vision - with abstracts, BibTeX, and direct links to PDFs."
         utility={
           <a
-            href={person.scholar_url}
+            href={profile.scholar_url}
             rel="noopener noreferrer"
             target="_blank"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--color-border-strong)] text-sm font-semibold text-[var(--color-fg)] hover:bg-[var(--color-bg-subtle)] transition-colors"

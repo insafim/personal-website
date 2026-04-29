@@ -1,7 +1,10 @@
 import Link from "next/link";
-import type { Person } from "#site/content";
+import type { Home, Profile } from "#site/content";
 
-export function ProfileFacts({ person }: { person: Person }) {
+// Same split as Hero: profile holds identity (location, affiliation, social
+// URLs), home holds the specialization pills. Caller (app/about/page.tsx)
+// passes both so this aside can render without re-merging in the page.
+export function ProfileFacts({ profile, home }: { profile: Profile; home: Home }) {
   return (
     <aside
       aria-label="At a glance"
@@ -12,19 +15,19 @@ export function ProfileFacts({ person }: { person: Person }) {
       <dl className="space-y-4 text-sm">
         <div>
           <dt className="metadata uppercase mb-1">Based in</dt>
-          <dd className="text-[var(--color-fg)]">{person.location}</dd>
+          <dd className="text-[var(--color-fg)]">{profile.location}</dd>
         </div>
-        {person.affiliation && (
+        {profile.affiliation && (
           <div>
             <dt className="metadata uppercase mb-1">Currently</dt>
-            <dd className="text-[var(--color-fg)]">{person.affiliation}</dd>
+            <dd className="text-[var(--color-fg)]">{profile.affiliation}</dd>
           </div>
         )}
         <div>
           <dt className="metadata uppercase mb-2">Focus areas</dt>
           <dd>
             <ul className="flex flex-wrap gap-1.5">
-              {person.specializations.map((s) => (
+              {home.specializations.map((s) => (
                 <li
                   key={s}
                   className="text-xs px-2 py-0.5 rounded-full border border-[var(--color-border-strong)] bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)]"
@@ -49,7 +52,7 @@ export function ProfileFacts({ person }: { person: Person }) {
               </li>
               <li>
                 <a
-                  href={person.linkedin_url}
+                  href={profile.linkedin_url}
                   rel="noopener noreferrer"
                   target="_blank"
                   className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
@@ -59,7 +62,7 @@ export function ProfileFacts({ person }: { person: Person }) {
               </li>
               <li>
                 <a
-                  href={person.github_url}
+                  href={profile.github_url}
                   rel="noopener noreferrer"
                   target="_blank"
                   className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
@@ -69,7 +72,7 @@ export function ProfileFacts({ person }: { person: Person }) {
               </li>
               <li>
                 <a
-                  href={person.scholar_url}
+                  href={profile.scholar_url}
                   rel="noopener noreferrer"
                   target="_blank"
                   className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"

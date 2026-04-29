@@ -1,5 +1,5 @@
 import type { Publication } from "#site/content";
-import { person, siteConfig } from "#site/content";
+import { profile, siteConfig } from "#site/content";
 
 export interface PersonJsonLd {
   "@context": "https://schema.org";
@@ -15,25 +15,25 @@ export interface PersonJsonLd {
 
 export function buildPersonJsonLd(): PersonJsonLd {
   const sameAs: string[] = [
-    person.github_url,
-    person.scholar_url,
-    person.linkedin_url,
-    ...(person.orcid_id ? [`https://orcid.org/${person.orcid_id}`] : []),
-    ...(person.arxiv_author_url ? [person.arxiv_author_url] : []),
-    ...(person.additional_social_links?.map((s) => s.url) ?? []),
+    profile.github_url,
+    profile.scholar_url,
+    profile.linkedin_url,
+    ...(profile.orcid_id ? [`https://orcid.org/${profile.orcid_id}`] : []),
+    ...(profile.arxiv_author_url ? [profile.arxiv_author_url] : []),
+    ...(profile.additional_social_links?.map((s) => s.url) ?? []),
   ];
 
   return {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: person.name,
-    jobTitle: person.title,
+    name: profile.name,
+    jobTitle: profile.title,
     url: siteConfig.site_url,
-    image: `${siteConfig.site_url}${person.avatar_url}`,
-    ...(person.affiliation
-      ? { affiliation: { "@type": "Organization" as const, name: person.affiliation } }
+    image: `${siteConfig.site_url}${profile.avatar_url}`,
+    ...(profile.affiliation
+      ? { affiliation: { "@type": "Organization" as const, name: profile.affiliation } }
       : {}),
-    address: { "@type": "PostalAddress", addressLocality: person.location },
+    address: { "@type": "PostalAddress", addressLocality: profile.location },
     sameAs,
   };
 }

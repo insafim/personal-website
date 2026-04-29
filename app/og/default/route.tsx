@@ -1,11 +1,11 @@
 import { ImageResponse } from "next/og";
-import { person, siteConfig } from "#site/content";
+import { profile, siteConfig } from "#site/content";
 import { getOgFonts } from "@/lib/og-fonts";
 
 export const runtime = "nodejs";
 
 // SEC-005 / PERF-002: this route ignores all query strings and uses ONLY
-// build-time data (person, siteConfig). Identical bytes regardless of any
+// build-time data (profile, siteConfig). Identical bytes regardless of any
 // ?attacker=1 input. Fonts loaded at module scope in lib/og-fonts.ts.
 export async function GET() {
   const og = getOgFonts();
@@ -30,9 +30,9 @@ export async function GET() {
         fontFamily: "Inter, system-ui, sans-serif",
       }}
     >
-      <div style={{ fontSize: 84, fontWeight: 700, lineHeight: 1.1 }}>{person.name}</div>
+      <div style={{ fontSize: 84, fontWeight: 700, lineHeight: 1.1 }}>{profile.name}</div>
       <div style={{ fontSize: 40, fontWeight: 400, marginTop: 16, opacity: 0.9 }}>
-        {person.title}
+        {profile.title}
       </div>
       <div style={{ fontSize: 28, marginTop: 32, opacity: 0.8 }}>{siteConfig.site_url}</div>
     </div>,

@@ -6,12 +6,15 @@ const externalUrl = s.string().url();
 const relativePath = s.string().regex(/^\//, "must be a relative path starting with /");
 const slug = s.slug("global");
 
-// Entity 1: Person (singleton). Career and education rows live in their own
-// per-file collections (career/, education/) so each role/degree is one small
-// file and company/school logos can be reused across sections.
-const person = defineCollection({
-  name: "Person",
-  pattern: "person.mdx",
+// Entity 1: identity (singleton). Three files split by intent so a content
+// edit maps to exactly one file: profile.mdx for site-wide identity used on
+// every page, home.mdx for the home Hero's pills, about.mdx for the long
+// narrative body. Career and education rows still live in their own per-file
+// collections so each role/degree is one small file and company/school logos
+// can be reused across sections.
+const profile = defineCollection({
+  name: "Profile",
+  pattern: "profile.mdx",
   single: true,
   schema: s
     .object({
@@ -19,9 +22,11 @@ const person = defineCollection({
       title: s.string(),
       location: s.string(),
       affiliation: s.string().optional(),
-      specializations: s.array(s.string()).min(1),
+      // bio_short stays in profile rather than home because it is reused as
+      // the metadata description on multiple pages (home, about) and as the
+      // llms.txt summary; treating it as identity keeps a single source of
+      // truth.
       bio_short: s.string().min(1).max(280),
-      bio_long: s.markdown(),
       avatar_url: s.string(),
       og_image_default: s.string(),
       email_obfuscated: s.string().min(1),
@@ -47,6 +52,29 @@ const person = defineCollection({
         .optional(),
     })
     .transform((data) => ({ ...data })),
+});
+
+// Home page Hero content. Today this is just the specialization pills; new
+// home-specific knobs (e.g. a custom CTA label or a pinned focus override)
+// would land here so that "edit my home page" remains a one-file action.
+const home = defineCollection({
+  name: "Home",
+  pattern: "home.mdx",
+  single: true,
+  schema: s.object({
+    specializations: s.array(s.string()).min(1),
+  }),
+});
+
+// About page narrative. The frontmatter is intentionally empty; the file's
+// markdown body becomes `bio` (rendered HTML) via Velite's s.markdown() field.
+const about = defineCollection({
+  name: "About",
+  pattern: "about.mdx",
+  single: true,
+  schema: s.object({
+    bio: s.markdown(),
+  }),
 });
 
 // Entity 1a: Company (one file per organisation worked at). Referenced by
@@ -345,7 +373,9 @@ export default defineConfig({
     clean: true,
   },
   collections: {
-    person,
+    profile,
+    home,
+    about,
     companies,
     schools,
     career,

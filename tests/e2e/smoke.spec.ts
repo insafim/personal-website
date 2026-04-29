@@ -405,12 +405,12 @@ test("contact page renders reveal-email button", async ({ page }) => {
   await expect(page.getByRole("button", { name: /Reveal contact email/i })).toBeVisible();
 });
 
-test("contact page renders phone and WhatsApp action links from person.phone", async ({ page }) => {
-  // Contract (per content/person.mdx + app/contact/page.tsx):
+test("contact page renders phone and WhatsApp action links from profile.phone", async ({ page }) => {
+  // Contract (per content/profile.mdx + app/contact/page.tsx):
   //   tel:   strips whitespace from the display number.
   //   wa.me: strips ALL non-digits (so the leading + is gone, leaving the
   //          E.164 digits). This is wa.me's required format.
-  // Catches: deletion of the phone block when person.phone is set, regression
+  // Catches: deletion of the phone block when profile.phone is set, regression
   // in the strip rules, or swapping the two link targets.
   await page.goto("/contact");
   const callLink = page.locator('a[href^="tel:"]');

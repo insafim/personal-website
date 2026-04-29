@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { person } from "#site/content";
+import { about, home, profile } from "#site/content";
 import { CareerTimeline } from "@/components/CareerTimeline";
 import { EducationTimeline } from "@/components/EducationTimeline";
 import { PageIntro } from "@/components/PageIntro";
@@ -11,7 +11,7 @@ import { getCareerRows, getEducationRows } from "@/lib/timeline";
 export const metadata: Metadata = buildMetadata({
   path: "/about",
   title: "About",
-  description: person.bio_short,
+  description: profile.bio_short,
   type: "profile",
 });
 
@@ -22,8 +22,8 @@ export default function AboutPage() {
     <div className="px-4 max-w-6xl mx-auto pt-12 pb-20">
       <PageIntro
         eyebrow="About"
-        title={person.name}
-        description={person.bio_short}
+        title={profile.name}
+        description={profile.bio_short}
         variant="accent"
       />
 
@@ -36,8 +36,8 @@ export default function AboutPage() {
                        prose-p:leading-relaxed prose-p:text-[var(--color-fg)]
                        prose-strong:text-[var(--color-fg)] prose-strong:font-semibold
                        prose-a:text-[var(--color-accent)] prose-a:no-underline hover:prose-a:underline"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: Velite-compiled MDX (build-time, author-controlled).
-            dangerouslySetInnerHTML={{ __html: person.bio_long }}
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: about.bio is the Velite-compiled markdown body of content/about.mdx (build-time, author-controlled). Schema declares this field as s.markdown() in velite.config.ts.
+            dangerouslySetInnerHTML={{ __html: about.bio }}
           />
 
           <section className="mb-14">
@@ -65,7 +65,7 @@ export default function AboutPage() {
           )}
         </div>
 
-        <ProfileFacts person={person} />
+        <ProfileFacts profile={profile} home={home} />
       </div>
 
       <PersonJsonLd />

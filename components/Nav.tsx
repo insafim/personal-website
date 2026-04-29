@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { person, siteConfig } from "#site/content";
+import { profile, siteConfig } from "#site/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Nav() {
@@ -70,7 +70,7 @@ export function Nav() {
              * route (LCP candidate on non-home pages where Hero is absent).
              */}
             <Image
-              src={person.avatar_url}
+              src={profile.avatar_url}
               alt=""
               width={40}
               height={40}

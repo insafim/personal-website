@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { person, projects, publications } from "#site/content";
+import { home, profile, projects, publications } from "#site/content";
 import { Hero } from "@/components/Hero";
 import { HomeSignals } from "@/components/HomeSignals";
 import { PersonJsonLd } from "@/components/PersonJsonLd";
@@ -10,7 +10,7 @@ const HOME_TITLE = "Insaf Ismath - AI/ML Engineer & Researcher";
 
 const baseMetadata = buildMetadata({
   path: "/",
-  description: person.bio_short,
+  description: profile.bio_short,
 });
 
 export const metadata: Metadata = {
@@ -34,7 +34,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Hero person={person} />
+      <Hero profile={profile} home={home} />
       <HomeSignals
         latestPublication={latestPublication}
         featuredProject={featuredProject}

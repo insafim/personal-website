@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { person, siteConfig } from "#site/content";
+import { profile, siteConfig } from "#site/content";
 import { EmailContact } from "@/components/EmailContact";
 import { PageIntro } from "@/components/PageIntro";
 import { buildMetadata } from "@/lib/metadata";
@@ -7,7 +7,7 @@ import { buildMetadata } from "@/lib/metadata";
 export const metadata: Metadata = buildMetadata({
   path: "/contact",
   title: "Contact",
-  description: `Get in touch with ${person.name}.`,
+  description: `Get in touch with ${profile.name}.`,
 });
 
 const REACH_OUT_REASONS = [
@@ -37,34 +37,34 @@ export default function ContactPage() {
             One line on what you're working on and how I can help. Specific is better than long.
           </p>
           <div className="text-lg md:text-xl mb-7">
-            <EmailContact obfuscated={person.email_obfuscated} />
+            <EmailContact obfuscated={profile.email_obfuscated} />
           </div>
 
-          {/* phone is optional in the Velite Person schema; the entire block
-              (including its top border) is omitted when person.mdx does not
+          {/* phone is optional in the Velite Profile schema; the entire block
+              (including its top border) is omitted when profile.mdx does not
               set the field, so the layout collapses cleanly without an
               orphan separator above the next subsection. */}
-          {person.phone && (
+          {profile.phone && (
             <div className="mb-7 border-t border-[var(--color-border)] pt-6">
               <p className="eyebrow mb-3">Phone & WhatsApp</p>
               <p className="text-lg md:text-xl font-medium tabular-nums mb-4">
-                {person.phone}
+                {profile.phone}
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href={`tel:${person.phone.replace(/\s/g, "")}`}
+                  href={`tel:${profile.phone.replace(/\s/g, "")}`}
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--color-border-strong)] text-sm font-semibold text-[var(--color-fg)] hover:bg-[var(--color-bg-subtle)] hover:border-[var(--color-accent)] transition-colors"
-                  aria-label={`Call ${person.phone}`}
+                  aria-label={`Call ${profile.phone}`}
                 >
                   <PhoneIcon />
                   <span>Call</span>
                 </a>
                 <a
-                  href={`https://wa.me/${person.phone.replace(/[^\d]/g, "")}`}
+                  href={`https://wa.me/${profile.phone.replace(/[^\d]/g, "")}`}
                   rel="noopener noreferrer"
                   target="_blank"
                   className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-[var(--color-border-strong)] text-sm font-semibold text-[var(--color-fg)] hover:bg-[var(--color-bg-subtle)] hover:border-[var(--color-accent)] transition-colors"
-                  aria-label={`Open WhatsApp chat with ${person.phone}`}
+                  aria-label={`Open WhatsApp chat with ${profile.phone}`}
                 >
                   <WhatsAppIcon />
                   <span>WhatsApp</span>
@@ -115,9 +115,9 @@ export default function ContactPage() {
 
           <div className="mt-5 pt-5 border-t border-[var(--color-border)]">
             <p className="metadata uppercase mb-2">Based in</p>
-            <p className="text-sm text-[var(--color-fg)]">{person.location}</p>
-            {person.affiliation && (
-              <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">{person.affiliation}</p>
+            <p className="text-sm text-[var(--color-fg)]">{profile.location}</p>
+            {profile.affiliation && (
+              <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">{profile.affiliation}</p>
             )}
           </div>
         </aside>
