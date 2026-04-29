@@ -75,7 +75,9 @@ app/                 # Next.js App Router routes (about, projects, publications,
 components/          # React components
 lib/                 # Helpers (metadata, JSON-LD, fonts, content readers)
 content/             # MDX source content
-  person.mdx           # Singleton: bio, social links, profile
+  profile.mdx          # Identity used on every page (name, photo, location, contact, social URLs)
+  home.mdx             # Home page Hero content (specialization pills)
+  about.mdx            # About page narrative (long bio markdown body)
   site-config.yaml     # Nav, social links, feature flags, AI crawler allowlist
   redirects.yaml       # URL redirects (compiled into next.config redirects)
   projects/            # One MDX file per project
@@ -109,7 +111,9 @@ All site content lives in `content/`. Most collections are MDX (frontmatter + bo
 | File | What it controls |
 | --- | --- |
 | `content/site-config.yaml` | Site name, nav order, social links, feature flags, AI crawler allowlist |
-| `content/person.mdx` | Bio, profile photo, social links, identity-level info |
+| `content/profile.mdx` | Site-wide identity: name, title, location, affiliation, photo, email, phone, social URLs, bio_short. Edit when contact info or photo changes. |
+| `content/home.mdx` | Home page Hero content (specialization pills today). Edit when home-only content changes. |
+| `content/about.mdx` | About page narrative (long bio markdown body). Edit when the about story changes. |
 | `content/redirects.yaml` | URL redirects (compiled into `next.config.mjs`) |
 
 **Section content (one file per entry)**
@@ -157,7 +161,7 @@ Edit `content/redirects.yaml`; entries are compiled into Next.js redirects at bu
 The site deploys to **Vercel** on push to `main`.
 
 1. In Vercel, **Add New → Project → Import** the GitHub repo. Vercel auto-detects Next.js, so leave the framework, build, and output settings at their defaults.
-2. Add `NEXT_PUBLIC_SITE_URL=https://insafismath.com` to the **Production** environment. Use the Vercel preview URL (or omit) for **Preview**. Type the Key by hand rather than pasting; Vercel rejects keys with trailing whitespace or non `[A-Z0-9_]` characters.
+2. Add `NEXT_PUBLIC_SITE_URL=https://insafismath.com` to the **Production** environment. Use the Vercel preview URL (or omit) for **Preview**. Type the Key by hand rather than pasting; Vercel rejects keys with trailing whitespace or characters outside `[A-Z0-9_]`. The Value field is paste-safe.
 3. Add the custom domains:
    - Add `insafismath.com` as a Production domain. **Uncheck** Vercel's default "Redirect insafismath.com to www.insafismath.com" checkbox; we want the apex as primary, not the redirect target. See [Apex vs www](#apex-vs-www-which-one-is-canonical) for the rationale.
    - Add `www.insafismath.com` separately, this time as `Redirect to Another Domain → insafismath.com` with redirect type **308 Permanent Redirect**.

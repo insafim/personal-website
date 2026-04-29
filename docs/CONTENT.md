@@ -9,7 +9,9 @@ see the failure in the Vercel build log (or locally with `pnpm dev`).
 
 | Section / thing                | File or folder                                    |
 |--------------------------------|---------------------------------------------------|
-| About bio + headshot + socials | `content/person.mdx`                              |
+| Name, photo, contact, socials  | `content/profile.mdx`                             |
+| Home page Hero (specialization pills) | `content/home.mdx`                         |
+| About page narrative (long bio) | `content/about.mdx`                              |
 | Career timeline (one job)      | `content/career/<file>.yaml`                      |
 | Education timeline (one degree)| `content/education/<file>.yaml`                   |
 | Company / employer info + logo | `content/companies/<slug>.yaml`                   |
@@ -79,7 +81,7 @@ contiguous, only their relative order matters.
 ## How do I add my CV?
 
 1. Put the PDF at `public/assets/cv/insaf-ismath-cv.pdf`.
-2. In `content/person.mdx`, uncomment and set `cv_url`:
+2. In `content/profile.mdx`, uncomment and set `cv_url`:
 
    ```yaml
    cv_url: /assets/cv/insaf-ismath-cv.pdf
