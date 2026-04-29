@@ -20,10 +20,13 @@ export default function AboutPage() {
   const educationRows = getEducationRows();
   return (
     <div className="px-4 max-w-6xl mx-auto pt-12 pb-20">
+      {/* bio_short is intentionally not passed to PageIntro on /about: the
+          full long bio body below already opens with the same summary, so
+          duplicating it here would push the timeline further down the page
+          for no information gain. The Hero on / still renders bio_short. */}
       <PageIntro
         eyebrow="About"
         title={profile.name}
-        description={profile.bio_short}
         variant="accent"
       />
 

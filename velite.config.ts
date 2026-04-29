@@ -25,8 +25,10 @@ const profile = defineCollection({
       // bio_short stays in profile rather than home because it is reused as
       // the metadata description on multiple pages (home, about) and as the
       // llms.txt summary; treating it as identity keeps a single source of
-      // truth.
-      bio_short: s.string().min(1).max(280),
+      // truth. The 600-char ceiling absorbs a multi-sentence elevator pitch
+      // (the original 280-char Twitter-style cap proved too tight); search
+      // engines will truncate long meta descriptions as needed.
+      bio_short: s.string().min(1).max(600),
       avatar_url: s.string(),
       og_image_default: s.string(),
       email_obfuscated: s.string().min(1),
