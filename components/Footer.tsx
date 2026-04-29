@@ -1,4 +1,5 @@
-import { siteConfig } from "#site/content";
+import { profile, siteConfig } from "#site/content";
+import { EmailContact } from "@/components/EmailContact";
 import { SocialIcon } from "@/components/SocialIcon";
 
 export function Footer() {
@@ -17,8 +18,25 @@ export function Footer() {
                 {siteConfig.site_name}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-muted)] md:text-base">
-                AI projects, writing, and the occasional side trail outside work.
+                AI projects, research, writing, and the occasional side trail outside work.
               </p>
+              {/* Email kept behind the EmailContact reveal control so the raw
+                  HTML stays free of an @ + TLD pair, matching the obfuscation
+                  pattern used in EmailContact.tsx and lib/email.ts. Phone is
+                  already exposed in plain on /contact, so duplicating it here
+                  doesn't widen the threat surface. */}
+              <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--color-fg-muted)]">
+                <EmailContact obfuscated={profile.email_obfuscated} />
+                {profile.phone && (
+                  <a
+                    href={`tel:${profile.phone.replace(/\s/g, "")}`}
+                    className="tabular-nums hover:text-[var(--color-fg)]"
+                    aria-label={`Call ${profile.phone}`}
+                  >
+                    {profile.phone}
+                  </a>
+                )}
+              </div>
             </div>
 
             <ul className="flex flex-wrap gap-2 md:max-w-md md:justify-end">

@@ -26,6 +26,14 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
             const frameBg = hasDark
               ? "bg-[var(--color-bg-raised)]"
               : "logo-frame-light";
+            // Per-slug inner padding override. Most logos are roughly square, so
+            // p-1 leaves a small inset that reads as a "tile". CIMA's source PNG
+            // is ~2.5:1 wide, so object-contain inside p-1 leaves it visibly
+            // smaller than the others; drop the padding so the wordmark fills
+            // the frame width and reads at the same visual weight. The slug
+            // here matches `slug:` in content/schools/cima.yaml — renaming the
+            // school slug requires updating this string.
+            const logoPad = e.school.slug === "cima" ? "p-0" : "p-1";
             return (
               <span
                 aria-hidden="true"
@@ -38,7 +46,7 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
                       alt=""
                       width={96}
                       height={96}
-                      className={`h-full w-full object-contain p-1 ${hasDark ? "dark:hidden" : ""}`}
+                      className={`h-full w-full object-contain ${logoPad} ${hasDark ? "dark:hidden" : ""}`}
                     />
                     {hasDark && (
                       <Image
@@ -46,7 +54,7 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
                         alt=""
                         width={96}
                         height={96}
-                        className="hidden dark:block h-full w-full object-contain p-1"
+                        className={`hidden dark:block h-full w-full object-contain ${logoPad}`}
                       />
                     )}
                   </>
@@ -59,16 +67,33 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
           <p className="metadata mb-1">{e.year_range}</p>
           <h3 className="text-lg font-semibold leading-snug">
             <span>{e.degree}</span>
-            <span className="text-[var(--color-fg-muted)] font-normal"> · {e.school.name}</span>
+            <span className="text-[var(--color-fg-muted)] font-normal">
+              {" · "}
+              {e.school.url ? (
+                <a
+                  href={e.school.url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  className="hover:text-[var(--color-fg)] hover:underline"
+                >
+                  {e.school.name}
+                </a>
+              ) : (
+                e.school.name
+              )}
+            </span>
           </h3>
-          {/* Optional grade + activities lines, both schema-optional. */}
+          {/* Optional grade + activities lines, both schema-optional.
+              Bumped from text-xs to text-sm so these scan-as-metadata lines
+              are easier to read on the timeline (paired in this batch with
+              the Activities line on the high-school entry). */}
           {e.grade && (
-            <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">
+            <p className="text-sm text-[var(--color-fg-muted)] mt-0.5">
               <span className="font-medium text-[var(--color-fg)]">Grade:</span> {e.grade}
             </p>
           )}
           {e.activities && (
-            <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">
+            <p className="text-sm text-[var(--color-fg-muted)] mt-0.5">
               <span className="font-medium text-[var(--color-fg)]">Activities:</span> {e.activities}
             </p>
           )}

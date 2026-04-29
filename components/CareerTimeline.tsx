@@ -64,7 +64,21 @@ export function CareerTimeline({ entries }: { entries: readonly CareerRow[] }) {
           <p className="metadata mb-1">{e.year_range}</p>
           <h3 className="text-lg font-semibold leading-snug">
             <span>{e.role}</span>
-            <span className="text-[var(--color-fg-muted)] font-normal"> · {e.company.name}</span>
+            <span className="text-[var(--color-fg-muted)] font-normal">
+              {" · "}
+              {e.company.url ? (
+                <a
+                  href={e.company.url}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  className="hover:text-[var(--color-fg)] hover:underline"
+                >
+                  {e.company.name}
+                </a>
+              ) : (
+                e.company.name
+              )}
+            </span>
           </h3>
           {/*
            * LinkedIn-style metadata strip: employment type + mode shown as
