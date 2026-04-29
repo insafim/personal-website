@@ -37,7 +37,7 @@ export function Hero({ profile, home }: { profile: Profile; home: Home }) {
           <div className="flex flex-wrap gap-3 items-center">
             <Link
               href="/publications"
-              className="px-5 py-2.5 rounded-md bg-[var(--color-accent)] text-[var(--color-accent-fg)] font-semibold shadow-sm hover:opacity-90 transition-opacity"
+              className="px-5 py-2.5 rounded-md border border-[var(--color-border-strong)] font-semibold hover:bg-[var(--color-bg-subtle)] transition-colors"
             >
               View Publications
             </Link>

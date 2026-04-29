@@ -17,7 +17,7 @@ export function Footer() {
                 {siteConfig.site_name}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-muted)] md:text-base">
-                Research, projects, writing, and the occasional side trail outside work.
+                AI projects, writing, and the occasional side trail outside work.
               </p>
             </div>
 

@@ -20,7 +20,7 @@ export function HomeSignals({ latestPublication, featuredProject }: HomeSignalsP
             label="Latest publication"
             color="research"
             title={latestPublication.title}
-            meta={`${latestPublication.venue} · ${latestPublication.year}`}
+            meta={latestPublication.venue}
             href={`/publications/${latestPublication.slug}`}
           />
         )}
