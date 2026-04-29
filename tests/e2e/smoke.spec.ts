@@ -327,33 +327,22 @@ test("publications index renders TYPE badges with peer-reviewed accent tint", as
   }
 });
 
-test("publication detail renders Cited-as prose block above BibTeX", async ({ page }) => {
+test("publication detail renders BibTeX block by default", async ({ page }) => {
   await page.goto("/publications/promptception-emnlp2025");
-  await expect(page.getByText("Cited as")).toBeVisible();
-  await expect(
-    page.getByText(/For attribution in academic contexts, please cite this work as/i)
-  ).toBeVisible();
-  // Surname is the last whitespace token of the first author's full byline; the
-  // Promptception MDX now lists "Mohamed Insaf Ismithdeen" so the prose
-  // citation surfaces as "Ismithdeen, et al., ...".
-  await expect(page.getByText(/Ismithdeen, et al\., "Promptception/)).toBeVisible();
-  await expect(page.getByText("BibTeX")).toBeVisible();
+  await expect(page.getByText("BibTeX", { exact: true })).toBeVisible();
 });
 
-test("publication detail suppresses Cited-as + BibTeX when hide_bibtex is true", async ({
-  page,
-}) => {
-  // CVPR 2026 carries hide_bibtex: true so the BibTeXBlock (and its embedded
-  // "Cited as" prose-citation header) must not render. Mutation guarded:
-  // removing the !pub.hide_bibtex guard in app/publications/[slug]/page.tsx.
+test("publication detail suppresses BibTeX when hide_bibtex is true", async ({ page }) => {
+  // CVPR 2026 carries hide_bibtex: true so the BibTeXBlock must not render.
+  // Mutation guarded: removing the !pub.hide_bibtex guard in
+  // app/publications/[slug]/page.tsx.
   await page.goto("/publications/prompt-tuning-calibration-cvpr2026");
   await expect(page.locator("h1")).toContainText(
     "Towards Calibrating Prompt Tuning of Vision-Language Models"
   );
-  await expect(page.getByText("Cited as")).toHaveCount(0);
-  // BibTeX appears nowhere in the visible DOM. Use a strict role/text query
-  // that ignores the BibTeXBlock chunk-preload script src (which contains the
-  // string "BibTeXBlock_tsx" but is not rendered text).
+  // BibTeX appears nowhere in the visible DOM. Use exact text to ignore the
+  // BibTeXBlock chunk-preload script src (which contains the string
+  // "BibTeXBlock_tsx" but is not rendered text).
   await expect(page.getByText("BibTeX", { exact: true })).toHaveCount(0);
 });
 

@@ -6,7 +6,7 @@ import { BibTeXBlock } from "@/components/BibTeXBlock";
 import { PageIntro } from "@/components/PageIntro";
 import { ScholarlyArticleJsonLd } from "@/components/ScholarlyArticleJsonLd";
 import { buildMetadata } from "@/lib/metadata";
-import { buildProseCitation, isSelfAuthor } from "@/lib/publications";
+import { isSelfAuthor } from "@/lib/publications";
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -79,7 +79,6 @@ export default async function PublicationDetailPage({ params }: Params) {
       <PageIntro
         eyebrow={pub.venue}
         title={pub.title}
-        description={pub.abstract}
         variant="accent"
         utility={
           <div className="flex flex-wrap gap-2 md:justify-end">
@@ -95,6 +94,12 @@ export default async function PublicationDetailPage({ params }: Params) {
           </div>
         }
       />
+
+      <section className="mb-10">
+        <p className="mx-auto max-w-3xl text-center text-base md:text-lg leading-relaxed text-[var(--color-fg-muted)]">
+          {pub.abstract}
+        </p>
+      </section>
 
       <div className="grid gap-6 md:grid-cols-2 mb-8">
         <section className="surface-elevated px-6 py-6 md:px-7 md:py-7">
@@ -164,12 +169,11 @@ export default async function PublicationDetailPage({ params }: Params) {
       )}
 
       {/*
-       * hide_bibtex (velite.config.ts) gates the BibTeX + "Cited as" block on
-       * a per-publication basis. The bibtex field is still required by the
-       * schema because it feeds SSG metadata + ScholarlyArticle JSON-LD; only
-       * the visible UI block is suppressed.
+       * hide_bibtex (velite.config.ts) gates the BibTeX block per publication.
+       * The bibtex field is still required by the schema because it feeds
+       * SSG metadata + ScholarlyArticle JSON-LD; only the visible UI is gated.
        */}
-      {!pub.hide_bibtex && <BibTeXBlock bibtex={pub.bibtex} citation={buildProseCitation(pub)} />}
+      {!pub.hide_bibtex && <BibTeXBlock bibtex={pub.bibtex} />}
       <ScholarlyArticleJsonLd publication={pub} />
     </div>
   );

@@ -4,12 +4,9 @@ import { useState } from "react";
 
 interface BibTeXBlockProps {
   bibtex: string;
-  // Optional Distill-style prose citation rendered above the BibTeX <pre>.
-  // Source: https://distill.pub/2021/gnn-intro/
-  citation?: string;
 }
 
-export function BibTeXBlock({ bibtex, citation }: BibTeXBlockProps) {
+export function BibTeXBlock({ bibtex }: BibTeXBlockProps) {
   const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
 
   const fallbackCopy = () => {
@@ -54,17 +51,6 @@ export function BibTeXBlock({ bibtex, citation }: BibTeXBlockProps) {
 
   return (
     <section className="surface-elevated my-8 overflow-hidden">
-      {citation && (
-        <div className="border-b border-[var(--color-border)] px-5 py-4 md:px-6">
-          <p className="eyebrow mb-2">Cited as</p>
-          <p className="text-sm leading-relaxed text-[var(--color-fg-muted)]">
-            For attribution in academic contexts, please cite this work as:
-          </p>
-          <p className="mt-2 text-sm italic leading-relaxed text-[var(--color-fg)]">
-            {citation}
-          </p>
-        </div>
-      )}
       <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] px-5 py-4 md:px-6">
         <span className="eyebrow">BibTeX</span>
         <button

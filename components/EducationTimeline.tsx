@@ -23,17 +23,18 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
           {/* See CareerTimeline for the dark-mode logo legibility design. */}
           {(() => {
             const hasDark = !!e.school.logo_dark;
-            const frameBg = hasDark
-              ? "bg-[var(--color-bg-raised)]"
-              : "logo-frame-light";
-            // Per-slug inner padding override. Most logos are roughly square, so
-            // p-1 leaves a small inset that reads as a "tile". CIMA's source PNG
-            // is ~2.5:1 wide, so object-contain inside p-1 leaves it visibly
-            // smaller than the others; drop the padding so the wordmark fills
-            // the frame width and reads at the same visual weight. The slug
-            // here matches `slug:` in content/schools/cima.yaml — renaming the
-            // school slug requires updating this string.
-            const logoPad = e.school.slug === "cima" ? "p-0" : "p-1";
+            const frameBg = hasDark ? "bg-[var(--color-bg-raised)]" : "logo-frame-light";
+            // Per-slug logo sizing override. Most logos are roughly square, so
+            // p-1 + object-contain reads as a "tile". CIMA's source PNG is
+            // ~2.5:1 wide, so object-contain inside a square frame letterboxes
+            // it to ~32px tall and it reads as visibly smaller than the
+            // others. Drop the padding AND scale the wordmark up so it fills
+            // the frame width while staying centred. The slug here matches
+            // `slug:` in content/schools/cima.yaml; renaming the school slug
+            // requires updating this string.
+            const isCima = e.school.slug === "cima";
+            const logoPad = isCima ? "p-0" : "p-1";
+            const logoScale = isCima ? "scale-[1.6]" : "";
             return (
               <span
                 aria-hidden="true"
@@ -46,7 +47,7 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
                       alt=""
                       width={96}
                       height={96}
-                      className={`h-full w-full object-contain ${logoPad} ${hasDark ? "dark:hidden" : ""}`}
+                      className={`h-full w-full object-contain ${logoPad} ${logoScale} ${hasDark ? "dark:hidden" : ""}`}
                     />
                     {hasDark && (
                       <Image
@@ -54,7 +55,7 @@ export function EducationTimeline({ entries }: { entries: readonly EducationRow[
                         alt=""
                         width={96}
                         height={96}
-                        className={`hidden dark:block h-full w-full object-contain ${logoPad}`}
+                        className={`hidden dark:block h-full w-full object-contain ${logoPad} ${logoScale}`}
                       />
                     )}
                   </>

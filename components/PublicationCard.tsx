@@ -143,6 +143,30 @@ export function PublicationCard({ publication: p }: { publication: Publication }
               </a>
             </li>
           )}
+          {p.code_repo_url && (
+            <li>
+              <a
+                className="inline-flex items-center px-2 py-1 rounded-md bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent-soft)] border border-[var(--color-border)] transition-colors"
+                href={p.code_repo_url}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Code ↗
+              </a>
+            </li>
+          )}
+          {p.project_page_url && (
+            <li>
+              <a
+                className="inline-flex items-center px-2 py-1 rounded-md bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] hover:text-[var(--color-accent)] hover:bg-[var(--color-accent-soft)] border border-[var(--color-border)] transition-colors"
+                href={p.project_page_url}
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Website ↗
+              </a>
+            </li>
+          )}
           <li className="ml-auto">
             <Link
               href={`/publications/${p.slug}`}
