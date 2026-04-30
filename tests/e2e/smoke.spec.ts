@@ -421,9 +421,14 @@ test("hobbies page renders anecdotes", async ({ page }) => {
   await expect(page.locator("section ul li").first()).toBeVisible();
 });
 
-test("contact page renders reveal-email button", async ({ page }) => {
+test("contact page renders mailto link to decoded email", async ({ page }) => {
+  // EmailContact replaces the obfuscated fallback with a clickable mailto
+  // anchor on hydration. /contact mounts two instances (footer + main
+  // section); the first one resolving is enough.
   await page.goto("/contact");
-  await expect(page.getByRole("button", { name: /Reveal contact email/i })).toBeVisible();
+  const mailto = page.locator('a[href^="mailto:"]').first();
+  await expect(mailto).toBeVisible();
+  await expect(mailto).toHaveAttribute("href", /^mailto:i\.m\.insaf@gmail\.com$/);
 });
 
 test("social links carry brand-icon SVGs in Footer and Contact aside", async ({ page }) => {

@@ -3,36 +3,32 @@
 import { useEffect, useState } from "react";
 import { decodeEmail } from "@/lib/email";
 
+// "i.m.insaf@gmail.com" -> "i.m.insaf at gmail dot com".
+// Calling decodeEmail server-side is safe because toReadable always runs
+// on its output before render, so the raw HTML never carries an @ + TLD
+// pair (NFR-009 / ADR-015).
+function toReadable(email: string): string {
+  return email.replace("@", " at ").replace(/\./g, " dot ");
+}
+
 export function EmailContact({ obfuscated }: { obfuscated: string }) {
-  const [email, setEmail] = useState<string | null>(null);
-  const [revealed, setRevealed] = useState(false);
+  const [decoded, setDecoded] = useState<string | null>(null);
 
   useEffect(() => {
-    setEmail(decodeEmail(obfuscated));
+    setDecoded(decodeEmail(obfuscated));
   }, [obfuscated]);
 
-  // Mounted with JS - render mailto: anchor.
-  if (email && revealed) {
+  if (decoded) {
     return (
       <a
-        href={`mailto:${email}`}
+        href={`mailto:${decoded}`}
         rel="noopener noreferrer"
         className="text-[var(--color-accent)] underline"
       >
-        {email}
+        {decoded}
       </a>
     );
   }
 
-  // Pre-mount or pre-reveal: show button (no @ in raw HTML - NFR-009).
-  return (
-    <button
-      type="button"
-      onClick={() => setRevealed(true)}
-      className="text-[var(--color-accent)] underline"
-      aria-label="Reveal contact email"
-    >
-      Reveal email
-    </button>
-  );
+  return <span>{toReadable(decodeEmail(obfuscated))}</span>;
 }

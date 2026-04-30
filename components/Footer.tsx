@@ -20,11 +20,9 @@ export function Footer() {
               <p className="mt-2 text-sm leading-relaxed text-[var(--color-fg-muted)] md:text-base">
                 AI projects, research, writing, and the occasional side trail outside work.
               </p>
-              {/* Email kept behind the EmailContact reveal control so the raw
-                  HTML stays free of an @ + TLD pair, matching the obfuscation
-                  pattern used in EmailContact.tsx and lib/email.ts. Phone is
-                  already exposed in plain on /contact, so duplicating it here
-                  doesn't widen the threat surface. */}
+              {/* EmailContact decodes profile.email_obfuscated client-side so
+                  the raw HTML response stays free of an @ + TLD pair (NFR-009).
+                  Pre-hydration it renders a human-readable obfuscated fallback. */}
               <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[var(--color-fg-muted)]">
                 <EmailContact obfuscated={profile.email_obfuscated} />
                 {profile.phone && (
