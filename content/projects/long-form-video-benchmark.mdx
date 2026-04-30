@@ -1,8 +1,7 @@
 ---
 slug: long-form-video-benchmark
 title: Long-Form Video Understanding Benchmark - MBZUAI IVAL
-category: research
-status: shipped
+affiliation: MBZUAI
 year: 2024
 problem: Existing Video-LMM benchmarks focused on short clips (seconds to a minute), but downstream applications - egocentric assistance, surveillance, instructional video - require reasoning over 3-30 minute footage. There was no systematic way to evaluate long-form video understanding, and prior benchmarks under-sampled egocentric content entirely.
 approach: Built a human-in-the-loop QA generation pipeline sourcing both egocentric (Ego4D) and non-egocentric long-form videos. The pipeline proposed candidate Q&A pairs, surfaced them for human review, and emitted curated benchmark items only after sign-off. Implemented inference and evaluation code to benchmark 7 open-source and 2 proprietary Video-LMMs against the resulting test set.

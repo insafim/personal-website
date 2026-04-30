@@ -25,9 +25,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
   const active = year !== null || tech !== null;
 
   const filtered = projects.filter(
-    (p) =>
-      (year === null || p.year === year) &&
-      (tech === null || p.tech_stack.includes(tech))
+    (p) => (year === null || p.year === year) && (tech === null || p.tech_stack.includes(tech))
   );
 
   const reset = () => {
@@ -109,7 +107,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
                     <span className="font-semibold">{p.title}</span>
                     <span className="metadata">{p.year}</span>
                   </div>
-                  <p className="metadata uppercase mb-2">{p.category}</p>
+                  <p className="metadata uppercase mb-2">{p.affiliation}</p>
                   <ul className="flex flex-wrap gap-1">
                     {p.tech_stack.slice(0, 4).map((t) => (
                       <li

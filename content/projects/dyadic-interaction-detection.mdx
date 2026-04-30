@@ -1,8 +1,7 @@
 ---
 slug: dyadic-interaction-detection
 title: Real-Time Multi-Dyadic Interaction Detection in Crowded Surveillance Video
-category: research
-status: shipped
+affiliation: UoP
 year: 2023
 problem: Surveillance video in the wild has multiple two-person interactions happening simultaneously in a crowded frame - and most action-recognition pipelines were trained on single-actor clips, so they collapse when interactions overlap. A real-time pipeline needed to localize each pair, isolate them, and classify the interaction without dropping frames.
 approach: Built a three-stage pipeline. YOLOv7 + SORT for spatiotemporal localization of person tracks, YOLO-Pose for skeleton extraction on each tracked subject, and X3D-M with attention for interaction classification on the dyad's stacked skeleton sequence. The skeleton-only classification stage is what kept it real-time on commodity hardware. Published at IEEE ICIIS 2023.

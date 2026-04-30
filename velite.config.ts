@@ -175,8 +175,12 @@ const projects = defineCollection({
     .object({
       slug,
       title: s.string(),
-      category: s.enum(["enterprise", "research", "independent"]),
-      status: s.enum(["shipped", "active", "archived", "in-progress"]),
+      // Where the project was done. Replaces the earlier category/status pair:
+      // category was a coarse enterprise/research/independent split that mapped
+      // 1:1 onto an org, and status was always "shipped" in practice. The
+      // enum values are user-facing (rendered as the detail-page eyebrow and
+      // the card chip) so spelling matches the brand exactly.
+      affiliation: s.enum(["2PointZero Group", "VisionLabs", "MBZUAI", "UoP", "Independent"]),
       year: s.number().int(),
       problem: s.string(),
       approach: s.string(),

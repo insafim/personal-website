@@ -1,8 +1,7 @@
 ---
 slug: fte-benchmarking-agent
 title: FTE Benchmarking Agent - Conversational workforce analysis across the IHC portfolio
-category: enterprise
-status: shipped
+affiliation: 2PointZero Group
 year: 2025
 problem: Workforce benchmarking across 2PointZero's portfolio companies was a multi-week manual exercise - and the source data was sparse and unevenly disclosed across companies. Stakeholders needed a conversational way to ask FTE questions and trust the answers.
 approach: Built a hybrid-RAG agent that classifies companies into 12 segments, imputes missing workforce fields via iterative LightGBM imputation within each segment, and validates imputed values through a multi-LLM majority-vote consensus. Retrieval is hybrid - semantic cosine over Qwen3 embeddings combined with weighted Postgres tsvector - surfaced via an MCP backend and a Streamlit frontend.

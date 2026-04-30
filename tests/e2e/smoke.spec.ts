@@ -80,9 +80,7 @@ test("every publication card renders the research accent bar", async ({ page }) 
   const cards = page.locator("ul article.surface-elevated");
   const cardCount = await cards.count();
   expect(cardCount).toBeGreaterThanOrEqual(1);
-  const bars = page.locator(
-    "ul article.surface-elevated > span.absolute.inset-y-0.left-0.w-1"
-  );
+  const bars = page.locator("ul article.surface-elevated > span.absolute.inset-y-0.left-0.w-1");
   await expect(bars).toHaveCount(cardCount);
 });
 
@@ -180,31 +178,16 @@ test("about page Current career pill dot uses motion-safe:animate-pulse", async 
   await expect(dot).toHaveClass(/motion-safe:animate-pulse/);
 });
 
-test("active project status dot pulses; non-active projects do not", async ({ page }) => {
-  // Contract: the count of pulsing status dots on /projects must equal the
-  // count of "active"-status pills. This catches three mutations:
-  //   - pulse applied to non-active dots → pulsing > active
-  //   - pulse removed from active dots → pulsing < active (when active > 0)
-  //   - pulse on a non-dot decorative element → pulsing > active
-  // Note: /projects does not render CareerTimeline, so the only pulses on this
-  // page come from ProjectCard. Mutation 3 ("pulse removed from active dots
-  // when zero active projects exist") is content-independently caught by the
-  // unit test in tests/lib/project-pulse.test.ts.
-  // Selector pins to the dot's exact dimensions (w-1.5 h-1.5) so a regression
-  // that pulses a different round span inside a card still fails.
+test("project cards do not render a status pill", async ({ page }) => {
+  // Contract: the legacy status pill (shipped/active/archived/in-progress) was
+  // removed in favour of an affiliation chip. Catches a regression that
+  // restores STATUS_PALETTE rendering inside ProjectCard. The selector pins to
+  // the same span shape the old pill used, scoped to the projects index.
   await page.goto("/projects");
-  const activeStatusPills = page.locator('span.rounded-full[class*="status-active-soft"]');
-  const pulsingDots = page.locator(
-    'span[aria-hidden="true"].motion-safe\\:animate-pulse.rounded-full.w-1\\.5.h-1\\.5'
+  const statusPills = page.locator(
+    'article.surface-elevated span.rounded-full[class*="status-shipped"], article.surface-elevated span.rounded-full[class*="status-active"], article.surface-elevated span.rounded-full[class*="status-archived"], article.surface-elevated span.rounded-full[class*="status-in-progress"]'
   );
-  const activeCount = await activeStatusPills.count();
-  const pulsingCount = await pulsingDots.count();
-  expect(pulsingCount).toBe(activeCount);
-  for (let i = 0; i < pulsingCount; i++) {
-    const dot = pulsingDots.nth(i);
-    const insideCard = dot.locator("xpath=ancestor::article[contains(@class,'surface-elevated')]");
-    await expect(insideCard).toHaveCount(1);
-  }
+  await expect(statusPills).toHaveCount(0);
 });
 
 test("nav brand image is decorative (alt empty string, parent link carries aria-label)", async ({
@@ -232,9 +215,32 @@ test("nav active state generalizes to nested routes via isActive's startsWith br
   await expect(activeLink).toHaveAttribute("href", "/projects");
 });
 
-test("projects index lists categories", async ({ page }) => {
+test("project detail page eyebrow shows the project's affiliation", async ({ page }) => {
+  // Contract: the eyebrow on a project detail page surfaces the affiliation
+  // (e.g. "2PointZero Group") rather than the legacy "Enterprise project" /
+  // "Research project" category label. avatar-voice-agent is wired to
+  // 2PointZero Group, so the eyebrow must contain that exact label.
+  await page.goto("/projects/avatar-voice-agent");
+  const eyebrow = page.locator("header .eyebrow").first();
+  await expect(eyebrow).toContainText("2PointZero Group");
+});
+
+test("projects index renders a flat list with affiliation chips on every card", async ({
+  page,
+}) => {
+  // Contract: the projects index is a single flat list (no enterprise/research
+  // grouping) and every card surfaces an affiliation chip via data-affiliation.
+  // Catches: regression that re-introduces section grouping, or a card that
+  // renders without an affiliation chip after the schema migration.
   await page.goto("/projects");
   await expect(page.locator("h1")).toContainText("Projects");
+
+  const cards = page.locator("article.surface-elevated");
+  const cardCount = await cards.count();
+  expect(cardCount).toBeGreaterThanOrEqual(1);
+
+  const chips = page.locator("article.surface-elevated [data-affiliation]");
+  expect(await chips.count()).toBe(cardCount);
 });
 
 test("projects index renders at least one hero-metric block on a featured card", async ({
@@ -511,6 +517,10 @@ test("llms.txt is markdown", async ({ page }) => {
   expect(res?.headers()["content-type"]).toMatch(/text\/plain/);
   const body = await res?.text();
   expect(body).toMatch(/^# /);
+  // Contract: copy must not advertise the legacy enterprise/research grouping
+  // since the projects page is now a flat list. Catches a regression that
+  // reverts the route handler text without updating the model surface.
+  expect(body).not.toMatch(/grouped by category/i);
 });
 
 test("theme toggle flips .dark class", async ({ page }) => {

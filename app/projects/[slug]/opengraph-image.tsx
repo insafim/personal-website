@@ -37,7 +37,7 @@ export default async function ProjectOgImage({ params }: { params: { slug: strin
       }}
     >
       <div style={{ fontSize: 24, opacity: 0.7, textTransform: "uppercase", letterSpacing: 2 }}>
-        {project.category} project · {project.year}
+        {project.affiliation} · {project.year}
       </div>
       <div style={{ fontSize: 64, fontWeight: 700, lineHeight: 1.1 }}>{project.title}</div>
       <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>

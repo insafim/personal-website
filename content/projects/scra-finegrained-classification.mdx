@@ -1,8 +1,7 @@
 ---
 slug: scra-finegrained-classification
 title: Selective Channel Recalibration Attention (SCRA) for Fine-Grained Classification
-category: research
-status: shipped
+affiliation: MBZUAI
 year: 2024
 problem: ConvNeXt-V2 is competitive on ImageNet but loses ground on fine-grained classification (CUB Birds, FGVC Aircraft, FoodX) where class-discriminative features live in narrow channel subspaces. Adding generic attention helps a little but tends to inflate FLOPs without proportionate accuracy gain.
 approach: Designed Selective Channel Recalibration Attention - a lightweight attention module that recalibrates only a learned subset of channels rather than all of them - and integrated it into ConvNeXt-Large-V2. SCRA improved fine-grained accuracy on CUB, Aircraft, and FoodX while keeping total FLOPs within 5% of the baseline.

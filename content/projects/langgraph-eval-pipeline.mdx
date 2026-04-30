@@ -1,8 +1,7 @@
 ---
 slug: langgraph-eval-pipeline
 title: LangGraph Evaluation Pipeline - Reproducible benchmarking for portfolio agents
-category: enterprise
-status: shipped
+affiliation: 2PointZero Group
 year: 2025
 problem: Portfolio analytics agents at 2PointZero were being tested ad-hoc - different prompts, different runs, no shared ground-truth, and no way to compare providers or regression-test prompt changes.
 approach: Built a LangGraph-orchestrated evaluation pipeline that auto-generates ground-truth Q&A datasets from agent context, runs multi-provider parallel answer generation, scores answers via LLM-as-Judge, and traces every run through Langfuse for audit and side-by-side comparison.

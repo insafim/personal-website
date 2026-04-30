@@ -1,8 +1,7 @@
 ---
 slug: lmm-prompt-sensitivity-eval
 title: LMM Prompt-Sensitivity Evaluation Harness - MBZUAI IVAL
-category: research
-status: shipped
+affiliation: MBZUAI
 year: 2025
 problem: Evaluations of large multimodal models (LMMs) report a single accuracy number per benchmark, but those numbers are silently a function of the prompt phrasing. A robust LMM should not swing 15 points on the same MCQA question because of cosmetic prompt edits - and the field had no systematic way to measure how much it actually does.
 approach: Built an evaluation harness on 20× NVIDIA A100s that orchestrated 1,500+ inference runs across 8 open-source and 2 proprietary LMMs over 3 MCQA benchmarks, sweeping a 61-prompt sensitivity grid spanning 15 categories. Output became Promptception, accepted at EMNLP 2025 (Findings).

@@ -1,8 +1,7 @@
 ---
 slug: visionlabs-synthetic-data
 title: Synthetic-Data Augmentation for Face Recognition - VisionLabs
-category: research
-status: shipped
+affiliation: VisionLabs
 year: 2024
 problem: Face-recognition models trained on real-only data plateau at the long tail of identity - small numbers of images per identity, demographic skew, and limited pose/lighting coverage. Adding synthetic identities is appealing, but only works if the synthetic generator is conditioned on a representative descriptor of each real identity.
 approach: Built the descriptor-extraction stage of a synthetic-augmentation pipeline. Trained an IR-50 + ArcFace baseline on MS1M-RetinaFace-T1 (5M faces, 90K identities), then used IR-101 + CurricularFace to extract descriptors and compute per-identity class centers. Those centers conditioned an Arc2Face diffusion generator to produce per-identity synthetic faces; retraining on mixed real+synthetic data improved accuracy by 30% across 7 benchmarks.

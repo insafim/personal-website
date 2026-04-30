@@ -28,6 +28,7 @@ tests/traces/
 
 # Local working artifacts (visual snapshots, scratch)
 .tmp/
+changes/
 
 # Editors
 .vscode/

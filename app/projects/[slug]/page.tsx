@@ -9,12 +9,6 @@ interface Params {
   params: Promise<{ slug: string }>;
 }
 
-const CATEGORY_LABEL = {
-  enterprise: "Enterprise project",
-  research: "Research project",
-  independent: "Independent project",
-} as const;
-
 export function generateStaticParams() {
   return projects.map((p) => ({ slug: p.slug }));
 }
@@ -39,7 +33,7 @@ export default async function ProjectDetailPage({ params }: Params) {
   return (
     <div className="px-4 max-w-6xl mx-auto pt-12 pb-20">
       <PageIntro
-        eyebrow={CATEGORY_LABEL[project.category]}
+        eyebrow={project.affiliation}
         title={project.title}
         description={project.problem}
         variant="accent"
@@ -47,9 +41,6 @@ export default async function ProjectDetailPage({ params }: Params) {
           <div className="flex flex-wrap gap-2 md:justify-end">
             <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[var(--color-bg-raised)] px-3 py-1 text-sm text-[var(--color-fg-muted)]">
               {project.year}
-            </span>
-            <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[var(--color-bg-raised)] px-3 py-1 text-sm text-[var(--color-fg-muted)]">
-              {project.status}
             </span>
           </div>
         }

@@ -14,7 +14,7 @@ export function GET() {
 - ${base}/about - Insaf's narrative + career timeline.
 
 ## Projects
-- ${base}/projects - Enterprise, Research, and Independent project work, grouped by category.
+- ${base}/projects - Selected engineering and research project work, tagged by where each project was done (2PointZero Group, MBZUAI, VisionLabs, UoP, Independent).
 
 ## Publications
 - ${base}/publications - Research publications with abstracts, BibTeX, arXiv/DOI/PDF links.

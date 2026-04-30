@@ -1,8 +1,7 @@
 ---
 slug: solar-ghi-nowcasting
 title: Solar GHI Nowcasting from Sky Images - Physics-Informed Two-Stage Network
-category: research
-status: shipped
+affiliation: UoP
 year: 2021
 problem: Solar irradiance (GHI) varies sharply with sky condition - clear, cumulus, overcast - and a single regression network has to learn three different physics regimes at once, which it does poorly. Photovoltaic operators need short-horizon forecasts that are accurate across all three regimes, not just on average.
 approach: Built a two-stage system. First, a classical CV sky-condition classifier labels each sky image into one of the three regimes. Then a regime-specialized ResNet sub-model - trained only on its assigned regime - produces the GHI estimate. The split lets each ResNet specialize to a single physics regime. Achieved 10.80% nRMSE and 98.88% Pearson correlation. Published at IEEE ICIIS 2021.

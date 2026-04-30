@@ -1,22 +1,8 @@
 import type { Project } from "#site/content";
 
-const CATEGORY_LABEL: Record<Project["category"], string> = {
-  enterprise: "Enterprise",
-  research: "Research",
-  independent: "Independent",
-};
-
-const STATUS_LABEL: Record<Project["status"], string> = {
-  shipped: "Shipped",
-  active: "Active",
-  archived: "Archived",
-  "in-progress": "In progress",
-};
-
 export function ProjectMeta({ project }: { project: Project }) {
   const summaryRows = [
-    { label: "Category", value: CATEGORY_LABEL[project.category] },
-    { label: "Status", value: STATUS_LABEL[project.status] },
+    { label: "Affiliation", value: project.affiliation },
     { label: "Role", value: project.role },
     { label: "Year", value: String(project.year) },
   ];
@@ -40,8 +26,13 @@ export function ProjectMeta({ project }: { project: Project }) {
           <p className="eyebrow mb-4">Scale and metrics</p>
           <dl className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
             {project.scale_metrics.map((m) => (
-              <div key={m.label} className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-4 py-3">
-                <dd className="text-lg font-semibold tabular-nums text-[var(--color-fg)]">{m.value}</dd>
+              <div
+                key={m.label}
+                className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-4 py-3"
+              >
+                <dd className="text-lg font-semibold tabular-nums text-[var(--color-fg)]">
+                  {m.value}
+                </dd>
                 <dt className="metadata uppercase mt-1">{m.label}</dt>
               </div>
             ))}

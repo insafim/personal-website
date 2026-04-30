@@ -29,7 +29,7 @@ export function HomeSignals({ latestPublication, featuredProject }: HomeSignalsP
             label="Featured project"
             color="enterprise"
             title={featuredProject.title}
-            meta={`${featuredProject.category} · ${featuredProject.year}`}
+            meta={`${featuredProject.affiliation} · ${featuredProject.year}`}
             href={`/projects/${featuredProject.slug}`}
           />
         )}
