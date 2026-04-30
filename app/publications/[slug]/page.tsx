@@ -63,19 +63,29 @@ export default async function PublicationDetailPage({ params }: Params) {
 
   return (
     <div className="px-4 max-w-5xl mx-auto pt-12 pb-20">
-      {pub.venue_logo && (
-        <div className="mb-4 flex items-center">
-          <span className="logo-frame-light inline-flex h-16 w-auto items-center justify-center rounded-md border border-[var(--color-border-strong)] px-3 py-2 shadow-[var(--shadow-card)]">
-            <Image
-              src={pub.venue_logo}
-              alt={`${pub.venue} logo`}
-              width={160}
-              height={64}
-              className="h-12 w-auto object-contain"
-            />
-          </span>
-        </div>
-      )}
+      {pub.venue_logo && (() => {
+        // Per-slug venue logo sizing override. The default frame (h-16 with
+        // h-12 inner image) suits the IEEE/ICIIS marks, but the EMNLP 2025
+        // wordmark is a wide multi-line lockup that reads small at that size.
+        // Bump the frame and image for this slug only. The slug here matches
+        // `slug:` in content/publications/promptception-emnlp2025.mdx.
+        const isEmnlp = pub.slug === "promptception-emnlp2025";
+        const frameH = isEmnlp ? "h-24" : "h-16";
+        const imageH = isEmnlp ? "h-20" : "h-12";
+        return (
+          <div className="mb-4 flex items-center">
+            <span className={`logo-frame-light inline-flex ${frameH} w-auto items-center justify-center rounded-md border border-[var(--color-border-strong)] px-3 py-2 shadow-[var(--shadow-card)]`}>
+              <Image
+                src={pub.venue_logo}
+                alt={`${pub.venue} logo`}
+                width={240}
+                height={96}
+                className={`${imageH} w-auto object-contain`}
+              />
+            </span>
+          </div>
+        );
+      })()}
       <PageIntro
         eyebrow={pub.venue}
         title={pub.title}
