@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import { profile, siteConfig } from "#site/content";
 import { EmailContact } from "@/components/EmailContact";
 import { PageIntro } from "@/components/PageIntro";
@@ -11,9 +12,38 @@ export const metadata: Metadata = buildMetadata({
   description: `Get in touch with ${profile.name}.`,
 });
 
-const REACH_OUT_REASONS = [
-  "Research collaborations on multimodal LLMs, vision-language calibration, or evaluation",
-  "Speaking, podcast, or panel invitations on enterprise AI and applied research",
+const REACH_OUT_REASONS: { id: string; body: ReactNode }[] = [
+  {
+    id: "industry-roles",
+    body: (
+      <>
+        Industry opportunities or collaborations for roles such as{" "}
+        <strong>Senior AI/ML Engineer</strong>, <strong>Forward Deployed Engineer</strong>, or{" "}
+        <strong>Applied AI Scientist</strong>, especially with real ownership, a collaborative team,
+        and business-critical problems. Preferred location: hybrid or on-site in{" "}
+        <strong>Abu Dhabi or Dubai</strong>.
+      </>
+    ),
+  },
+  {
+    id: "research",
+    body: (
+      <>
+        Research collaborations on <strong>multimodal GenAI</strong>,{" "}
+        <strong>vision-language models</strong>, <strong>LLM evaluation</strong>, or{" "}
+        <strong>agentic AI</strong>.
+      </>
+    ),
+  },
+  {
+    id: "volunteering",
+    body: (
+      <>
+        Volunteering opportunities where I can contribute to{" "}
+        <strong>AI, education, research, or community-focused initiatives</strong>.
+      </>
+    ),
+  },
 ];
 
 export default function ContactPage() {
@@ -24,18 +54,12 @@ export default function ContactPage() {
       <PageIntro
         eyebrow="Get in touch"
         title="Contact"
-        description="The fastest way to reach me is email. I read everything; I reply to most messages within a few days."
+        description="I'm currently exploring new opportunities and collaborations in enterprise AI and applied AI research. If you're working on something relevant or think there may be a good fit, I'd be happy to hear from you."
       />
 
       <div className="grid gap-6 md:gap-8 md:grid-cols-[minmax(0,1fr)_18rem]">
         <section className="surface-accent px-6 py-8 md:px-10 md:py-10">
           <p className="eyebrow mb-3">Email</p>
-          <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight mb-2">
-            Send a note
-          </h2>
-          <p className="text-sm text-[var(--color-fg-muted)] mb-5 max-w-prose">
-            One line on what you're working on and how I can help. Specific is better than long.
-          </p>
           <div className="text-lg md:text-xl mb-7">
             <EmailContact obfuscated={profile.email_obfuscated} />
           </div>
@@ -47,9 +71,7 @@ export default function ContactPage() {
           {profile.phone && (
             <div className="mb-7 border-t border-[var(--color-border)] pt-6">
               <p className="eyebrow mb-3">Phone & WhatsApp</p>
-              <p className="text-lg md:text-xl font-medium tabular-nums mb-4">
-                {profile.phone}
-              </p>
+              <p className="text-lg md:text-xl font-medium tabular-nums mb-4">{profile.phone}</p>
               <div className="flex flex-wrap gap-3">
                 <a
                   href={`tel:${profile.phone.replace(/\s/g, "")}`}
@@ -75,15 +97,15 @@ export default function ContactPage() {
           )}
 
           <div className="border-t border-[var(--color-border)] pt-6">
-            <p className="metadata uppercase mb-3">Especially keen to hear about</p>
+            <p className="metadata uppercase mb-3">Open to hearing about</p>
             <ul className="space-y-2.5">
               {REACH_OUT_REASONS.map((reason) => (
-                <li key={reason} className="flex gap-3 text-sm leading-relaxed">
+                <li key={reason.id} className="flex gap-3 text-sm leading-relaxed">
                   <span
                     aria-hidden="true"
                     className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[var(--color-accent)] shrink-0"
                   />
-                  <span>{reason}</span>
+                  <span>{reason.body}</span>
                 </li>
               ))}
             </ul>
@@ -116,12 +138,16 @@ export default function ContactPage() {
             ))}
           </ul>
 
+          {/* Intentionally hardcoded rather than reading profile.location /
+              profile.affiliation. The contact page wants country-level
+              framing plus visa status (relevant context for inbound role and
+              collaboration enquiries); the Hero and ProfileFacts on / and
+              /about correctly continue to render city + employer from
+              profile.mdx, which is the right grain there. */}
           <div className="mt-5 pt-5 border-t border-[var(--color-border)]">
             <p className="metadata uppercase mb-2">Based in</p>
-            <p className="text-sm text-[var(--color-fg)]">{profile.location}</p>
-            {profile.affiliation && (
-              <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">{profile.affiliation}</p>
-            )}
+            <p className="text-sm text-[var(--color-fg)]">United Arab Emirates 🇦🇪</p>
+            <p className="text-xs text-[var(--color-fg-muted)] mt-0.5">Golden Visa Holder</p>
           </div>
         </aside>
       </div>
