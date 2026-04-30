@@ -19,16 +19,18 @@ abstract: |
   Large scale integration of photovoltaic (PV) energy into power grids has seen an expressive growth. But PV power output variability hinders the large scale deployment of PV. Images captured from ground based sky imaging systems are commonly used in irradiance forecasting to address the intermittent energy production from solar panels. Facing that scenario, this study presents a novel approach to model the Global Horizontal Irradiance (GHI) based on contemporaneous hemispherical sky images (nowcast). A physics-based nonparametric classification model based on threshold of fractional cloudiness of sky images was utilized to classify the images into 3 sky conditions: sunny, partially cloudy and overcast. Several ResNet architectures were first examined as end-to-end models and then they were tailored to each sky-condition to create sky-condition based sub models. For each ResNet architecture, results of the end-to-end model and sky-condition specific sub models were compared. These sky-condition specific sub models were then combined to create a classification-nowcast framework. The best performing model yielded a MAE of 23.86 W/m^2, nRMSE of 10.80% and reached 98.88% in Pearson's correlation on the test set. The errors were comparable to or lower than other studies despite the high fluctuations in the GHI.
 contribution_summary: |
   Designed the two-stage architecture (sky classifier + regime-specialized ResNet regressors), implemented the routing logic, and ran the full evaluation against ground-truth pyranometer measurements - demonstrating that physics-informed routing outperforms a single end-to-end regressor.
-doi: "10.1109/ICIIS53935.2021.9660664"
+doi: "10.1109/ICIIS53135.2021.9660664"
 bibtex: |
-  @inproceedings{ismath2021solarghi,
-    title     = {Global Horizontal Irradiance Modeling from Sky Images Using ResNet Architectures},
-    author    = {Ismath, Insaf and others},
-    booktitle = {2021 IEEE 16th International Conference on Industrial and Information Systems (ICIIS)},
-    year      = {2021},
-    publisher = {IEEE},
-    doi       = {10.1109/ICIIS53935.2021.9660664}
-  }
+  @INPROCEEDINGS{9660664,
+    author={Insaf, I. M. and Wickramathilaka, H. M. K. D. and Upendra, M. A. N. and Godaliyadda, G. M. R. I. and Ekanayake, M. P. B. and Herath, H. M. V. R. and Dissawa, D. M. L. H. and Ekanayake, J. B.},
+    booktitle={2021 IEEE 16th International Conference on Industrial and Information Systems (ICIIS)},
+    title={Global Horizontal Irradiance Modeling from Sky Images Using ResNet Architectures},
+    year={2021},
+    volume={},
+    number={},
+    pages={239-244},
+    keywords={Clouds;Neural networks;Imaging;Production;Power grids;Large scale integration;Solar panels;Solar Irradiance Modeling;Global Horizontal Irradiance;Sky Images;Computer Vision;Deep Learning;ResNet},
+    doi={10.1109/ICIIS53135.2021.9660664}}
 related_project_id: solar-ghi-nowcasting
 tags: [solar, regression, physics-informed, vision, resnet]
 ---

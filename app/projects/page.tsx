@@ -47,7 +47,6 @@ export default function ProjectsPage() {
                 <h2 className="text-2xl md:text-3xl font-semibold flex items-center mb-1">
                   <span className={`section-rule ${RULE_COLOR[key]}`} aria-hidden="true" />
                   {label}
-                  <span className="ml-3 text-sm font-normal metadata">({items.length})</span>
                 </h2>
                 <p className="text-sm text-[var(--color-fg-muted)] ml-[0.875rem] max-w-2xl">
                   {CATEGORY_BLURB[key]}

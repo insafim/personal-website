@@ -40,9 +40,11 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
       <details className="surface-elevated">
         <summary className="cursor-pointer flex items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--color-fg-muted)]">
           <span className="eyebrow text-[10px]">Filter</span>
-          <span className="text-[var(--color-fg)]">
-            {active ? `${filtered.length} of ${projects.length}` : "All projects"}
-          </span>
+          {active && (
+            <span className="text-[var(--color-fg)]">
+              {`${filtered.length} of ${projects.length}`}
+            </span>
+          )}
           <span className="ml-auto text-[var(--color-fg-muted)]">▾</span>
         </summary>
         <div className="px-4 pb-4 grid gap-3 sm:grid-cols-2 text-sm border-t border-[var(--color-border)] pt-4">
