@@ -273,9 +273,19 @@ const resources = defineCollection({
   pattern: "resources/**/*.mdx",
   schema: s.object({
     title: s.string(),
-    kind: s.enum(["talk", "repo", "model", "writing"]),
-    url: externalUrl,
+    // Resource kinds reflect the three buckets the index page groups by.
+    // Earlier values (talk, repo, model, writing) were retired when the
+    // page was restructured; do not re-add them without updating the page
+    // KINDS array and the ResourceCard palette in lockstep.
+    kind: s.enum(["book", "blog", "youtube"]),
+    // Optional because books are listed without a canonical URL: the title
+    // is identifier enough. Blog and YouTube entries supply one in practice;
+    // the card renders the title as a link only when url is present.
+    url: externalUrl.optional(),
     why_this_matters: s.string().min(1),
+    // Optional secondary attribution (book author, blog publisher). Shown
+    // as a small line above why_this_matters on the card.
+    author: s.string().optional(),
     year: s.number().int().optional(),
     tags: s.array(s.string()).optional(),
     reading_order: s.number().int().optional(),

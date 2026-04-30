@@ -8,40 +8,34 @@ export const metadata: Metadata = buildMetadata({
   path: "/resources",
   title: "Resources",
   description:
-    "Curated talks, repositories, models, and writing - each annotated with why it matters.",
+    "A short, opinionated reading list of books, blogs, and YouTube channels that have shaped how I work.",
 });
 
 const KINDS: Array<{
-  key: "talk" | "repo" | "model" | "writing";
+  key: "book" | "blog" | "youtube";
   label: string;
   // Singular form used by the count's aria-label when items.length === 1, so
-  // assistive tech reads "1 talk" instead of the grammatically wrong "1 talks".
+  // assistive tech reads "1 book" instead of the grammatically wrong "1 books".
   singular: string;
   blurb: string;
 }> = [
   {
-    key: "talk",
-    label: "Talks",
-    singular: "talk",
-    blurb: "Conference talks and recorded sessions worth your time.",
+    key: "book",
+    label: "Books",
+    singular: "book",
+    blurb: "Long-form reading that has shaped how I think about systems and ML.",
   },
   {
-    key: "repo",
-    label: "Repositories",
-    singular: "repository",
-    blurb: "Code I keep coming back to - for ideas, primitives, or the way they're built.",
+    key: "blog",
+    label: "Blogs",
+    singular: "blog",
+    blurb: "Engineering writing I keep returning to in production work.",
   },
   {
-    key: "model",
-    label: "Models",
-    singular: "model",
-    blurb: "Open-weight models I've tested or shipped against.",
-  },
-  {
-    key: "writing",
-    label: "Writing",
-    singular: "writing",
-    blurb: "Essays, papers, and posts that changed how I think.",
+    key: "youtube",
+    label: "YouTube Channels",
+    singular: "channel",
+    blurb: "Channels where the talks and primers are consistently worth the time.",
   },
 ];
 
@@ -58,9 +52,9 @@ export default function ResourcesPage() {
   return (
     <div className="px-4 max-w-5xl mx-auto pt-12 pb-20">
       <PageIntro
-        eyebrow="Curated"
+        eyebrow="Curated, not comprehensive"
         title="Resources"
-        description="A short, opinionated reading list - talks, repositories, models, and writing that have shaped how I work, with a one-line annotation on each."
+        description="A short, opinionated reading list of books, blogs, and YouTube channels that have shaped how I work. Continuously updated."
       />
 
       {ordered.length > 0 && (
@@ -75,7 +69,7 @@ export default function ResourcesPage() {
           </p>
           <ol className="space-y-3">
             {ordered.map((r, i) => (
-              <li key={r.url} className="flex items-start gap-4">
+              <li key={`${r.kind}-${r.title}`} className="flex items-start gap-4">
                 <span
                   aria-hidden="true"
                   className="display text-2xl font-bold tabular-nums text-[var(--color-accent)] leading-none mt-0.5 w-8 shrink-0"
@@ -137,7 +131,10 @@ export default function ResourcesPage() {
               </div>
               <ul className="grid gap-4 md:grid-cols-2">
                 {items.map((r) => (
-                  <li key={r.url}>
+                  // Composite key (kind+title) used because `url` is optional
+                  // for books — using r.url alone would yield undefined keys
+                  // and React duplicate-key warnings for url-less entries.
+                  <li key={`${r.kind}-${r.title}`}>
                     <ResourceCard resource={r} />
                   </li>
                 ))}

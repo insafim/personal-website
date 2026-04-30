@@ -1,17 +1,15 @@
 import type { Resource } from "#site/content";
 
 const KIND_PALETTE: Record<Resource["kind"], { glyph: string; color: string }> = {
-  talk: { glyph: "▶", color: "var(--color-research)" },
-  repo: { glyph: "{ }", color: "var(--color-enterprise)" },
-  model: { glyph: "◆", color: "var(--color-accent)" },
-  writing: { glyph: "¶", color: "var(--color-independent)" },
+  book: { glyph: "▣", color: "var(--color-research)" },
+  blog: { glyph: "¶", color: "var(--color-enterprise)" },
+  youtube: { glyph: "▶", color: "var(--color-accent)" },
 };
 
 const KIND_LABEL: Record<Resource["kind"], string> = {
-  talk: "Talk",
-  repo: "Repo",
-  model: "Model",
-  writing: "Writing",
+  book: "Book",
+  blog: "Blog",
+  youtube: "YouTube",
 };
 
 export function ResourceCard({ resource }: { resource: Resource }) {
@@ -34,16 +32,23 @@ export function ResourceCard({ resource }: { resource: Resource }) {
         </span>
         {resource.year && <span className="ml-auto metadata">{resource.year}</span>}
       </div>
-      <h3 className="text-base font-semibold leading-snug mb-2">
-        <a
-          href={resource.url}
-          rel="noopener noreferrer"
-          target="_blank"
-          className="hover:text-[var(--color-accent)] transition-colors"
-        >
-          {resource.title} <span aria-hidden="true">↗</span>
-        </a>
+      <h3 className="text-base font-semibold leading-snug mb-1">
+        {resource.url ? (
+          <a
+            href={resource.url}
+            rel="noopener noreferrer"
+            target="_blank"
+            className="hover:text-[var(--color-accent)] transition-colors"
+          >
+            {resource.title} <span aria-hidden="true">↗</span>
+          </a>
+        ) : (
+          resource.title
+        )}
       </h3>
+      {resource.author && (
+        <p className="text-xs text-[var(--color-fg-muted)] mb-2 italic">{resource.author}</p>
+      )}
       <p className="text-sm text-[var(--color-fg-muted)] leading-relaxed flex-1">
         {resource.why_this_matters}
       </p>
