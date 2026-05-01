@@ -40,21 +40,23 @@ export function Hero({ profile, home }: { profile: Profile; home: Home }) {
                 {profile.cv_dev_url && (
                   <a
                     href={profile.cv_dev_url}
-                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent)] px-5 py-2.5 font-semibold text-[var(--color-accent-fg)] transition-opacity hover:opacity-90"
                   >
                     CV
-                    <span aria-hidden="true">↓</span>
+                    <span aria-hidden="true">↗</span>
                   </a>
                 )}
                 {profile.cv_research_url && (
                   <a
                     href={profile.cv_research_url}
-                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent)] px-5 py-2.5 font-semibold text-[var(--color-accent-fg)] transition-opacity hover:opacity-90"
                   >
                     Research CV
-                    <span aria-hidden="true">↓</span>
+                    <span aria-hidden="true">↗</span>
                   </a>
                 )}
               </div>
