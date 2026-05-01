@@ -423,6 +423,17 @@ test("Beyond page renders at least one org logo inside a card", async ({ page })
   await expect(logoImgs).not.toHaveCount(0);
 });
 
+test("Beyond page renders the partner-logo chip strip on the MBZUAI card", async ({ page }) => {
+  // Scoped specifically to the only card with `partner_logos` today. The
+  // page-wide "logo not zero" assertion above passes even if the entire
+  // partner_logos render block is deleted, because the primary logo would
+  // still produce one img. This narrower test catches that regression.
+  await page.goto("/beyond");
+  const mbzuaiCard = page.locator('article:has(h3:text-is("MBZUAI Consulting Club"))');
+  await expect(mbzuaiCard.locator("img")).toHaveCount(3);
+  await expect(mbzuaiCard.getByText("With", { exact: true })).toBeVisible();
+});
+
 test("Beyond page renders anecdotes", async ({ page }) => {
   await page.goto("/beyond");
   await expect(page.locator("h1")).toContainText("Beyond");

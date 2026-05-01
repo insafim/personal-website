@@ -24,10 +24,23 @@ describe("yaml logo paths resolve to real files under public/", () => {
       expect(existsSync(join(publicRoot, s.logo as string))).toBe(true);
     });
   }
+  // Single pass over hobbies: assert primary `logo` and any `partner_logos`.
+  // Partner logos carry the same broken-image risk as primary logos -- the
+  // velite schema only validates the leading-slash, not file existence -- so
+  // a typo or deleted asset would render as a broken chip in the "With" strip
+  // on the Beyond page just as silently as a broken primary logo would.
   for (const h of hobbies) {
-    if (!h.logo) continue;
-    it(`hobby "${h.title}" -> ${h.logo} exists`, () => {
-      expect(existsSync(join(publicRoot, h.logo as string))).toBe(true);
-    });
+    if (h.logo) {
+      it(`hobby "${h.title}" -> ${h.logo} exists`, () => {
+        expect(existsSync(join(publicRoot, h.logo as string))).toBe(true);
+      });
+    }
+    if (h.partner_logos) {
+      for (const partnerPath of h.partner_logos) {
+        it(`hobby "${h.title}" partner -> ${partnerPath} exists`, () => {
+          expect(existsSync(join(publicRoot, partnerPath))).toBe(true);
+        });
+      }
+    }
   }
 });

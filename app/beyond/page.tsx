@@ -150,6 +150,40 @@ export default function BeyondPage() {
                         <p className="text-base text-[var(--color-fg-muted)] mb-5 max-w-prose leading-relaxed">
                           {h.description}
                         </p>
+                        {/*
+                         * Partner-logo strip. Sits between description and
+                         * anecdotes (not in the header) so the primary `logo`
+                         * keeps visual ownership of the card; partners are
+                         * contextual support. See velite.config.ts partner_logos
+                         * schema for the hierarchy rationale. No `logo_dark`
+                         * variant: the `logo-frame-light` frame gives PNGs with
+                         * white backgrounds a consistent treatment in both
+                         * themes, so a separate dark variant would be redundant
+                         * for the small chip size used here.
+                         */}
+                        {h.partner_logos && h.partner_logos.length > 0 && (
+                          <div className="flex items-center gap-3 mb-5 -mt-2">
+                            <span className="metadata text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
+                              With
+                            </span>
+                            <ul className="flex gap-1.5">
+                              {h.partner_logos.map((src) => (
+                                <li
+                                  key={src}
+                                  className="logo-frame-light inline-flex items-center justify-center w-8 h-8 rounded border border-[var(--color-border-strong)] overflow-hidden"
+                                >
+                                  <Image
+                                    src={src}
+                                    alt=""
+                                    width={32}
+                                    height={32}
+                                    className="h-full w-full object-contain p-0.5"
+                                  />
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                         <ul className="space-y-3">
                           {h.anecdotes.map((a) => (
                             <li key={a.slice(0, 60)} className="flex gap-3 leading-relaxed">

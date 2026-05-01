@@ -320,6 +320,25 @@ const hobbies = defineCollection({
       .string()
       .regex(/^\//, "logo_dark must be a site-relative path starting with /")
       .optional(),
+    // Supporting partner organisations associated with the entry but
+    // subordinate to the primary `logo`. Renders as a small "With" chip
+    // strip below the description so the hierarchy stays visually clear:
+    // primary org owns the card, partners contextualise it. Capped at 4
+    // because the chip strip stops fitting cleanly past that on mobile.
+    //
+    // No `partner_logos_dark` counterpart by design: chips are rendered
+    // unconditionally on the `logo-frame-light` near-white background in
+    // both themes, which suits the common opaque-on-white and dark-on-
+    // transparent partner logos. If a future partner needs a dark variant,
+    // add `partner_logos_dark` then (paired array semantics) rather than
+    // pre-building it now.
+    partner_logos: s
+      .array(
+        s.string().regex(/^\//, "partner_logos paths must be site-relative starting with /")
+      )
+      .min(1)
+      .max(4)
+      .optional(),
   }),
 });
 
