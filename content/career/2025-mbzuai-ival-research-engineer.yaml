@@ -1,0 +1,7 @@
+order: 2
+year_range: May 2025 - Sep 2025
+role: AI Research Engineer
+company: mbzuai
+employment_type: Full-time
+mode: On-site
+summary: Calibration of prompt-tuned CLIP for robust base-to-novel generalization. Co-developed a dual-regularization framework (mean-variance margin loss + text moment-matching) and ran the 11-dataset base-to-novel benchmark; published at CVPR 2026.

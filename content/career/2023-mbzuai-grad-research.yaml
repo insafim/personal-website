@@ -1,7 +1,7 @@
-order: 3
+order: 4
 year_range: Aug 2023 - May 2025
 role: Research Assistant
 company: mbzuai
 employment_type: Part-time
 mode: On-site
-summary: Research on Vision-Language Models and multimodal LLMs. Long-form video understanding benchmarks and fine-grained image classification on ConvNeXt. Published at EMNLP 2025 Findings and CVPR 2026.
+summary: Research on long-form video understanding and the sensitivity of large multi-modal models. Published at EMNLP 2025 Findings.
