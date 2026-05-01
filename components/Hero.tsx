@@ -43,7 +43,7 @@ export function Hero({ profile, home }: { profile: Profile; home: Home }) {
                     download
                     className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent)] px-5 py-2.5 font-semibold text-[var(--color-accent-fg)] transition-opacity hover:opacity-90"
                   >
-                    Dev CV
+                    CV
                     <span aria-hidden="true">↓</span>
                   </a>
                 )}
