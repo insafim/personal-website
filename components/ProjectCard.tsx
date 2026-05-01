@@ -1,17 +1,28 @@
 import type { Project } from "#site/content";
 
-type ProjectCardProps = { project: Project; featured?: boolean };
+type ProjectCardProps = { project: Project };
 
-export function ProjectCard({ project, featured = false }: ProjectCardProps) {
-  const truncate = featured ? 260 : 140;
+// Many project titles use a "Main - Subtitle" form (e.g. "Avatar AI Voice
+// Agent - Digital delegate for IHC's Growth Day"). Splitting on the first
+// " - " gives the tile a clean two-line typographic hierarchy: a strong
+// main title and a quieter tagline. Titles without a separator render as
+// a single line.
+function splitTitle(title: string): { main: string; sub: string | null } {
+  const idx = title.indexOf(" - ");
+  if (idx === -1) return { main: title, sub: null };
+  return { main: title.slice(0, idx), sub: title.slice(idx + 3) };
+}
+
+export function ProjectCard({ project }: ProjectCardProps) {
+  const { main: titleMain, sub: titleSub } = splitTitle(project.title);
 
   return (
     <article className="surface-elevated relative h-full flex flex-col overflow-hidden">
       <div
-        className={`absolute inset-y-0 left-0 ${featured ? "w-1.5" : "w-1"} bg-[var(--color-accent)]`}
+        className="absolute inset-y-0 left-0 w-1 bg-[var(--color-accent)]"
         aria-hidden="true"
       />
-      <div className={`flex flex-col h-full ${featured ? "p-6 pl-7 md:p-8 md:pl-9" : "p-5 pl-6"}`}>
+      <div className="flex flex-col h-full p-5 pl-6">
         <div className="flex items-center gap-2 mb-3">
           <span
             data-affiliation={project.affiliation}
@@ -21,65 +32,40 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
           </span>
           <span className="ml-auto metadata">{project.year}</span>
         </div>
-        <h3
-          className={`font-semibold leading-tight mb-2 ${
-            featured ? "text-2xl md:text-3xl display tracking-tight" : "text-lg"
-          }`}
-        >
-          {project.title}
+        <h3 className="text-lg font-semibold leading-snug tracking-tight mb-1.5 line-clamp-2">
+          {titleMain}
         </h3>
-        <p
-          className={`text-[var(--color-fg-muted)] mb-4 flex-1 leading-relaxed ${
-            featured ? "text-base" : "text-sm"
-          }`}
-        >
-          {project.problem.slice(0, truncate)}
-          {project.problem.length > truncate ? "…" : ""}
+        {titleSub && (
+          <p className="text-sm text-[var(--color-fg-muted)] mb-3 leading-snug line-clamp-2">
+            {titleSub}
+          </p>
+        )}
+        <p className="text-sm text-[var(--color-fg-muted)] mb-4 leading-relaxed line-clamp-4">
+          {project.problem}
         </p>
         {/*
-         * Hero-metric pattern (Brittany Chiang-style "100k+ Installs"): promote
-         * the first scale_metric to display-size as the card's anchor number,
-         * keep the rest at small text below. Inspired by:
-         * https://brittanychiang.com (verified 2026-04-27).
-         *
-         * `?.[0]` is required (not just `[0]`) because tsconfig sets
-         * `noUncheckedIndexedAccess: true`, so array index access returns
-         * `T | undefined` and must be guarded.
-         *
-         * `data-hero-metric` is a load-bearing e2e selector, not a styling
-         * hook - it anchors tests/e2e/smoke.spec.ts. Do not remove it.
+         * data-hero-metric / data-metric-value are load-bearing e2e selectors
+         * pinned by tests/e2e/smoke.spec.ts. Preserved across the
+         * featured-vs-regular unification: cards with scale_metrics still
+         * promote their first metric, just at tile-appropriate size.
          */}
-        {featured && project.scale_metrics?.[0] && (
-          <div data-hero-metric="" className="mb-5 pb-5 border-b border-[var(--color-border)]">
-            <div className="flex items-baseline gap-3 mb-3 flex-wrap">
+        {project.scale_metrics?.[0] && (
+          <div data-hero-metric="" className="mb-4 pt-1">
+            <div className="flex items-baseline gap-2 flex-wrap">
               <span
                 data-metric-value=""
-                className="display tabular-nums text-4xl md:text-5xl font-bold leading-none tracking-tight text-[var(--color-fg)]"
+                className="display tabular-nums text-3xl font-bold leading-none tracking-tight text-[var(--color-fg)]"
               >
                 {project.scale_metrics[0].value}
               </span>
-              <span className="text-[11px] uppercase tracking-[0.14em] text-[var(--color-fg-muted)] font-medium">
+              <span className="text-[10px] uppercase tracking-[0.14em] text-[var(--color-fg-muted)] font-medium">
                 {project.scale_metrics[0].label}
               </span>
             </div>
-            {project.scale_metrics.length > 1 && (
-              <dl className="grid grid-cols-2 gap-4">
-                {project.scale_metrics.slice(1, 3).map((m) => (
-                  <div key={m.label}>
-                    <dt className="text-[10px] uppercase tracking-[0.12em] text-[var(--color-fg-muted)]">
-                      {m.label}
-                    </dt>
-                    <dd className="text-sm font-semibold text-[var(--color-fg)] tabular-nums mt-0.5">
-                      {m.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            )}
           </div>
         )}
-        <ul className="flex flex-wrap gap-1.5 mt-auto">
-          {project.tech_stack.slice(0, featured ? 8 : 5).map((t) => (
+        <ul className="flex flex-wrap gap-1.5 mt-auto pt-1">
+          {project.tech_stack.slice(0, 5).map((t) => (
             <li
               key={t}
               className="text-xs px-2 py-0.5 rounded-md bg-[var(--color-bg-subtle)] text-[var(--color-fg-muted)] border border-[var(--color-border)]"
