@@ -23,7 +23,7 @@ export function GET() {
 - ${base}/resources - Curated talks, repositories, models, and writing - each annotated with why it matters.
 
 ## Beyond
-- ${base}/beyond - Clubs, competitions, sports, and the things Insaf shows up for outside the day job.
+- ${base}/beyond - Leadership, sports, and the things Insaf shows up for outside the day job.
 
 ## Contact
 - ${base}/contact - Email + social links (no consent banner; cookieless).

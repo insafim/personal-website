@@ -392,26 +392,24 @@ test("GET /hobbies redirects permanently to /beyond", async ({ page }) => {
 
 test("Beyond page renders categorised sections in the expected order", async ({ page }) => {
   // Asserts the populated category H2s are present and ordered as
-  // CATEGORY_ORDER declares (Clubs & competitions > Sports). Leadership
-  // entries fold into the Clubs & competitions bucket at render time.
+  // CATEGORY_ORDER declares (Leadership > Sports & Fitness). Empty categories
+  // (extracurricular, interest) are skipped by the items.length === 0 guard.
   // Catches:
   //   - mutation: removing a category field from a yaml (silently migrates to Interests)
   //   - mutation: reordering CATEGORY_ORDER
   //   - mutation: heading-hierarchy regression (cards becoming h2 instead of h3)
   await page.goto("/beyond");
-  // The H2 textContent includes the inline count badge digits (e.g.
-  // "Sports4"); strip trailing digits before comparing the label order.
   const sectionHeadings = await page
     .locator("h2.display")
     .allTextContents()
-    .then((arr) => arr.map((s) => s.trim().replace(/\d+$/, "")));
-  expect(sectionHeadings).toEqual(["Clubs & competitions", "Sports"]);
+    .then((arr) => arr.map((s) => s.trim()));
+  expect(sectionHeadings).toEqual(["Leadership", "Sports & Fitness"]);
 
   // Card titles render as h3 (one per entry). Floor catches mass-deletion of
-  // hobby MDX files; current content has 7 entries so floor=5 leaves room for
-  // intentional content edits without false-failing on every removal.
+  // hobby MDX files; current content has 6 entries so floor=4 leaves room for
+  // a single intentional removal without false-failing.
   const cardTitles = page.locator("section article h3");
-  expect(await cardTitles.count()).toBeGreaterThanOrEqual(5);
+  expect(await cardTitles.count()).toBeGreaterThanOrEqual(4);
 });
 
 test("Beyond page renders at least one org logo inside a card", async ({ page }) => {

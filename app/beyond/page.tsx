@@ -8,7 +8,7 @@ export const metadata: Metadata = buildMetadata({
   path: "/beyond",
   title: "Beyond",
   description:
-    "Clubs, communities, sports, and the things I show up for outside the day job.",
+    "Leadership, sports, and the things I show up for outside the day job.",
 });
 
 type Accent = { fg: string; soft: string };
@@ -21,19 +21,24 @@ const ACCENTS: readonly [Accent, Accent, Accent, Accent] = [
 
 // Category display order + section labels. Entries without a category fall
 // into "interest" by default so the page never has uncategorised orphans.
-// "leadership" remains a valid schema value but folds into "Clubs &
-// competitions" at render time so a single founding role does not require its
-// own section header.
+// "extracurricular" stays in the order as an empty placeholder so a future
+// non-leadership club entry can land without a code change; the empty-section
+// guard below skips it visually until something fills it.
 type Category = NonNullable<Hobby["category"]>;
 const CATEGORY_ORDER: ReadonlyArray<{ key: Category; label: string; blurb: string }> = [
   {
+    key: "leadership",
+    label: "Leadership",
+    blurb: "Roles I've founded or joined.",
+  },
+  {
     key: "extracurricular",
-    label: "Clubs & competitions",
-    blurb: "Clubs I've founded or joined, and competitions I've shown up for.",
+    label: "Extracurricular",
+    blurb: "Clubs and student bodies.",
   },
   {
     key: "sport",
-    label: "Sports",
+    label: "Sports & Fitness",
     blurb: "What keeps me moving when the laptop closes.",
   },
   {
@@ -47,10 +52,7 @@ export default function BeyondPage() {
   const sorted = [...hobbies].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   const grouped = new Map<Category, Hobby[]>();
   for (const h of sorted) {
-    // "leadership" entries fold into "extracurricular" so we keep one combined
-    // "Clubs & competitions" section; the schema still accepts both values.
-    const raw = h.category ?? "interest";
-    const cat = (raw === "leadership" ? "extracurricular" : raw) as Category;
+    const cat = (h.category ?? "interest") as Category;
     const list = grouped.get(cat) ?? [];
     list.push(h);
     grouped.set(cat, list);
@@ -65,7 +67,7 @@ export default function BeyondPage() {
       <PageIntro
         eyebrow="Off the clock"
         title="Beyond"
-        description="Clubs, competitions, sports, and the things I show up for outside the day job. Each one teaches me something I bring back to work."
+        description="Leadership, sports, and the things I show up for outside the day job. Each one teaches me something I bring back to work."
       />
 
       <div className="space-y-16">
@@ -78,12 +80,6 @@ export default function BeyondPage() {
                 <h2 className="display text-2xl md:text-3xl font-semibold tracking-tight flex items-center mb-1">
                   <span className="section-rule bg-[var(--color-accent)]" aria-hidden="true" />
                   {label}
-                  <span
-                    aria-label={`${items.length} ${label.toLowerCase()}`}
-                    className="ml-auto metadata text-sm tabular-nums text-[var(--color-fg-muted)] font-normal"
-                  >
-                    {items.length}
-                  </span>
                 </h2>
                 <p className="text-sm text-[var(--color-fg-muted)] ml-[0.875rem] max-w-2xl">
                   {blurb}
@@ -166,18 +162,18 @@ export default function BeyondPage() {
                             <span className="metadata text-xs uppercase tracking-wider text-[var(--color-fg-muted)]">
                               With
                             </span>
-                            <ul className="flex gap-1.5">
+                            <ul className="flex gap-2">
                               {h.partner_logos.map((src) => (
                                 <li
                                   key={src}
-                                  className="logo-frame-light inline-flex items-center justify-center w-8 h-8 rounded border border-[var(--color-border-strong)] overflow-hidden"
+                                  className="logo-frame-light inline-flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded border border-[var(--color-border-strong)] overflow-hidden"
                                 >
                                   <Image
                                     src={src}
                                     alt=""
-                                    width={32}
-                                    height={32}
-                                    className="h-full w-full object-contain p-0.5"
+                                    width={56}
+                                    height={56}
+                                    className="h-full w-full object-contain p-1"
                                   />
                                 </li>
                               ))}
