@@ -1,0 +1,38 @@
+---
+slug: power-automate-legal-intake
+title: Power Automate Legal Intake - replacing manual triage with a structured flow
+affiliation: 2PointZero Group
+year: 2025
+problem: Legal requests at 2PointZero arrived as ad-hoc emails. No structured fields, no SLA visibility, no consistent place to drop attachments. The legal team spent more time triaging than reviewing.
+approach: Designed a Power Automate flow that turns a single intake form submission into a structured SharePoint list item, fires parallel notifications to both the legal team and the requester for confirmation and visibility, and provisions a request-scoped SharePoint folder for attachments. The list item, the notification thread, and the folder all share one ID, so any of the three is a doorway into the others.
+role: Sole designer and implementer.
+tech_stack:
+  - Power Automate
+  - SharePoint
+  - Microsoft 365
+tags: [automation, sharepoint, low-code, internal-tools]
+---
+
+## Why Power Automate
+
+The intake did not need a backend service. It needed structure on top of what
+M365 already provided. Power Automate moved fastest because it sat on the same
+identity and permission model the legal team already used, with no new vendor
+review or sign-off cycle.
+
+## Where the leverage came from
+
+The "one ID, three doorways" pattern. The list item, the notification thread,
+and the attachment folder all share an ID. If a requester replies to the
+email, the legal team can find the folder. If legal opens the folder, they
+know which list item to update. If they update the list item, the requester
+gets pinged.
+
+## Where it broke
+
+Parallel branches in Power Automate look concurrent on the canvas but can race
+on shared state. The first version updated the list item from both the
+notification branch and the folder-provision branch; whichever finished last
+won, and sometimes the folder URL was missing from the notification. Fixed by
+sequencing the folder creation before any notification, and reading the
+canonical URL from the list item rather than from the local branch state.

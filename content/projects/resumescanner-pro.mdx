@@ -1,0 +1,40 @@
+---
+slug: resumescanner-pro
+title: ResumeScanner Pro - AI resume triage for university career fairs
+affiliation: Independent
+year: 2026
+problem: University career-fair recruiters scan dozens of resumes per booth in minutes, with QR codes pointing to a mess of formats (raw PDFs, Drive links, Symplicity redirects, GitHub, LinkedIn, portfolio sites). There is no time to read each one, and model latency would block the next candidate if analysis ran inline.
+approach: Built a mobile-first React app that scans the QR, persists the candidate before any AI call, then dispatches analysis in the background to Gemini, Groq, or OpenAI depending on what the source is. A Supabase Edge Function resolves Symplicity-style redirects to the underlying PDF and archives a copy to Drive, so the recruiter sees a structured candidate card and a Go/No-Go control while the next person is already at the booth.
+role: Solo build - product, frontend, edge functions, and AI provider routing.
+tech_stack:
+  - React 19
+  - TypeScript
+  - Vite 6
+  - Supabase
+  - Gemini
+  - Groq
+  - OpenAI
+  - Tailwind CSS
+github_url: https://github.com/insafim/resumescanner
+tags: [ai, recruiting, supabase, react]
+---
+
+## Why async-after-save
+
+Saving the scan before the AI call decouples recruiter throughput from model
+latency. The candidate row exists the moment the QR resolves; the recruiter can
+take notes immediately, and the analysis fills in around them.
+
+## PDF routing
+
+Gemini and OpenAI ingest PDFs directly via file URI parts. Groq cannot, so any
+input that lands as a Drive PDF or a resolved Symplicity PDF is routed to one
+of the other two. URL-only inputs (LinkedIn, GitHub, portfolios) can still go
+to Groq.
+
+## Where the seams are
+
+The hard part is not any single provider call. It is Symplicity. The Edge
+Function follows HTTP 3xx, meta-refresh, and JS redirects to find the actual
+PDF; without that step, half the QR codes in the wild resolve to a redirect
+HTML page, not the resume itself.

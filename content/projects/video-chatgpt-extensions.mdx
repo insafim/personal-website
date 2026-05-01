@@ -1,0 +1,38 @@
+---
+slug: video-chatgpt-extensions
+title: Extending Video-ChatGPT - long videos, pixel grounding, and audio context
+affiliation: MBZUAI
+year: 2023
+problem: Video-ChatGPT was designed around short clips. On long videos (multi-minute), token budgets exploded and frame-level attention degraded; meanwhile the model had no audio channel, so dialogue and ambient sound that often disambiguate a scene were invisible to it.
+approach: Built three extensions on top of Video-ChatGPT. Token compression along the lines of MovieChat and Token Merging to make long videos fit, pixel-grounded outputs so the model could point to objects rather than just describe them, and an audio path that transcribed the source audio with Whisper and concatenated the transcript into the language context. Evaluated on long-video scenarios where the baseline degraded.
+role: AI701 course project lead - system extension and evaluation.
+tech_stack:
+  - PyTorch
+  - Hugging Face
+  - Whisper
+  - Video-ChatGPT
+tags: [vlm, video, multimodal, course-project]
+---
+
+## Why these three extensions
+
+Each addressed a separate failure mode. Token explosion on long videos is a
+budget problem: MovieChat and Token Merging compress redundant frame tokens.
+Lack of grounding is a precision problem: pixel-level outputs let the model
+say *that* car, not just *a car*. Lack of audio is an information problem:
+speech and ambient sound carry meaning the visual stream alone misses.
+
+## Where Whisper fit
+
+Audio-to-text transcription was the cheapest way to plug an audio channel
+into a VLM that had none. The transcript joined the language context, so the
+existing language stack handled it without retraining. Imperfect (Whisper's
+errors propagate), but a useful baseline before considering a learned audio
+encoder.
+
+## Where it broke
+
+Long-video evaluation was thinner than I wanted. The benchmarks for
+multi-minute video QA were sparse in 2023, so the comparison was qualitative
+on hand-curated cases more often than ideal. The Long-form Video QA benchmark
+project that followed was partly a response to that gap.
