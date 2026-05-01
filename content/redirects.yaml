@@ -1,1 +1,5 @@
-entries: []
+entries:
+  - from_path: /hobbies
+    to_path: /beyond
+    status_code: 308
+    reason: Route renamed to match the page heading; preserves inbound links and OG cards.

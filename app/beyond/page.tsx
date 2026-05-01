@@ -5,7 +5,7 @@ import { PageIntro } from "@/components/PageIntro";
 import { buildMetadata } from "@/lib/metadata";
 
 export const metadata: Metadata = buildMetadata({
-  path: "/hobbies",
+  path: "/beyond",
   title: "Beyond",
   description:
     "Clubs, communities, sports, and the things I show up for outside the day job.",
@@ -21,17 +21,15 @@ const ACCENTS: readonly [Accent, Accent, Accent, Accent] = [
 
 // Category display order + section labels. Entries without a category fall
 // into "interest" by default so the page never has uncategorised orphans.
+// "leadership" remains a valid schema value but folds into "Clubs &
+// competitions" at render time so a single founding role does not require its
+// own section header.
 type Category = NonNullable<Hobby["category"]>;
 const CATEGORY_ORDER: ReadonlyArray<{ key: Category; label: string; blurb: string }> = [
   {
-    key: "leadership",
-    label: "Leadership",
-    blurb: "Roles where I've owned the agenda - founding, organising, mentoring.",
-  },
-  {
     key: "extracurricular",
-    label: "Extracurricular",
-    blurb: "Clubs, competitions, and student bodies.",
+    label: "Clubs & competitions",
+    blurb: "Clubs I've founded or joined, and competitions I've shown up for.",
   },
   {
     key: "sport",
@@ -45,11 +43,14 @@ const CATEGORY_ORDER: ReadonlyArray<{ key: Category; label: string; blurb: strin
   },
 ];
 
-export default function HobbiesPage() {
+export default function BeyondPage() {
   const sorted = [...hobbies].sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
   const grouped = new Map<Category, Hobby[]>();
   for (const h of sorted) {
-    const cat = (h.category ?? "interest") as Category;
+    // "leadership" entries fold into "extracurricular" so we keep one combined
+    // "Clubs & competitions" section; the schema still accepts both values.
+    const raw = h.category ?? "interest";
+    const cat = (raw === "leadership" ? "extracurricular" : raw) as Category;
     const list = grouped.get(cat) ?? [];
     list.push(h);
     grouped.set(cat, list);
@@ -64,7 +65,7 @@ export default function HobbiesPage() {
       <PageIntro
         eyebrow="Off the clock"
         title="Beyond"
-        description="Leadership, extracurriculars, sports, and the things I show up for outside the day job. Each one teaches me something I bring back to work."
+        description="Clubs, competitions, sports, and the things I show up for outside the day job. Each one teaches me something I bring back to work."
       />
 
       <div className="space-y-16">

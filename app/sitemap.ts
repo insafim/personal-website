@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/projects",
     "/publications",
     "/resources",
-    "/hobbies",
+    "/beyond",
     "/contact",
   ].map((path) => ({ url: `${base}${path}`, lastModified: now }));
 
@@ -24,7 +24,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
   }));
 
-  // resources + hobbies are list-only (no detail routes at MVP)
+  // resources + beyond entries are list-only (no detail routes at MVP)
   void resources;
   void hobbies;
 

@@ -9,7 +9,7 @@ const PAGES = [
   "/projects",
   "/publications",
   "/resources",
-  "/hobbies",
+  "/beyond",
   "/contact",
 ] as const;
 

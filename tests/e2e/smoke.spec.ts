@@ -375,29 +375,37 @@ test("resources page shows per-kind hit counts as bare numbers in section eyebro
   }
 });
 
-test("nav surfaces the Beyond link routing to /hobbies", async ({ page }) => {
-  // Catches mutation: restoring the old "Hobbies" label in site-config.yaml.
+test("nav surfaces the Beyond link routing to /beyond", async ({ page }) => {
+  // Catches mutation: reverting the nav href back to the old /hobbies path.
   await page.goto("/");
-  const beyondLink = page.locator('nav a[href="/hobbies"]');
+  const beyondLink = page.locator('nav a[href="/beyond"]');
   await expect(beyondLink).toHaveCount(1);
   await expect(beyondLink).toContainText("Beyond");
 });
 
+test("GET /hobbies redirects permanently to /beyond", async ({ page }) => {
+  // content/redirects.yaml is the sole source of truth for the 308. A regression
+  // there would silently break inbound links and OG cards from before the rename.
+  await page.goto("/hobbies");
+  expect(page.url()).toContain("/beyond");
+});
+
 test("Beyond page renders categorised sections in the expected order", async ({ page }) => {
-  // Asserts the three populated category H2s are present and ordered as
-  // CATEGORY_ORDER declares (Leadership > Extracurricular > Sports).
+  // Asserts the populated category H2s are present and ordered as
+  // CATEGORY_ORDER declares (Clubs & competitions > Sports). Leadership
+  // entries fold into the Clubs & competitions bucket at render time.
   // Catches:
   //   - mutation: removing a category field from a yaml (silently migrates to Interests)
   //   - mutation: reordering CATEGORY_ORDER
   //   - mutation: heading-hierarchy regression (cards becoming h2 instead of h3)
-  await page.goto("/hobbies");
+  await page.goto("/beyond");
   // The H2 textContent includes the inline count badge digits (e.g.
-  // "Leadership1"); strip trailing digits before comparing the label order.
+  // "Sports4"); strip trailing digits before comparing the label order.
   const sectionHeadings = await page
     .locator("h2.display")
     .allTextContents()
     .then((arr) => arr.map((s) => s.trim().replace(/\d+$/, "")));
-  expect(sectionHeadings).toEqual(["Leadership", "Extracurricular", "Sports"]);
+  expect(sectionHeadings).toEqual(["Clubs & competitions", "Sports"]);
 
   // Card titles render as h3 (one per entry). Floor catches mass-deletion of
   // hobby MDX files; current content has 7 entries so floor=5 leaves room for
@@ -410,13 +418,13 @@ test("Beyond page renders at least one org logo inside a card", async ({ page })
   // Catches mutations: removing all `logo:` fields from hobby YAMLs, replacing
   // next/image with a non-rendering element, or breaking the conditional
   // render block.
-  await page.goto("/hobbies");
+  await page.goto("/beyond");
   const logoImgs = page.locator("section article img");
   await expect(logoImgs).not.toHaveCount(0);
 });
 
-test("hobbies page renders anecdotes", async ({ page }) => {
-  await page.goto("/hobbies");
+test("Beyond page renders anecdotes", async ({ page }) => {
+  await page.goto("/beyond");
   await expect(page.locator("h1")).toContainText("Beyond");
   await expect(page.locator("section ul li").first()).toBeVisible();
 });

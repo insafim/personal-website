@@ -23,10 +23,9 @@ nav:
     - { label: Projects,     href: /projects,     order: 2 }
     - { label: Publications, href: /publications, order: 3 }
     - { label: Resources,    href: /resources,    order: 4 }
-    # Label is "Beyond" but the route stays /hobbies for backward
-    # compatibility (existing inbound links / OG cards). To rename the URL,
-    # also move app/hobbies -> app/beyond and add a redirect entry.
-    - { label: Beyond,       href: /hobbies,      order: 5 }
+    # Old /hobbies path is preserved as a 308 redirect in content/redirects.yaml
+    # so existing inbound links and OG cards keep resolving.
+    - { label: Beyond,       href: /beyond,       order: 5 }
     - { label: Contact,      href: /contact,      order: 6 }
   footer: []
   social:

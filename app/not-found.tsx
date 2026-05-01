@@ -7,7 +7,7 @@ export default function NotFound() {
     { href: "/projects", label: "Projects" },
     { href: "/publications", label: "Publications" },
     { href: "/resources", label: "Resources" },
-    { href: "/hobbies", label: "Hobbies" },
+    { href: "/beyond", label: "Beyond" },
     { href: "/contact", label: "Contact" },
   ];
 

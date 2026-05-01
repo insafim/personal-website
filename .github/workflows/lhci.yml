@@ -34,7 +34,7 @@ jobs:
             ${{ github.event.deployment_status.target_url }}/projects
             ${{ github.event.deployment_status.target_url }}/publications
             ${{ github.event.deployment_status.target_url }}/resources
-            ${{ github.event.deployment_status.target_url }}/hobbies
+            ${{ github.event.deployment_status.target_url }}/beyond
           configPath: ./lighthouserc.js
           uploadArtifacts: true
           temporaryPublicStorage: true

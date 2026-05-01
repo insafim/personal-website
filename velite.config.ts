@@ -294,10 +294,12 @@ const resources = defineCollection({
 
 // Entity 5 — Hobby (rendered under "Beyond"). Covers sports, leadership,
 // extracurricular activities, and miscellaneous interests. Grouped by `category`
-// on the page (app/hobbies/page.tsx); the schema leaves `category` optional and
+// on the page (app/beyond/page.tsx); the schema leaves `category` optional and
 // the page coerces missing values to "interest" so this collection has no
 // uncategorised orphans at render time. The coercion lives in the page, not
 // the schema — keep them in sync if a second consumer of `hobbies` is added.
+// The collection variable and content/hobbies/ directory keep their historical
+// name for stable MDX paths; the public URL is /beyond.
 const hobbies = defineCollection({
   name: "Hobby",
   pattern: "hobbies/**/*.mdx",
