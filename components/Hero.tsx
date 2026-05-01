@@ -34,25 +34,51 @@ export function Hero({ profile, home }: { profile: Profile; home: Home }) {
               </li>
             ))}
           </ul>
-          <div className="flex flex-wrap gap-3 items-center">
-            <Link
-              href="/publications"
-              className="px-5 py-2.5 rounded-md border border-[var(--color-border-strong)] font-semibold hover:bg-[var(--color-bg-subtle)] transition-colors"
-            >
-              View Publications
-            </Link>
-            <Link
-              href="/projects"
-              className="px-5 py-2.5 rounded-md border border-[var(--color-border-strong)] font-semibold hover:bg-[var(--color-bg-subtle)] transition-colors"
-            >
-              See Projects
-            </Link>
-            <Link
-              href="/contact"
-              className="px-3 py-2.5 font-semibold text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors"
-            >
-              Get in touch →
-            </Link>
+          <div className="flex flex-col gap-4">
+            {(profile.cv_dev_url || profile.cv_research_url) && (
+              <div className="flex flex-wrap gap-3 items-center">
+                {profile.cv_dev_url && (
+                  <a
+                    href={profile.cv_dev_url}
+                    download
+                    className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent)] px-5 py-2.5 font-semibold text-[var(--color-accent-fg)] transition-opacity hover:opacity-90"
+                  >
+                    Dev CV
+                    <span aria-hidden="true">↓</span>
+                  </a>
+                )}
+                {profile.cv_research_url && (
+                  <a
+                    href={profile.cv_research_url}
+                    download
+                    className="inline-flex items-center gap-2 rounded-md bg-[var(--color-accent)] px-5 py-2.5 font-semibold text-[var(--color-accent-fg)] transition-opacity hover:opacity-90"
+                  >
+                    Research CV
+                    <span aria-hidden="true">↓</span>
+                  </a>
+                )}
+              </div>
+            )}
+            <div className="flex flex-wrap gap-3 items-center">
+              <Link
+                href="/publications"
+                className="px-5 py-2.5 rounded-md border border-[var(--color-border-strong)] font-semibold hover:bg-[var(--color-bg-subtle)] transition-colors"
+              >
+                View Publications
+              </Link>
+              <Link
+                href="/projects"
+                className="px-5 py-2.5 rounded-md border border-[var(--color-border-strong)] font-semibold hover:bg-[var(--color-bg-subtle)] transition-colors"
+              >
+                See Projects
+              </Link>
+              <Link
+                href="/contact"
+                className="px-3 py-2.5 font-semibold text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors"
+              >
+                Get in touch →
+              </Link>
+            </div>
           </div>
         </div>
         <div className="shrink-0 self-start md:self-center">

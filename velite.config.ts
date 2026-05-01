@@ -46,11 +46,15 @@ const profile = defineCollection({
       linkedin_url: externalUrl,
       orcid_id: s.string().optional(),
       arxiv_author_url: externalUrl.optional(),
-      // Stable public URL for a downloadable CV (e.g. /assets/cv/insaf-cv.pdf).
-      // Optional: when absent, the CV download link is hidden site-wide.
-      cv_url: s
+      // Two CV variants reflect the dual identity (engineer + researcher).
+      // Both are optional and site-relative; absent ones hide their pill.
+      cv_dev_url: s
         .string()
-        .regex(/^\//, "cv_url must be a site-relative path starting with /")
+        .regex(/^\//, "cv_dev_url must be a site-relative path starting with /")
+        .optional(),
+      cv_research_url: s
+        .string()
+        .regex(/^\//, "cv_research_url must be a site-relative path starting with /")
         .optional(),
       additional_social_links: s
         .array(s.object({ platform: s.string(), url: externalUrl }))
