@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Project } from "#site/content";
 
 type ProjectCardProps = { project: Project; featured?: boolean };
@@ -7,7 +6,7 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
   const truncate = featured ? 260 : 140;
 
   return (
-    <article className="surface-elevated is-interactive relative h-full flex flex-col overflow-hidden">
+    <article className="surface-elevated relative h-full flex flex-col overflow-hidden">
       <div
         className={`absolute inset-y-0 left-0 ${featured ? "w-1.5" : "w-1"} bg-[var(--color-accent)]`}
         aria-hidden="true"
@@ -27,12 +26,7 @@ export function ProjectCard({ project, featured = false }: ProjectCardProps) {
             featured ? "text-2xl md:text-3xl display tracking-tight" : "text-lg"
           }`}
         >
-          <Link
-            href={`/projects/${project.slug}`}
-            className="hover:text-[var(--color-accent)] transition-colors"
-          >
-            {project.title}
-          </Link>
+          {project.title}
         </h3>
         <p
           className={`text-[var(--color-fg-muted)] mb-4 flex-1 leading-relaxed ${

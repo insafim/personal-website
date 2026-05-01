@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Project } from "#site/content";
 
@@ -99,10 +98,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {filtered.map((p) => (
               <li key={p.slug}>
-                <Link
-                  href={`/projects/${p.slug}`}
-                  className="surface-elevated is-interactive block p-4"
-                >
+                <div className="surface-elevated block p-4">
                   <div className="flex items-baseline justify-between gap-2 mb-1">
                     <span className="font-semibold">{p.title}</span>
                     <span className="metadata">{p.year}</span>
@@ -118,7 +114,7 @@ export function ProjectFilter({ projects }: { projects: Project[] }) {
                       </li>
                     ))}
                   </ul>
-                </Link>
+                </div>
               </li>
             ))}
           </ul>
