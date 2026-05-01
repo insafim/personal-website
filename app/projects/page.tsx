@@ -24,6 +24,10 @@ export default function ProjectsPage() {
         title="Projects"
         description="Production AI systems and research builds across 2PointZero, MBZUAI, VisionLabs, the University of Peradeniya, and independent work."
       />
+      <div className="mb-6 -mt-2 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-subtle)] px-4 py-2.5 text-sm text-[var(--color-fg-muted)]">
+        <span className="font-medium text-[var(--color-fg)]">Note:</span> Detail pages
+        are still being refreshed. Some are richer than others.
+      </div>
       <ProjectFilter projects={projects} />
       {sorted.length > 0 && (
         <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

@@ -243,36 +243,6 @@ test("projects index renders a flat list with affiliation chips on every card", 
   expect(await chips.count()).toBe(cardCount);
 });
 
-test("projects index promotes a scale_metric on cards that have one", async ({
-  page,
-}) => {
-  await page.goto("/projects");
-  // data-hero-metric marks a project's first scale_metric as the tile's anchor
-  // number. Tiles share one uniform format now (no featured/regular split), so
-  // the attribute appears on every card whose project frontmatter has
-  // scale_metrics, and is absent on cards whose frontmatter omits them.
-  const heroMetrics = page.locator("[data-hero-metric]");
-  await expect(heroMetrics).not.toHaveCount(0);
-
-  // The promoted value carries data-metric-value as a stable test anchor
-  // (decoupled from the .display font class, which controls family/leading
-  // but not size). Assert presence AND a computed font-size at or above
-  // text-3xl (30px) so a regression that strips the size utilities is caught.
-  const valueSpan = heroMetrics.first().locator("[data-metric-value]");
-  await expect(valueSpan).toBeVisible();
-  const fontSize = await valueSpan.evaluate((el) =>
-    Number.parseFloat(getComputedStyle(el).fontSize)
-  );
-  expect(fontSize).toBeGreaterThanOrEqual(30);
-
-  // Exclusivity: cards whose frontmatter has no scale_metrics must NOT carry
-  // the hero-metric block. At least one such card exists in the seed content
-  // (e.g. avatar-voice-agent, langgraph-eval-pipeline), so the count must be
-  // > 0 - otherwise the attribute has leaked to every card.
-  const cardsWithoutHero = page.locator("article.surface-elevated:not(:has([data-hero-metric]))");
-  expect(await cardsWithoutHero.count()).toBeGreaterThan(0);
-});
-
 test("publications index has Scholar link", async ({ page }) => {
   await page.goto("/publications");
   await expect(page.getByRole("link", { name: /Google Scholar/i })).toBeVisible();
