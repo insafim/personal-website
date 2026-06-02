@@ -33,7 +33,7 @@ public/assets/
   profile/          headshots
   projects/         project cover images / screenshots
   publications/     locally-mirrored PDFs and thumbnails
-  cv/               CV PDF, e.g. Insaf_Ismath_CV.pdf
+  cv/               CV PDF, e.g. Insaf_Ismath-CV.pdf
 ```
 
 Filenames are public URLs. A file at `public/assets/companies/2pointzero.svg`
@@ -43,7 +43,7 @@ from YAML / MDX with that leading-slash path.
 Recommended formats:
 - Logos: SVG when available, otherwise PNG with transparent background
 - Headshots: JPG, around 600x600 or larger
-- CV: PDF, keep filename stable (e.g. `Insaf_Ismath_CV.pdf`) so links don't break
+- CV: PDF, keep filename stable (e.g. `Insaf_Ismath-CV.pdf`) so links don't break
 - Project covers: JPG or WebP, 1600x900 ideal
 
 ## How do I add a new job?
@@ -80,13 +80,13 @@ contiguous, only their relative order matters.
 
 ## How do I add my CV?
 
-1. Put the PDF at `public/assets/cv/Insaf_Ismath_CV.pdf` (or any stable
+1. Put the PDF at `public/assets/cv/Insaf_Ismath-CV.pdf` (or any stable
    filename under `public/assets/cv/`).
 2. In `content/profile.mdx`, set `cv_dev_url` (and optionally
    `cv_research_url` for a separate research CV):
 
    ```yaml
-   cv_dev_url: /assets/cv/Insaf_Ismath_CV.pdf
+   cv_dev_url: /assets/cv/Insaf_Ismath-CV.pdf
    ```
 
 The Hero on the home page reads `cv_dev_url` and `cv_research_url` and
